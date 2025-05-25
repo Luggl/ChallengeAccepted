@@ -17,3 +17,5 @@ def create_app():
     app.register_blueprint(user_routes)
 
     return app
+
+
