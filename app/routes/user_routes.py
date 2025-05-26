@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 # Blueprint ist eine "Mini-App" innerhalb Flask, um Routen besser zu strukturieren.
 user_bp = Blueprint('user', __name__)
@@ -49,7 +50,7 @@ def forgot_password():
     if email is None:
         return jsonify({"error": "Email ist erforderlich"}), 400
 
-    # Wieder Einbinden der Logik aus services
+    # Wieder Einbinden der Logik aus services (Hier wird allerdings nur ein Link an die E-Mail des Users gesendet, falls vorhanden!)
     success, message = forgot_password_logic(email)
 
     if not success:
@@ -57,4 +58,25 @@ def forgot_password():
 
     return jsonify({"message": message})
 
-@user_bp.route('/api/users/<int:id>', methods=['DELETE']):
+@user_bp.route('/api/reset-password/confirm', methods=['POST'])
+def reset_password():
+
+
+@user_bp.route('/api/users/<int:id>', methods=['DELETE'])
+@jwt_required() # Sicherstellen, dass User eingeloggt ist
+def delete_user(id):
+    # Prüfen, wer der aktuell eingeloggte User ist
+    current_user_id = get_jwt_identity()
+
+    # Sicherstellen, dass kein anderer User gelöscht wird außer sich selbst.
+    if current_user_id != id:
+        return jsonify({"error": "Du darfst nur deinen eigenen Account löschen!"}), 404
+
+    # Logik in Services:
+    success, message = delete_user_logic(id)
+
+    if not success:
+        return jsonify({"error": message}), 404
+
+    return jsonify({"message": message})
+
