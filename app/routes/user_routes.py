@@ -60,6 +60,17 @@ def forgot_password():
 
 @user_bp.route('/api/reset-password/confirm', methods=['POST'])
 def reset_password():
+    token = request.json.get('token')
+    password = request.json.get('newPassword')
+
+    if token is None or password is None:
+        return jsonify({"error": "Token und Password erforderlich"}), 400
+
+    # Logik in Services - Prüfung ob Password / Token akzeptiert werden
+    success, message = reset_password_logic(token, password)
+
+    status = 200 if success else 400
+    return jsonify({"message": message, "status": status})
 
 
 @user_bp.route('/api/users/<int:id>', methods=['DELETE'])
