@@ -1,7 +1,60 @@
-from flask import Blueprint
+from flask import Blueprint, request, jsonify
 
-user_routes = Blueprint('user_routes', __name__)
+# Blueprint ist eine "Mini-App" innerhalb Flask, um Routen besser zu strukturieren.
+user_bp = Blueprint('user', __name__)
 
-@user_routes.route('/hello')
-def hello_user():
-    return "Hello from user_routes!"
+@user_bp.route('/api/user', methods=['POST'])
+def register_user():
+    # Lesen der Daten aus dem Body der Schnittstelle
+    data = request.get_json()
+
+    # Einzelne Werte zuweisen
+    username = data.get('username')
+    email = data.get('email')
+    password = data.get('password')
+
+    # Prüfung, ob alle Daten vorhanden:
+    if username is None or email is None or password is None:
+        return jsonify({"error": "Username, Password und Email sind erforderlich"}), 400
+
+    # Hier die Methode einbinden, die prüft ob Werte i. O.!
+    success, result = register_user_logic(username, email, password)
+
+    if not success:
+        return jsonify({"error": result}), 400
+
+    return jsonify({"message": "User erfolgreich registriert", "user": result}), 201
+
+@user_bp.route('/api/login', methods=['POST'])
+def login_user():
+    data = request.get_json()
+    email = data.get('email')
+    password = data.get('password')
+
+    if email is None or password is None:
+        return jsonify({"error": "Email und Password sind erforderlich"}), 400
+
+    # Hier Methode einbinden aus Services
+    success, result = login_user_logic(email, password)
+    if not success:
+        return jsonify({"error": result}), 401 # Nicht authorisiert!
+
+    return jsonify({"message": "Login erfolgreich", "user": result}), 200
+
+@user_bp.route('/api/password-reset', methods=['POST'])
+def forgot_password():
+    data = request.get_json()
+    email = data.get('email')
+
+    if email is None:
+        return jsonify({"error": "Email ist erforderlich"}), 400
+
+    # Wieder Einbinden der Logik aus services
+    success, message = forgot_password_logic(email)
+
+    if not success:
+        return jsonify({"error": message}), 404
+
+    return jsonify({"message": message})
+
+@user_bp.route('/api/users/<int:id>', methods=['DELETE']):
