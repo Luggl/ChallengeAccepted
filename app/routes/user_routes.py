@@ -32,13 +32,14 @@ def register_user():
 def login_user():
     data = request.get_json()
     email = data.get('email')
+    username = data.get('username')
     password = data.get('password')
 
-    if email is None or password is None:
-        return jsonify({"error": "Email und Password sind erforderlich"}), 400
+    if email is None and username is None or password is None:
+        return jsonify({"error": "Email/Username und Password sind erforderlich"}), 400
 
     # Hier Methode einbinden aus Services
-    success, result = login_user_logic(email, password)
+    success, result = login_user_logic(username, email, password)
     if not success:
         return jsonify({"error": result}), 401 # Nicht authorisiert!
 
