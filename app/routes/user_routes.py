@@ -94,3 +94,49 @@ def delete_user(id):
 
     return jsonify({"message": message})
 
+@user_bp.route('/api/user', methods=['GET'])
+@jwt_required()
+def get_user():
+    current_user_id = get_jwt_identity()
+
+    # Hier prüfen, wie wir den Kalender einbauen können, sowie die Streak
+    success, result = get_user_logic(current_user_id)
+
+    if not success:
+        return jsonify({"error": result}), 404
+
+    return jsonify({"message": result}), 200
+
+@user_bp.route('/api/user/me', methods=['PATCH'])
+@jwt_required()
+def update_user():
+    current_user_id = get_jwt_identity()
+
+    updateData = request.get_json()
+
+    #Hier muss geprüft werden, welche Daten überhaupt geändert werden und welche nicht! - Siehe Schnittstelle
+    success, result = update_user_logic(current_user_id, updateData)
+
+    if not success:
+        return jsonify({"error": result}), 404
+
+    return jsonify({"message": result}), 200
+
+@user_bp.route('/api/user/password', methods=['PATCH'])
+@jwt_required()
+def update_password():
+    current_user_id = get_jwt_identity()
+
+    old_pw = request.json.get('oldPassword')
+    new_pw = request.json.get('newPassword')
+
+    if not old_pw or not new_pw:
+        return jsonify({"error": "Altes und neues Passwort sind erforderlich"}), 400
+
+    success, result = update_password_logic(current_user_id, old_pw, new_pw)
+
+    if not success:
+        return jsonify({"error": result}), 404
+
+    return jsonify({"message": result}), 200
+
