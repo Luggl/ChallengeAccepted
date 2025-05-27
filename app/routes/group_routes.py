@@ -5,7 +5,7 @@ from services.user_service import *
 # Blueprint für alle Gruppenfunktionen
 group_bp = Blueprint('group', __name__)
 
-@group_bp.route('/api/groups', methods=['POST'])
+@group_bp.route('/api/group', methods=['POST'])
 def create_group():
     # Daten in JSON Format auslesen
     data = request.get_json()
@@ -34,7 +34,7 @@ def invitation_link():
 
     return jsonify({"message": "Einladungslink erstellt", "link": result}), 200
 
-@group_bp.route('/api/groups', methods=['PUT'])
+@group_bp.route('/api/group', methods=['PUT'])
 def join_group_via_link():
     user_id = request.args.get('user')
     invitation_link = request.args.get('invitationLink')
@@ -46,7 +46,7 @@ def join_group_via_link():
 
     return jsonify({"message": result}), 200
 
-@group_bp.route('/api/groups/<int:id>', methods=['DELETE'])
+@group_bp.route('/api/group/<int:id>', methods=['DELETE'])
 @jwt_required()
 def delete_group(id):
     current_user_id = get_jwt_identity()        # aktuell eingeloggter User prüfen
@@ -58,3 +58,30 @@ def delete_group(id):
         return jsonify({"error": result}), 403 # Keine Berechtigung oder Fehler
 
     return jsonify({"message": result}), 204
+
+
+@group_bp.route('/api/groupfeed/<int:gid>', methods=['GET'])
+@jwt_required()
+def get_group_feed(gid):
+    current_user_id = get_jwt_identity()
+
+    success, result = get_group_feed_logic(gid, current_user_id)
+
+    if not success:
+        return jsonify({"error": result}), 403
+
+    return jsonify({"message": result}), 200
+
+@group_bp.route('/api/groups')
+@jwt_required()
+def get_group_overview():
+    current_user_id = get_jwt_identity()
+
+    # Achtung, hier muss im result auch eine Information mitgeliefert werden, ob der User eine Aufgabe zu erledigen hat oder nicht
+    # Genauso ob die Aufgabe Standard oder Survival Challenge bezogen ist
+    success, result = get_group_overview_logic(current_user_id)
+
+    if not success:
+        return jsonify({"error": result}), 403
+
+    return jsonify({"message": result}), 200
