@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
+from services.user_service import *
 
 # Blueprint für Mitglieder-Verwaltung
 membership_bp = Blueprint("membership", __name__)

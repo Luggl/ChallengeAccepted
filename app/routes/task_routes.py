@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
+from services.user_service import *
 
 # Blueprint für alle Aufgaben-Routen
 task_bp = Blueprint("task", __name__)
