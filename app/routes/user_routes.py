@@ -1,5 +1,7 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
+from services.user_service import *
+
 
 # Blueprint ist eine "Mini-App" innerhalb Flask, um Routen besser zu strukturieren.
 user_bp = Blueprint('user', __name__)
@@ -30,13 +32,14 @@ def register_user():
 def login_user():
     data = request.get_json()
     email = data.get('email')
+    username = data.get('username')
     password = data.get('password')
 
-    if email is None or password is None:
-        return jsonify({"error": "Email und Password sind erforderlich"}), 400
+    if email is None and username is None or password is None:
+        return jsonify({"error": "Email/Username und Password sind erforderlich"}), 400
 
     # Hier Methode einbinden aus Services
-    success, result = login_user_logic(email, password)
+    success, result = login_user_logic(username, email, password)
     if not success:
         return jsonify({"error": result}), 401 # Nicht authorisiert!
 
@@ -90,4 +93,50 @@ def delete_user(id):
         return jsonify({"error": message}), 404
 
     return jsonify({"message": message})
+
+@user_bp.route('/api/user', methods=['GET'])
+@jwt_required()
+def get_user():
+    current_user_id = get_jwt_identity()
+
+    # Hier prüfen, wie wir den Kalender einbauen können, sowie die Streak
+    success, result = get_user_logic(current_user_id)
+
+    if not success:
+        return jsonify({"error": result}), 404
+
+    return jsonify({"message": result}), 200
+
+@user_bp.route('/api/user/me', methods=['PATCH'])
+@jwt_required()
+def update_user():
+    current_user_id = get_jwt_identity()
+
+    updateData = request.get_json()
+
+    #Hier muss geprüft werden, welche Daten überhaupt geändert werden und welche nicht! - Siehe Schnittstelle
+    success, result = update_user_logic(current_user_id, updateData)
+
+    if not success:
+        return jsonify({"error": result}), 404
+
+    return jsonify({"message": result}), 200
+
+@user_bp.route('/api/user/password', methods=['PATCH'])
+@jwt_required()
+def update_password():
+    current_user_id = get_jwt_identity()
+
+    old_pw = request.json.get('oldPassword')
+    new_pw = request.json.get('newPassword')
+
+    if not old_pw or not new_pw:
+        return jsonify({"error": "Altes und neues Passwort sind erforderlich"}), 400
+
+    success, result = update_password_logic(current_user_id, old_pw, new_pw)
+
+    if not success:
+        return jsonify({"error": result}), 404
+
+    return jsonify({"message": result}), 200
 
