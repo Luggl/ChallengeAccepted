@@ -29,3 +29,22 @@ def complete_task(id):
 
     return jsonify({"message": result}), 201
 
+@task_bp.route('/api/vote/<int:id>', methods=["POST"])
+@jwt_required()
+def vote(id):
+    current_user_id = get_jwt_identity()
+
+    vote = request.json.get('vote')
+
+    if vote is None:
+        return jsonify({"error": result}), 400
+
+    #Hier prüfen, ob Vote noch aussteht
+    success, result = vote_logic(current_user_id, id, vote)
+
+    if not success:
+        return jsonify({"error": result}), 400
+
+    return jsonify({"message": result}), 200
+
+
