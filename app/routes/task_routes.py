@@ -19,10 +19,10 @@ def get_task(id):
 
 @task_bp.route("/api/tasks/<int:id>/complete", methods=["POST"])
 @jwt_required()
-def complete_task(id):
+def complete_task(taskid):
     current_user_id = get_jwt_identity()
 
-    success, result = complete_task_logic(id, current_user_id)
+    success, result = complete_task_logic(taskid, current_user_id)
 
     if not success:
         return jsonify({"error": result}), 400
