@@ -7,8 +7,8 @@ from database import Base
 
 class UserAchievement(Base):
     __tablename__="user_achievement"
-    user_id= Column(BLOB,ForeignKey("user_id"), primary_key=True)
-    achievement_id=Column(BLOB,ForeignKey("achievement_id"), primary_key=True)
+    user_id= Column(BLOB,ForeignKey("user.user_id"), primary_key=True)
+    achievement_id=Column(BLOB,ForeignKey("achievement.achievement_id"), primary_key=True)
     erhalten=Column(Boolean, default=False)
     erhaltenAm=Column(Date)
 
@@ -27,6 +27,7 @@ class User(Base):
     streak=Column(Integer, default=0)
 
     achievement_links=relationship("UserAchievement", back_populates="user")
+    token=relationship("ResetToken",back_populates="user", uselist=False)
 
 class Achievement (Base):
     __tablename__="achievement"
@@ -35,3 +36,13 @@ class Achievement (Base):
     beschreibung= Column(String)
 
     user_links=relationship("UserAchievement", back_populates="achievement")
+
+
+class ResetToken(Base):
+    __tablename__="resettoken"
+
+    token=Column(String, primary_key=True)
+    gueltigBis=Column(Date)
+
+    user_id=Column(BLOB, ForeignKey("user.user_id"), unique=True)
+    user=relationship("User", back_populates="token")
