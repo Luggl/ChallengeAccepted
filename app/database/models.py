@@ -105,6 +105,7 @@ class Challenge(Base):
 
     challenge_id=Column(BLOB, primary_key=True, default=lambda: uuid.uuid4().bytes)
     startdatum=Column(Date)
+    typ=Column(String(50))
 
     gruppe_id=Column(BLOB, ForeignKey("gruppe.gruppe_id"))
     gruppe=relationship("Gruppe", back_populates="challenges")
@@ -115,10 +116,29 @@ class Challenge(Base):
         "Membership",
         primaryjoin="and_(Challenge.ersteller_user_id==Membership.user_id,Challenge.ersteller_gruppe_id==Membership.gruppe_id"
     )
+    __mapper_args_={
+        "polymorphic_identity":"challenge",
+        "polymorphic_on":typ
+    }
 
     sportarten=relationship("Sportart", secondary=challenge_sportart,back_populates="challenges")
     aufgabe=relationship("Aufgabe", back_populates="challenge")
 
+class StandardChallenge(Challenge):
+    __tablename__ = "standard_challenge"
+    challenge_id = Column(BLOB, ForeignKey("challenge.challenge_id"),primary_key=True)
+    dauer=Column(Integer)
+
+    __mapper_args_ = {
+        "polymorphic_identity":"standard"
+    }
+
+class Survivalchallenge(Challenge):
+    __tablename__ = "survival_challenge"
+    challenge_id = Column(BLOB, ForeignKey("challenge.challenge_id"), primary_key=True)
+    __mapper_args_ = {
+        "polymorphic_identity":"survival"
+    }
 class Aufgabe(Base):
     __tablename__="aufgabe"
 
@@ -153,6 +173,22 @@ class Aufgabenerfuellung (Base):
     gruppe_id=Column(BLOB, ForeignKey("membership.gruppe_id"))
 
     mitglied=relationship("Membership", primaryjoin="and_(Aufgabenerfuellung.user_id=Membership.user_id, Aufgabenerfuellung.gruppe_id==Membership.gruppe_id)")
+    beitrag=relationship("Beitrag", back_populates="erfuellung", uselist=False)
+class Beitrag (Base):
+    __tablename__="beitrag"
+
+    beitrag_id=Column(BLOB, primary_key=True, default=lambda: uuid.uuid4().bytes)
+    video=Column(String, nullable=False)
+    beschreibung=Column(String)
+    erstellDatum=Column(Date)
+
+    user_id=Column(BLOB, ForeignKey("membership.user_id"))
+    gruppe_id=Column (BLOB, ForeignKey("membership.gruppe_id"))
+    mitglied=relationship(
+        "Membership",
+        primaryjoin="and_(Beitrag.user_id==Membership.user_id, Beitrag.gruppe_id==Membership.gruppe_id)"
+    )
+
 
 
 
