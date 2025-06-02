@@ -92,3 +92,70 @@ class Sportart(Base):
     unit=Column(SQLEnum(StatusUnit), nullable=False)
 
     challenges=relationship("Challenge", secondary="challenge_sportart", back_populates="sportarten")
+
+challenge_sportart=Table(
+    "challenge_sportart",
+    Base.metadata,
+    Column("challenge_id",BLOB,ForeignKey("challenge.challenge_id"),primary_key=True),
+    Column("sportart_id",BLOB,ForeignKey("sportart.sportart_id"),primary_key=True)
+)
+
+class Challenge(Base):
+    __tablename__="challenge"
+
+    challenge_id=Column(BLOB, primary_key=True, default=lambda: uuid.uuid4().bytes)
+    startdatum=Column(Date)
+
+    gruppe_id=Column(BLOB, ForeignKey("gruppe.gruppe_id"))
+    gruppe=relationship("Gruppe", back_populates="challenges")
+
+    ersteller_user_id=Column(BLOB, ForeignKey("membership.user_id"))
+    ersteller_gruppe_id=Column(BLOB, ForeignKey("membership.gruppe_id"))
+    ersteller=relationship(
+        "Membership",
+        primaryjoin="and_(Challenge.ersteller_user_id==Membership.user_id,Challenge.ersteller_gruppe_id==Membership.gruppe_id"
+    )
+
+    sportarten=relationship("Sportart", secondary=challenge_sportart,back_populates="challenges")
+    aufgabe=relationship("Aufgabe", back_populates="challenge")
+
+class Aufgabe(Base):
+    __tablename__="aufgabe"
+
+    aufgabe_id=Column(BLOB, primary_key=True, default=lambda : uuid.uuid4().bytes)
+    beschreibung=Column(String)
+    zielwert=Column(Integer)
+    dauer=Column(Integer)
+    schwierigkeit=Column(SQLEnum(Schwierigkeit), nullable=False)
+    unit=Column(SQLEnum(StatusUnit), nullable=False)
+
+    challenge_id=Column(BLOB, ForeignKey("challenge.challenge_id"))
+    challenge=relationship("Challenge",back_populates="aufgaben")
+
+    sportart_id=Column(BLOB, ForeignKey("sportart.sportart_id"))
+    sportart=relationship("Sportart")
+
+    erfuellungen=relationship("Aufgabenerfuellung",back_populates="aufgabe")
+
+
+class Aufgabenerfuellung (Base):
+    __tablename__="aufgabenerfuellung"
+
+    erfuellung_id=Column(BLOB, primary_key=True, default=lambda: uuid.uuid4().bytes)
+    status=Column(SQLEnum(AufgabeStatus), nullable=False)
+    bild=Column(String)
+    datum=Column(Date)
+
+    aufgabe_id= Column(BLOB, ForeignKey("aufgabe.aufgabe_id"))
+    aufgabe=relationship("Aufgabe", back_populates="erfuellungen")
+
+    user_id=Column(BLOB, ForeignKey("membership.user_id"))
+    gruppe_id=Column(BLOB, ForeignKey("membership.gruppe_id"))
+
+    mitglied=relationship("Membership", primaryjoin="and_(Aufgabenerfuellung.user_id=Membership.user_id, Aufgabenerfuellung.gruppe_id==Membership.gruppe_id)")
+
+
+
+
+
+
