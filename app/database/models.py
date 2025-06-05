@@ -213,6 +213,8 @@ class Beitrag (Base):
 
     user_id=Column(BLOB, ForeignKey("membership.user_id"))
     gruppe_id=Column (BLOB, ForeignKey("membership.gruppe_id"))
+    erfuellung_id=Column(BLOB, ForeignKey("aufgabenerfuellung.erfuellung_id"), unique=True)
+
     mitglied=relationship(
         "Membership",
         primaryjoin=and_(
@@ -220,6 +222,7 @@ class Beitrag (Base):
             foreign(gruppe_id)==Membership.gruppe_id
         )
     )
+    erfuellung=relationship("Aufgabenerfuellung", back_populates="beitrag")
 
 from sqlalchemy.orm import configure_mappers
 configure_mappers()
