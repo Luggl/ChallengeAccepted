@@ -130,7 +130,7 @@ class Challenge(Base):
     }
 
     sportarten=relationship("Sportart", secondary=challenge_sportart,back_populates="challenges")
-    aufgabe=relationship("Aufgabe", back_populates="challenge")
+    aufgaben=relationship("Aufgabe", back_populates="challenge")
 
 class StandardChallenge(Challenge):
     __tablename__ = "standard_challenge"
@@ -221,7 +221,8 @@ class Beitrag (Base):
         )
     )
 
-
+from sqlalchemy.orm import configure_mappers
+configure_mappers()
 
 
 
