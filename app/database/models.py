@@ -44,6 +44,7 @@ class User(Base):
 
     achievement_links=relationship("UserAchievement", back_populates="user")
     token=relationship("ResetToken",back_populates="user", uselist=False)
+    membership=relationship("Membership", back_populates="user")
 
 class Achievement (Base):
     __tablename__="achievement"
