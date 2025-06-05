@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
 
-DATABASE_URL= "sqlite:///mydatabase.db"
+DATABASE_URL= r"sqlite:///C:/Users/User/DatenbankFitnessApp/myrepo/gruppe-14---challenge-accepted/mydatabase.db"
 
 engine=create_engine(DATABASE_URL, echo=True)
 SessionLocal= sessionmaker(bind=engine)

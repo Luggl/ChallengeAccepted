@@ -1,5 +1,7 @@
-from database import SessionLocal
-from models import User
+from database.database import SessionLocal
+#from database.database import SessionLocal
+import database
+from database.models import User
 import uuid
 from werkzeug.security import generate_password_hash
 
