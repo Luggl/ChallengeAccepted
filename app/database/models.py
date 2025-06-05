@@ -148,6 +148,7 @@ class Aufgabe(Base):
     dauer=Column(Integer)
     schwierigkeit=Column(SQLEnum(Schwierigkeit), nullable=False)
     unit=Column(SQLEnum(StatusUnit), nullable=False)
+    typ=Column(String(50))
 
     challenge_id=Column(BLOB, ForeignKey("challenge.challenge_id"))
     challenge=relationship("Challenge",back_populates="aufgaben")
@@ -156,7 +157,21 @@ class Aufgabe(Base):
     sportart=relationship("Sportart")
 
     erfuellungen=relationship("Aufgabenerfuellung",back_populates="aufgabe")
+    __mapper_args__={
+        "polymorphic_identity":"normal",
+        "polymorphic_on": typ
+    }
 
+class BonusAufgabe(Aufgabe):
+    __tablename__ ="bonus_aufgabe"
+
+    aufgabe_id = Column(BLOB, ForeignKey("aufgabe.aufgabe_id"),primary_key=True)
+    bonus_punkte=Column(Integer, default=0)
+    ist_freiwillig=Column(Boolean, default=True)
+
+    __mapper_args__ = {
+        "polymorphic_identity":"bonus"
+    }
 
 class Aufgabenerfuellung (Base):
     __tablename__="aufgabenerfuellung"
