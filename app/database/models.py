@@ -5,6 +5,9 @@ from sqlalchemy.orm import relationship
 from .database import Base
 from enum import Enum
 from sqlalchemy import Enum as SQLEnum
+from sqlalchemy import and_
+from sqlalchemy.orm import foreign
+
 
 class StatusUnit(Enum):
     anzahl="anzahl"
@@ -115,8 +118,12 @@ class Challenge(Base):
     ersteller_gruppe_id=Column(BLOB, ForeignKey("membership.gruppe_id"))
     ersteller=relationship(
         "Membership",
-        primaryjoin="and_(Challenge.ersteller_user_id==Membership.user_id,Challenge.ersteller_gruppe_id==Membership.gruppe_id"
+        primaryjoin=and_(
+            foreign(ersteller_user_id)==Membership.user_id,
+            foreign(ersteller_gruppe_id)==Membership.gruppe_id
+        )
     )
+
     __mapper_args_={
         "polymorphic_identity":"challenge",
         "polymorphic_on":typ
@@ -188,7 +195,13 @@ class Aufgabenerfuellung (Base):
     user_id=Column(BLOB, ForeignKey("membership.user_id"))
     gruppe_id=Column(BLOB, ForeignKey("membership.gruppe_id"))
 
-    mitglied=relationship("Membership", primaryjoin="and_(Aufgabenerfuellung.user_id=Membership.user_id, Aufgabenerfuellung.gruppe_id==Membership.gruppe_id)")
+    mitglied=relationship(
+        "Membership",
+                     primaryjoin=and_(
+                              foreign(user_id)==Membership.user_id,
+                              foreign(gruppe_id)==Membership.gruppe_id
+                          )
+                    )
     beitrag=relationship("Beitrag", back_populates="erfuellung", uselist=False)
 class Beitrag (Base):
     __tablename__="beitrag"
@@ -202,7 +215,10 @@ class Beitrag (Base):
     gruppe_id=Column (BLOB, ForeignKey("membership.gruppe_id"))
     mitglied=relationship(
         "Membership",
-        primaryjoin="and_(Beitrag.user_id==Membership.user_id, Beitrag.gruppe_id==Membership.gruppe_id)"
+        primaryjoin=and_(
+            foreign(user_id)==Membership.user_id,
+            foreign(gruppe_id)==Membership.gruppe_id
+        )
     )
 
 
