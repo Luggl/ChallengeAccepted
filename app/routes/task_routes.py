@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from services.user_service import *
+from services.task_service import *
 
 # Blueprint für alle Aufgaben-Routen
 task_bp = Blueprint("task", __name__)
@@ -19,10 +19,10 @@ def get_task(id):
 
 @task_bp.route("/api/tasks/<int:id>/complete", methods=["POST"])
 @jwt_required()
-def complete_task(id):
+def complete_task(taskid):
     current_user_id = get_jwt_identity()
 
-    success, result = complete_task_logic(id, current_user_id)
+    success, result = complete_task_logic(taskid, current_user_id)
 
     if not success:
         return jsonify({"error": result}), 400
@@ -37,7 +37,7 @@ def vote(id):
     vote = request.json.get('vote')
 
     if vote is None:
-        return jsonify({"error": result}), 400
+        return jsonify({"error": "Vote cannot be empty"}), 400
 
     #Hier prüfen, ob Vote noch aussteht
     success, result = vote_logic(current_user_id, id, vote)

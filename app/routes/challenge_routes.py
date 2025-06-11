@@ -1,17 +1,32 @@
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from services.user_service import *
+from services.challenge_service import *
 
 # Blueprint für die Challenge erstellen
 challenge_bp = Blueprint('challenge', __name__)
 
-@challenge_bp.route('/api/challenges')
-@jwt_required       #Sicherstellen, dass User eingeloggt ist!
-def create_challenge():
+
+# Split von Challenge Standard und Survival benötigt, da ChallengeSportart unterschiedlich definiert ist (Schwierigkeitsgrad und nicht Intensitätsangaben)
+@challenge_bp.route('/api/challengestandard')
+@jwt_required()       #Sicherstellen, dass User eingeloggt ist!
+def create_challenge_standard():
     data = request.get_json()
     current_user_id = get_jwt_identity()
 
-    success, result = create_challenge_logic(current_user_id, data)
+    success, result = create_challenge_standard_logic(current_user_id, data)
+
+    if not success:
+        return jsonify({"error": result}), 400
+
+    return jsonify({"message": "Challenge erstellt", "challenge": result}), 201
+
+@challenge_bp.route('/api/challengesurvival')
+@jwt_required()
+def create_challenge_survival():
+    data = request.get_json()
+    current_user_id = get_jwt_identity()
+
+    success, result = create_challenge_survival_logic(current_user_id, data)
 
     if not success:
         return jsonify({"error": result}), 400

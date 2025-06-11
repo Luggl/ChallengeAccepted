@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from services.user_service import *
+from app.services.user_service import *
 
 
 # Blueprint ist eine "Mini-App" innerhalb Flask, um Routen besser zu strukturieren.
@@ -31,15 +31,14 @@ def register_user():
 @user_bp.route('/api/login', methods=['POST'])
 def login_user():
     data = request.get_json()
-    email = data.get('email')
-    username = data.get('username')
+    login = data.get('login')
     password = data.get('password')
 
-    if email is None and username is None or password is None:
-        return jsonify({"error": "Email/Username und Password sind erforderlich"}), 400
+    if login is None or password is None:
+        return jsonify({"error": "Login und Password sind erforderlich"}), 400
 
-    # Hier Methode einbinden aus Services
-    success, result = login_user_logic(username, email, password)
+    # Hier Methode einbinden aus Services - login kann Username oder E-Mail sein!
+    success, result = login_user_logic(login, password)
     if not success:
         return jsonify({"error": result}), 401 # Nicht authorisiert!
 
