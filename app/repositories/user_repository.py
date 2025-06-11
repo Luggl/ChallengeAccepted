@@ -1,6 +1,6 @@
 # app/repositories/user_repository.py
 
-from app.models.models import User  # falls User direkt in models/__init__.py steht, sonst: from app.models.user import User
+from app.database.models import User  # falls User direkt in models/__init__.py steht, sonst: from app.models.user import User
 from app import db  # Das ist die SQLAlchemy-Instanz (db.session)
 
 def find_user_by_email(email):

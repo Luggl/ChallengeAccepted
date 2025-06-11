@@ -1,6 +1,6 @@
 # app/repositories/user_achievement_repository.py
 
-from app.models.models import UserAchievement
+from app.database.models import UserAchievement
 from app import db
 
 def find_user_achievement(user_id, achievement_id):
