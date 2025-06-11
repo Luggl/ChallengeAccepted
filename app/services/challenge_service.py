@@ -1,4 +1,4 @@
-from app.models.challenge import Challenge
+from app.database.models import Challenge
 from app.utils.response import response
 from app.repositories.challenge_repository import (
     save_challenge,
