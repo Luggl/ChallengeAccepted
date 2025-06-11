@@ -1,6 +1,6 @@
 # app/repositories/group_repository.py
 
-from app.models.models import Gruppe
+from app.database.models import Gruppe
 from app import db
 
 def find_group_by_id(gruppe_id):

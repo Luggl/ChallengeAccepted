@@ -1,6 +1,6 @@
 # app/repositories/sportart_repository.py
 
-from app.models.models import Sportart
+from app.database.models import Sportart
 from app import db
 
 def find_sportart_by_id(sportart_id):

@@ -1,5 +1,5 @@
 
-from app.models.models import Challenge
+from app.database.models import Challenge
 from app import db
 
 def find_challenge_by_id(challenge_id):

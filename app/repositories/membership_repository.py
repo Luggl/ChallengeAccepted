@@ -1,6 +1,6 @@
 # app/repositories/membership_repository.py
 
-from app.models.models import Membership
+from app.database.models import Membership
 from app import db
 
 def find_membership(user_id, gruppe_id):

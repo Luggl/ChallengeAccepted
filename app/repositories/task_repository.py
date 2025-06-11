@@ -1,6 +1,6 @@
 # app/repositories/task_repository.py
 
-from app.models.models import Aufgabe  # falls Aufgabe im __init__.py ist, sonst von app.models.aufgabe import Aufgabe
+from app.database.models import Aufgabe  # falls Aufgabe im __init__.py ist, sonst von app.models.aufgabe import Aufgabe
 from app import db
 
 def find_task_by_id(aufgabe_id):
