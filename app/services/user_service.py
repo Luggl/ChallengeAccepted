@@ -1,7 +1,7 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 from app import db
 from app.utils.response import response
-from app.models.user import User
+from app.database.models import User
 from app.repositories.user_repository import (
     find_user_by_email,
     save_user,

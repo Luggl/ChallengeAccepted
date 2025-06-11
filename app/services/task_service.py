@@ -1,4 +1,4 @@
-from app.models.task import Task
+from app.database.models import Aufgabe
 from app.utils.response import response
 from app.repositories.task_repository import (
     find_task_by_id,

@@ -25,9 +25,16 @@ def create_group():
 
     return jsonify({"message": "Gruppe erstellt", "gruppe": result}), 201
 
-@group_bp.route('/api/invitationlink', methods=['GET'])
+@group_bp.route('/api/invitationlink/', methods=['GET'])
 def invitation_link():
-    success, result = invitation_link_logic()
+    # Gruppe-ID aus den Query-Parametern holen
+    gruppe_id = request.args.get('gruppe_id')
+
+    if not gruppe_id:
+        return jsonify({"error": "gruppe_id ist erforderlich!"}), 400
+
+
+    success, result = invitation_link_logic(gruppe_id)
 
     if not success:
         return jsonify({"error": result}), 400
