@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/login_background_pic">
+
+    <!-- Background Image -->
+    <ImageView
+        android:id="@+id/iv_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/login_background_pic" />
+
+    <!-- Overlay -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#99000000" />
+
+    <!-- Logo oben links -->
+    <ImageView
+        android:id="@+id/logo_top"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginStart="10dp"
+        android:src="@drawable/logo"
+        android:contentDescription="App Logo" />
+
+    <!-- Titel -->
+    <TextView
+        android:id="@+id/title_passwort_vergessen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=" Passwort\nVergessen"
+        android:textColor="@color/accent_bright"
+        android:textSize="40sp"
+        android:textStyle="bold"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/logo_top"
+        android:layout_marginTop="50dp" />
+
+    <!-- Passwort -->
+    <EditText
+        android:id="@+id/edit_password1"
+        android:layout_width="280dp"
+        android:layout_height="50dp"
+        android:layout_below="@id/title_passwort_vergessen"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="100dp"
+        android:hint="Passwort"
+        android:textColorHint="@color/black"
+        android:background="@drawable/textfield"
+        android:paddingHorizontal="16dp"
+        android:textColor="@color/black"
+        android:inputType="textPassword" />
+
+    <!-- Passwort wiederholen -->
+    <EditText
+        android:id="@+id/edit_password2"
+        android:layout_width="280dp"
+        android:layout_height="50dp"
+        android:layout_below="@id/edit_password1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:hint="Passwort wiederholen"
+        android:textColorHint="@color/black"
+        android:background="@drawable/textfield"
+        android:paddingHorizontal="16dp"
+        android:textColor="@color/black"
+        android:inputType="textPassword" />
+
+
+    <!-- Los geht's Button -->
+    <Button
+        android:id="@+id/button_change_password"
+        android:layout_width="250dp"
+        android:layout_height="60dp"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="650dp"
+        android:text="Passwort ändern"
+        android:textColor="@color/white"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        android:background="@drawable/green_button" />
+
+</RelativeLayout>

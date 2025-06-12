@@ -1,0 +1,7 @@
+<shape xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    tools:ignore="ExtraText">
+    <corners android:radius="10dp" />
+    <solid android:color="@color/grey_100" /> <!-- 50% Transparentes Schwarz -->
+    <stroke android:width="3dp" android:color="@color/button_red" />
+</shape>

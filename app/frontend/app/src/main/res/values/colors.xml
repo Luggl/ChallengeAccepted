@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+
+        <resources>
+            <!-- Hauptfarben -->
+            <color name="primary">#00cec5</color> <!-- Türkis -->
+            <color name="accent_bright">#00c7be</color>
+            <color name="accent_dark">#0d847f</color>
+
+            <!-- Buttons und Hervorhebungen -->
+            <color name="button_green">#00c7be</color>
+            <color name="button_red">#f44336</color>
+            <color name="button_confirm">#00c853</color>
+            <color name="button_cancel">#d50000</color>
+
+            <!-- Grundfarben -->
+            <color name="grey">#1f1f1f</color>
+            <color name="black">#000000</color>
+            <color name="white">#ffffff</color>
+
+            <!-- Grautöne für Karten, UI-Flächen, etc. -->
+            <color name="grey_100">#202020</color>
+            <color name="grey_200">#1d1d1d</color>
+            <color name="grey_300">#1e1e1e</color>
+            <color name="grey_400">#1c1c1c</color>
+            <color name="grey_500">#171717</color>
+            <color name="grey_600">#0f0f0f</color>
+        </resources>

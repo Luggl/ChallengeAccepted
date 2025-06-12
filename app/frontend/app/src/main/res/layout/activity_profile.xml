@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#1E1E1E"
+    tools:context=".DashboardActivity">
+
+    <!-- Greeting Section with Profile Background -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cv_greeting"
+        android:layout_width="400dp"
+        android:layout_height="80dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="4dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:id="@+id/iv_background"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/profile_picture" />
+
+        <TextView
+            android:id="@+id/tv_greeting"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="sans-serif-medium"
+            android:background="@drawable/grey_background"
+            android:text="        Profil"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+    </androidx.cardview.widget.CardView>
+
+
+    <!-- Persönliche Daten -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_below="@id/cv_greeting"
+        android:layout_marginTop="25dp"
+        android:layout_marginBottom="16dp"
+        android:orientation="horizontal"
+        android:background="@drawable/grey_background"
+        android:gravity="center_vertical"
+        android:padding="8dp">
+
+        <!-- Gruppenbild -->
+        <ImageView
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:src="@drawable/profile_picture"
+            android:scaleType="centerCrop"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/round_background"
+            android:clipToOutline="true" />
+
+        <!-- Gruppenname -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Mara"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:gravity="center_vertical"
+            android:paddingStart="8dp" />
+
+        <!-- Indikatoren -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <LinearLayout
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:background="@drawable/grey_background">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginStart="2dp"
+                    android:src="@drawable/settings_icon" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Achievements -->
+
+    <!-- Kalender -->
+
+    <!-- Bottom Navigation -->
+    <LinearLayout
+        android:id="@+id/ll_bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="670dp"
+        android:background="#2A2A2A"
+        android:orientation="horizontal"
+        android:weightSum="4"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <!-- Community Icon -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/group_white_icon"/>
+
+        </LinearLayout>
+
+        <!-- Home Icon -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/home_white_icon"/>
+
+        </LinearLayout>
+
+        <!-- Add Icon -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/add_white_icon" />
+
+        </LinearLayout>
+
+        <!-- Profile Icon -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/profile_blue_icon"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

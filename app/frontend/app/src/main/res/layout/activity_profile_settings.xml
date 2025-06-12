@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#1E1E1E"
+    tools:context=".DashboardActivity">
+
+    <LinearLayout
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/grey_background"
+        android:padding="8dp">
+
+        <!-- Gruppenname -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Einstellungen"
+            android:textColor="@color/white"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:scaleType="centerCrop"
+            android:paddingStart="8dp" />
+    </LinearLayout>
+
+    <!-- 🔙 Zurück-Button oben links -->
+    <ImageButton
+        android:id="@+id/btn_back"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_margin="16dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:src="@drawable/back_icon"
+        android:background="@drawable/grey_background"
+        android:scaleType="center"
+        android:padding="8dp" />
+
+
+    <!-- Persönliche Daten -->
+    <LinearLayout
+        android:layout_width="400dp"
+        android:layout_height="100dp"
+        android:layout_below="@id/btn_back"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="16dp"
+        android:orientation="horizontal"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/grey_background"
+        android:gravity="center_vertical"
+        android:padding="8dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/grey_background"
+            android:orientation="vertical">
+
+        <!-- Gruppenbild -->
+            <ImageView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/profile_picture"
+            android:scaleType="centerCrop"
+            android:background="@drawable/round_background"
+            android:clipToOutline="true" />
+
+            <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+                android:layout_marginLeft="50dp"
+                android:background="@drawable/grey_background"
+            android:src="@drawable/camera_icon" />
+        </LinearLayout>
+
+        <!-- Gruppenname -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Mara"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginLeft="100dp"
+            android:gravity="center_vertical"
+            android:paddingStart="8dp" />
+
+        <!-- Indikatoren -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_marginLeft="100dp">
+
+            <LinearLayout
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:background="@drawable/grey_background">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/change_icon" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="400dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btn_back"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="150dp"
+        android:orientation="vertical">
+
+        <!-- Persönliche Daten -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/green_frame"
+            android:padding="12dp"
+            android:layout_marginBottom="12dp">
+
+            <!-- Titel -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/profile_blue_icon"
+                    android:tint="#00d5cf"
+                    android:layout_marginEnd="8dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Persönliche Daten"
+                    android:textColor="#00d5cf"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- E-Mail -->
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="marak@gmail.com"
+                android:textColor="#FFFFFF"
+                android:background="@drawable/grey_background"
+                android:layout_marginTop="12dp" />
+
+            <!-- Passwort ändern mit Icon -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="Passwort ändern"
+                    android:textColor="#FFFFFF"
+                    android:background="@drawable/grey_background" />
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginStart="8dp"
+                    android:src="@drawable/change_icon" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Datenschutz -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/green_frame"
+            android:padding="12dp"
+            android:layout_marginBottom="12dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/question_icon"
+                    android:tint="#00d5cf"
+                    android:layout_marginEnd="8dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Datenschutz"
+                    android:textColor="#00d5cf"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Datenschutzerklärung"
+                android:textColor="#FFFFFF"
+                android:background="@drawable/grey_background"
+                android:layout_marginTop="12dp" />
+        </LinearLayout>
+
+        <!-- Deaktivieren & Löschen -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/grey_background"
+            android:padding="12dp">
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Profil deaktivieren"
+                android:textColor="#FFFFFF"
+                android:background="@drawable/grey_background"
+                android:layout_marginBottom="8dp" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Profil löschen"
+                android:textColor="#FF0000"
+                android:background="@drawable/red_frame"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </LinearLayout>
+
+
+    <!-- Bottom Navigation -->
+    <LinearLayout
+        android:id="@+id/ll_bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="670dp"
+        android:background="#2A2A2A"
+        android:orientation="horizontal"
+        android:weightSum="4"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <!-- Community Icon -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/group_white_icon"/>
+
+        </LinearLayout>
+
+        <!-- Home Icon -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/home_white_icon"/>
+
+        </LinearLayout>
+
+        <!-- Add Icon -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/add_white_icon" />
+
+        </LinearLayout>
+
+        <!-- Profile Icon -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/profile_blue_icon"/>
+
+        </LinearLayout>
+    </LinearLayout>
