@@ -12,8 +12,10 @@ challenge_bp = Blueprint('challenge', __name__)
 def create_challenge_standard():
     data = request.get_json()
     current_user_id = get_jwt_identity()
+    gid = request.args.get('gid', type=int)
 
-    success, result = create_challenge_standard_logic(current_user_id, data)
+
+    success, result = create_challenge_standard_logic(current_user_id, data, gid)
 
     if not success:
         return jsonify({"error": result}), 400
@@ -25,8 +27,9 @@ def create_challenge_standard():
 def create_challenge_survival():
     data = request.get_json()
     current_user_id = get_jwt_identity()
+    gid = request.args.get('gid', type=int)
 
-    success, result = create_challenge_survival_logic(current_user_id, data)
+    success, result = create_challenge_survival_logic(current_user_id, data, gid)
 
     if not success:
         return jsonify({"error": result}), 400
