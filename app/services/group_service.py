@@ -1,36 +1,29 @@
 import uuid
+import app.repositories.group_repository
 from datetime import datetime, timedelta
 from app.utils.time import now_berlin
 from utils.response import response
-from app.models.group import Group
-from app.repositories.group_repository import (
-    save_group,
-    find_group_by_invite_link,
-    add_user_to_group,
-    delete_group_by_id,
-    get_group_feed_data,
-    get_groups_for_user
-)
-
+from app.database.models import Gruppe
+from app.repositories.group_repository import *
 
 
 # Gruppe erstellen
 def create_group_logic(name, beschreibung, gruppenbild):
     invite_link = str(uuid.uuid4())  # einfacher Invite-Code
-    group = Group(
+    group = Gruppe(
         name=name,
         beschreibung=beschreibung,
         gruppenbild=gruppenbild,
         invite_link=invite_link
     )
 
-    saved_group = save_group(group)
+    created_group = create_group(group)
 
     return response(True, {
-        "id": saved_group.id,
-        "name": saved_group.name,
-        "beschreibung": saved_group.beschreibung,
-        "invite_link": saved_group.invite_link
+        "id": created_group.id,
+        "name": created_group.name,
+        "beschreibung": created_group.beschreibung,
+        "invite_link": created_group.invite_link
     })
 
 # Einladung erstellen
@@ -42,7 +35,7 @@ def invitation_link_logic(group_id):
     group.invite_link = str(uuid.uuid4())
     group.invite_expires_at = now_berlin() + timedelta(minutes=30)  # Link ist 30 min gültig
 
-    updated = save_group(group)
+    updated = update_group(group)
     if not updated:
         return response(False, "Link konnte nicht aktualisiert werden.")
 
@@ -50,7 +43,7 @@ def invitation_link_logic(group_id):
 
 # Gruppe beitreten per Link
 def join_group_via_link_logic(user_id, invitation_link):
-    group = find_group_by_invite_link(invitation_link)
+    group = find_group_by_invite_code(invitation_link)
     if not group:
         return response(False, "Ungültiger Einladungslink.")
 
