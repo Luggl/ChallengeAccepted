@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#1E1E1E"
+    android:background="@color/black"
     tools:context=".DashboardActivity">
 
     <!-- Greeting Section with Profile Background -->
@@ -39,6 +39,35 @@
             android:textSize="24sp"
             android:textStyle="bold" />
 
+
+        <LinearLayout
+            android:id="@+id/ll_streak_display"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/calendar"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="20dp"
+            android:background="@drawable/grey_background"
+            android:padding="8dp">
+
+            <!-- Icon  -->
+            <ImageView
+                android:id="@+id/iv_streak_icon"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/flash_blue_icon" />
+
+            <!-- Streak-Zahl -->
+            <TextView
+                android:id="@+id/tv_streak_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="3"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
     </androidx.cardview.widget.CardView>
 
     <!-- Weekly Calendar -->
@@ -52,10 +81,8 @@
         android:gravity="center"
         android:padding="8dp"
         android:layout_below="@id/cv_greeting"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="8dp"
-        android:background="@drawable/grey_background"
-        tools:ignore="DuplicateIds">
+        android:layout_margin="16dp"
+        android:background="@drawable/grey_background">
 
         <TextView
             android:layout_width="0dp"
@@ -128,41 +155,8 @@
             android:textSize="16sp" />
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/ll_streak_display"
-        android:layout_width="50dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/calendar"
-        android:layout_marginLeft="345dp"
-        android:background="@drawable/grey_background"
-        android:orientation="horizontal"
-        android:padding="8dp">
 
-        <!-- Icon  -->
-        <ImageView
-            android:id="@+id/iv_streak_icon"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:contentDescription="Streak Icon"
-            android:src="@drawable/flash_blue_icon" />
 
-        <!-- Streak-Zahl -->
-        <TextView
-            android:id="@+id/tv_streak_count"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="3"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            android:textStyle="bold" />
-    </LinearLayout>
-
-    <LinearLayout
-
-        android:layout_width="450dp"
-        android:layout_height="400dp"
-        android:layout_marginTop="300dp"
-        android:background="@drawable/grey_background"
 
     <!-- User Profiles Section -->
     <LinearLayout
@@ -171,7 +165,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:orientation="horizontal"
-        android:layout_below="@id/ll_streak_display"
+        android:layout_below="@id/calendar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
@@ -197,7 +191,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:text="Mara"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/white"
                 android:textSize="14sp" />
 
         </LinearLayout>
@@ -224,14 +218,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:text="Die Kämpfernatur"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/white"
                 android:textSize="14sp" />
 
         </LinearLayout>
-
     </LinearLayout>
-
-
 
     <!-- Video Placeholder (temporär als Bild) --> <!-- Video Card (mit ExoPlayer ersetzt VideoView) -->
     <androidx.cardview.widget.CardView
@@ -339,7 +330,7 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_marginTop="670dp"
-        android:background="#2A2A2A"
+        android:background="@color/grey_300"
         android:orientation="horizontal"
         android:weightSum="4"
         app:layout_constraintBottom_toBottomOf="parent"

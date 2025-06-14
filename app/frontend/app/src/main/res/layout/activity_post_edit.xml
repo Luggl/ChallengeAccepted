@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#1E1E1E"
+    tools:context=".DashboardActivity">
+
+    <LinearLayout
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/grey_background"
+        android:padding="8dp">
+
+        <!-- Gruppenname -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Kämpfernatur\nBeitrag bearbeiten"
+            android:textColor="@color/white"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:paddingStart="8dp" />
+    </LinearLayout>
+
+    <!-- 🔙 Zurück-Button oben links -->
+    <ImageButton
+        android:id="@+id/btn_back"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_margin="40dp"
+        android:src="@drawable/x_icon"
+        tools:ignore="UseAppTint"
+        android:background="@drawable/grey_background"
+        android:scaleType="center"
+        android:padding="8dp" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cv_video"
+        android:layout_width="4000dp"
+        android:layout_height="300dp"
+        android:layout_below="@id/btn_back"
+        android:layout_centerHorizontal="true"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="4dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:id="@+id/video_placeholder"
+            android:layout_width="wrap_content"
+            android:layout_height="400dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/survival_mode_pic"/>
+
+        <TextView
+            android:id="@+id/activity"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dp"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/ll_user_profiles"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/grey_background"
+            android:text="    Sit-Ups - 10 Stück"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+    </androidx.cardview.widget.CardView>
+
+
+    <!-- Beschreibung -->
+    <EditText
+        android:id="@+id/et_group_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/cv_video"
+        android:hint="Beschreibung:\nHallo..."
+        android:gravity="top|start"
+        android:background="@drawable/bright_grey_frame"
+        android:textColor="@color/white"
+        android:textColorHint="#cccccc"
+        android:padding="12dp"
+        android:layout_margin="16dp"
+        android:inputType="textMultiLine" />
+
+
+    <!-- Check Button -->
+    <ImageButton
+        android:id="@+id/btn_confirm_selection"
+        android:layout_width="80dp"
+        android:layout_height="50dp"
+        android:layout_below="@id/cv_video"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="200dp"
+        android:layout_marginRight="16dp"
+        android:background="@drawable/green_button"
+        android:src="@drawable/check_icon"
+        android:contentDescription="Auswahl bestätigen" />
+
+
+    <!-- Bottom Navigation -->
+    <LinearLayout
+        android:id="@+id/ll_bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="670dp"
+        android:background="#2A2A2A"
+        android:orientation="horizontal"
+        android:weightSum="4"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <!-- Community Icon -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/group_white_icon"/>
+
+        </LinearLayout>
+
+        <!-- Home Icon -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/home_white_icon"/>
+
+        </LinearLayout>
+
+        <!-- Add Icon -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/add_blue_icon" />
+
+        </LinearLayout>
+
+        <!-- Profile Icon -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/profile_white_icon"/>
+
+        </LinearLayout>
+    </LinearLayout>

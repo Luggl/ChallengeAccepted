@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    tools:context=".DashboardActivity">
+
+    <!-- Header: Gruppenname -->
+    <LinearLayout
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:layout_centerHorizontal="true"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:background="@drawable/grey_background"
+        android:padding="8dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Kämpfernatur\nSurvival Challenge"
+            android:textColor="@color/white"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:paddingStart="8dp" />
+    </LinearLayout>
+
+    <!-- Zurück-Button -->
+    <ImageButton
+        android:id="@+id/btn_back"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_margin="28dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:src="@drawable/back_icon"
+        android:tint="@color/white"
+        tools:ignore="UseAppTint"
+        android:background="@drawable/grey_background"
+        android:padding="8dp" />
+
+    <!-- Titel: Sportaktivitäten -->
+    <TextView
+        android:id="@+id/tv_sport_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="130dp"
+        android:layout_centerHorizontal="true"
+        android:text="Sportaktivitäten"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        android:textColor="@color/white" />
+
+    <!-- Grid mit Übungen -->
+    <GridLayout
+        android:id="@+id/grid_exercises"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_sport_title"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:columnCount="2"
+        android:rowCount="3"
+        android:background="@drawable/grey_background">
+
+        <!-- Übungsvorlagen -->
+        <!-- Push-Ups -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="120dp"
+            android:layout_margin="8dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:background="@drawable/green_frame">
+
+            <ImageView
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/pushups_icon"
+                android:tint="@color/white"
+                tools:ignore="UseAppTint"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Push-Ups"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <!-- Sit-Ups -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="120dp"
+            android:layout_margin="8dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:background="@drawable/grey_background">
+
+            <ImageView
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/situps_icon"
+                android:tint="@color/white"
+                tools:ignore="UseAppTint"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sit-Ups"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <!-- Burpees -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="120dp"
+            android:layout_margin="8dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:background="@drawable/grey_background">
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/burpees_icon"
+                android:tint="@color/white"
+                tools:ignore="UseAppTint"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Burpees"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <!-- Planks -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="120dp"
+            android:layout_margin="8dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:background="@drawable/green_frame">
+
+            <ImageView
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/plank_icon"
+                android:tint="@color/white"
+                tools:ignore="UseAppTint"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Planks"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <!-- Squats -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="120dp"
+            android:layout_margin="8dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:background="@drawable/grey_background">
+
+            <ImageView
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/squat_icon"
+                android:tint="@color/white"
+                tools:ignore="UseAppTint"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Squats"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <!-- Lunges -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="120dp"
+            android:layout_margin="8dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:background="@drawable/grey_background">
+
+            <ImageView
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:src="@drawable/lunges_icon"
+                android:tint="@color/white"
+                tools:ignore="UseAppTint"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Lunges"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:textSize="16sp" />
+        </LinearLayout>
+    </GridLayout>
+
+    <!-- Bestätigungs-Button -->
+    <ImageButton
+        android:id="@+id/btn_confirm_selection"
+        android:layout_width="80dp"
+        android:layout_height="50dp"
+        android:layout_above="@id/ll_bottom_navigation"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="16dp"
+        android:background="@drawable/green_button"
+        android:src="@drawable/check_icon" />
+
+    <!-- Bottom Navigation -->
+    <LinearLayout
+        android:id="@+id/ll_bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/grey_300"
+        android:orientation="horizontal"
+        android:weightSum="4">
+
+        <!-- Community -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/group_white_icon" />
+        </LinearLayout>
+
+        <!-- Home -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/home_white_icon" />
+        </LinearLayout>
+
+        <!-- Add -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/add_blue_icon" />
+        </LinearLayout>
+
+        <!-- Profile -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/profile_white_icon" />
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>
