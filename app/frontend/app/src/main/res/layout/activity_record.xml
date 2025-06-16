@@ -29,23 +29,25 @@
             android:textStyle="bold" />
     </LinearLayout>
 
-    <!-- 🔙 Zurück-Button oben links -->
+    <!-- Abbruch Button -->
     <ImageButton
-        android:id="@+id/btn_back"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_margin="40dp"
+        android:id="@+id/btn_cancel"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_margin="30dp"
         android:background="@drawable/grey_background"
         android:padding="8dp"
         android:scaleType="center"
         android:src="@drawable/x_icon"
-        tools:ignore="UseAppTint" />
+        tools:ignore="UseAppTint"
+        android:contentDescription="@string/desc_check_cancel"
+        />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cv_video"
         android:layout_width="4000dp"
         android:layout_height="300dp"
-        android:layout_below="@id/btn_back"
+        android:layout_below="@id/btn_cancel"
         android:layout_centerHorizontal="true"
         app:cardCornerRadius="12dp"
         app:cardElevation="4dp"
@@ -99,7 +101,8 @@
         android:layout_marginTop="200dp"
         android:layout_marginRight="16dp"
         android:background="@drawable/green_button"
-        android:src="@drawable/check_icon" />
+        android:src="@drawable/check_icon"
+        android:contentDescription="@string/desc_check_confirm" />
 
 
     <!-- Bottom Navigation -->

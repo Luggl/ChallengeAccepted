@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Challenge Accepted</string>
+
+    <string name="back_button_desc">Zurück</string>
+    <string name="desc_check_confirm">Auswahl bestätigen</string>
+    <string name="desc_check_cancel">Abbrechen</string>
+
+
 </resources>
