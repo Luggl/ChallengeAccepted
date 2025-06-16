@@ -37,7 +37,8 @@
         android:background="@drawable/grey_background"
         android:src="@drawable/back_icon"
         android:tint="@android:color/white"
-        tools:ignore="UseAppTint" />
+        tools:ignore="UseAppTint"
+        android:contentDescription="@string/back_button_desc" />
 
     <!-- Hauptinhalt -->
     <LinearLayout
@@ -208,7 +209,8 @@
         android:layout_alignParentEnd="true"
         android:layout_margin="16dp"
         android:background="@drawable/green_button"
-        android:src="@drawable/check_icon" />
+        android:src="@drawable/check_icon"
+        android:contentDescription="@string/desc_check_confirm"  />
 
     <!-- Bottom Navigation -->
     <LinearLayout

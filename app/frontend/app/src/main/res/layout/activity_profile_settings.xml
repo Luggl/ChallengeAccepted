@@ -38,7 +38,8 @@
         android:background="@drawable/grey_background"
         android:src="@drawable/back_icon"
         android:tint="@android:color/white"
-        tools:ignore="UseAppTint" />
+        tools:ignore="UseAppTint"
+        android:contentDescription="@string/back_button_desc"  />
 
 
     <!-- Persönliche Daten -->

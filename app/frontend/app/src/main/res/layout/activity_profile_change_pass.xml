@@ -39,7 +39,8 @@
         android:background="@drawable/grey_background"
         android:src="@drawable/back_icon"
         android:tint="@android:color/white"
-        tools:ignore="UseAppTint" />
+        tools:ignore="UseAppTint"
+        android:contentDescription="@string/back_button_desc" />
 
 
     <!-- Persönliche Daten -->
@@ -122,13 +123,14 @@
                     android:layout_height="24dp"
                     android:layout_marginEnd="8dp"
                     android:src="@drawable/profile_blue_icon"
-                    android:tint="#00d5cf" />
+                    app:tint="@color/primary"
+                    tools:ignore="UseAppTint" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Passwort ändern"
-                    android:textColor="#00d5cf"
+                    android:textColor="@color/primary"
                     android:textSize="16sp"
                     android:textStyle="bold" />
             </LinearLayout>
