@@ -29,20 +29,16 @@
             android:paddingStart="8dp" />
     </LinearLayout>
 
-    <!-- 🔙 Zurück-Button oben links -->
+    <!-- Zurück-Button -->
     <ImageButton
         android:id="@+id/btn_back"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_margin="28dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
         android:src="@drawable/back_icon"
-        android:tint="@android:color/white"
-        tools:ignore="UseAppTint"
         android:background="@drawable/grey_background"
-        android:scaleType="center"
-        android:padding="8dp" />
+        android:tint="@android:color/white"
+        tools:ignore="UseAppTint"/>
 
 
     <TextView
@@ -63,12 +59,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_sport_title"
-        android:layout_marginTop="24dp"
+        android:layout_margin="16dp"
         android:columnCount="2"
         android:rowCount="3"
-        android:background="@drawable/grey_background"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp">
+        android:background="@drawable/grey_background">
 
 
     <!-- Push-Ups -->
@@ -251,7 +245,7 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_marginTop="670dp"
-        android:background="#2A2A2A"
+        android:background="@color/grey_300"
         android:orientation="horizontal"
         android:weightSum="4"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -284,7 +278,7 @@
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/home_white_icon"/>
+                android:src="@drawable/home_blue_icon"/>
 
         </LinearLayout>
 
@@ -299,7 +293,7 @@
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/add_blue_icon" />
+                android:src="@drawable/add_white_icon" />
 
         </LinearLayout>
 
@@ -317,4 +311,5 @@
                 android:src="@drawable/profile_white_icon"/>
 
         </LinearLayout>
+
     </LinearLayout>

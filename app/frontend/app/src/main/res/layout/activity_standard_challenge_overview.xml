@@ -44,7 +44,6 @@
 
         </LinearLayout>
     </LinearLayout>
-    <!-- Weekly Calendar -->
 
     <!-- Hier kommen die Tagesanzeigen -->
     <LinearLayout
