@@ -19,17 +19,17 @@ def create_group_logic(name, beschreibung, gruppenbild, created_by):
     created_group = create_group(group)
 
     membership = Membership(
-        user_id=created_by,
-        gruppe_id=created_group.id,
+        user_id=uuid.UUID(created_by).bytes,
+        gruppe_id=created_group.gruppe_id,
         isAdmin=True
     )
     created_membership = create_membership(membership)
 
     return response(True, {
-        "id": created_group.id,
-        "name": created_group.name,
+        "id": str(uuid.UUID(bytes=created_group.gruppe_id)),
+        "name": created_group.gruppenname,
         "beschreibung": created_group.beschreibung,
-        "invite_link": created_group.invite_link
+        "invite_link": created_group.einladungscode
     })
 
 # Einladung erstellen

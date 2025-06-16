@@ -18,8 +18,12 @@ def find_group_by_invite_code(einladungscode):
 
 def create_group(gruppe):
     """Erstelle und speichere eine neue Gruppe."""
-    db.session.add(gruppe)
-    db.session.commit()
+
+    with SessionLocal() as session:
+        session.add(gruppe)
+        session.flush()
+        session.commit()
+        session.refresh(gruppe)
     return gruppe
 
 def create_membership(membership):
@@ -27,7 +31,7 @@ def create_membership(membership):
     with SessionLocal() as session:
         session.add(membership)
         session.commit()
-
+    return membership
 
 def delete_group_by_id(gruppe_id):
     """Lösche eine Gruppe anhand ihrer ID."""

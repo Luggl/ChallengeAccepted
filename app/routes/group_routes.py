@@ -6,10 +6,10 @@ from services.group_service import *
 group_bp = Blueprint('group', __name__)
 
 @group_bp.route('/api/group', methods=['POST'])
-@jwt_required
+@jwt_required()
 def create_group():
     #Sicherstellen wer der User ist
-    current_user_id = get_jwt_identity()
+    current_user_id = str(uuid.UUID(get_jwt_identity())) #JWT_Token von String in UUID Format geswitcht und dann wieder in String
     # Daten in JSON Format auslesen
     data = request.get_json()
 
