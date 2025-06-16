@@ -1,15 +1,22 @@
 package com.example.challengeaccepted
 import android.annotation.SuppressLint
+import android.content.Intent
 //import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.Toast
 //import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 
 class CreateChallengeModeActivity : AppCompatActivity() {
-    private var selectedMode: String?=null
+    //Bottom Navigation
+    private lateinit var navGroup: ImageView
+    private lateinit var navHome: ImageView
+    private lateinit var navProfile: ImageView
+    //Modusauswahl (Standard voreingestellt)
+    private var selectedMode: String="standard"
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,11 +36,6 @@ class CreateChallengeModeActivity : AppCompatActivity() {
         imageSurvival.setBackgroundResource(R.drawable.bright_grey_frame)
 
 
-        //zurück-Button: finish activity
-        backButton.setOnClickListener{
-            finish() //zurück zur letzten Seite
-        }
-
         //Manuelle Auswahl - wenn Nutzer etwas anderes auswählt
         imageStandard.setOnClickListener{
             imageStandard.setBackgroundResource(R.drawable.green_frame)
@@ -47,7 +49,28 @@ class CreateChallengeModeActivity : AppCompatActivity() {
         }
         //auswahl bestätigen
         confirmButton.setOnClickListener{
-
+            val intent=when (selectedMode) {
+                "standard" -> Intent(this, StandardChallengeOverviewActivity::class.java)
+                "survival" -> Intent(this, SurvivalChallengeOverviewActivity::class.java)
+                else -> null
+            }
+            if (intent!=null){
+                startActivity(intent)
+            }else{
+                Toast.makeText(this, "Ungültiger Modus", Toast.LENGTH_SHORT).show()
+            }
+        }
+        navGroup.setOnClickListener{
+            startActivity(Intent(this, GroupOverviewActivity::class.java))
+        }
+        navHome.setOnClickListener{
+            startActivity(Intent(this, DashboardActivity::class.java))
+        }
+        navProfile.setOnClickListener{
+            startActivity(Intent(this, ProfileActivity::class.java))
+        }
+        backButton.setOnClickListener{
+            finish()
         }
     }
 }
