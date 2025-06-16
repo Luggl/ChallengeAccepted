@@ -2,6 +2,7 @@
 
 from app.database.models import Gruppe
 from app import db
+from database.database import SessionLocal
 
 def find_group_by_id(gruppe_id):
     """Finde eine Gruppe anhand der ID."""
@@ -20,6 +21,13 @@ def create_group(gruppe):
     db.session.add(gruppe)
     db.session.commit()
     return gruppe
+
+def create_membership(membership):
+    """Erstelle und speichere eine neue Membership."""
+    with SessionLocal() as session:
+        session.add(membership)
+        session.commit()
+
 
 def delete_group_by_id(gruppe_id):
     """Lösche eine Gruppe anhand ihrer ID."""

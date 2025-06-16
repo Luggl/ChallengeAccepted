@@ -3,21 +3,27 @@ import app.repositories.group_repository
 from datetime import datetime, timedelta
 from app.utils.time import now_berlin
 from utils.response import response
-from app.database.models import Gruppe
+from app.database.models import Gruppe, Membership
 from app.repositories.group_repository import *
 
 
 # Gruppe erstellen
-def create_group_logic(name, beschreibung, gruppenbild):
+def create_group_logic(name, beschreibung, gruppenbild, created_by):
     invite_link = str(uuid.uuid4())  # einfacher Invite-Code
     group = Gruppe(
-        name=name,
+        gruppenname=name,
         beschreibung=beschreibung,
         gruppenbild=gruppenbild,
-        invite_link=invite_link
+        einladungscode=invite_link,
     )
-
     created_group = create_group(group)
+
+    membership = Membership(
+        user_id=created_by,
+        gruppe_id=created_group.id,
+        isAdmin=True
+    )
+    created_membership = create_membership(membership)
 
     return response(True, {
         "id": created_group.id,

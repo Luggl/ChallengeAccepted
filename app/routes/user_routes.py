@@ -34,7 +34,7 @@ def register_user():
 @user_bp.route('/api/login', methods=['POST'])
 def login_user():
     data = request.get_json()
-    login = data.get('login')
+    login = data.get('email')
     password = data.get('password')
 
     if login is None or password is None:

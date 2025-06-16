@@ -6,7 +6,10 @@ from services.group_service import *
 group_bp = Blueprint('group', __name__)
 
 @group_bp.route('/api/group', methods=['POST'])
+@jwt_required
 def create_group():
+    #Sicherstellen wer der User ist
+    current_user_id = get_jwt_identity()
     # Daten in JSON Format auslesen
     data = request.get_json()
 
@@ -18,12 +21,12 @@ def create_group():
         return jsonify({"error": "Gruppenname ist erforderlich!"}), 400
 
     # Service Logik Methode
-    success, result = create_group_logic(name, beschreibung, gruppenbild)
+    result = create_group_logic(name, beschreibung, gruppenbild, created_by = current_user_id)
 
-    if not success:
+    if not result['success']:
         return jsonify({"error": result}), 400
 
-    return jsonify({"message": "Gruppe erstellt", "gruppe": result}), 201
+    return jsonify({"message": "Gruppe erstellt", "gruppe": result["data"]}), 201
 
 @group_bp.route('/api/invitationlink/', methods=['GET'])
 def invitation_link():
