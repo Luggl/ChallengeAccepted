@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token
 from app.services.user_service import *
 
 
@@ -28,24 +28,29 @@ def register_user():
 
     return jsonify({
         "message": "User erfolgreich registriert",
-        "user": result["data"]
+        "user": result["data"],
     }), 201
 
 @user_bp.route('/api/login', methods=['POST'])
 def login_user():
     data = request.get_json()
-    login = data.get('login')
+    email = data.get('email')
     password = data.get('password')
 
-    if login is None or password is None:
+    if email is None or password is None:
         return jsonify({"error": "Login und Password sind erforderlich"}), 400
 
     # Hier Methode einbinden aus Services - login kann Username oder E-Mail sein!
-    success, result = login_user_logic(login, password)
-    if not success:
+    result = login_user_logic(email, password)
+    if not result["success"]:
         return jsonify({"error": result}), 401 # Nicht authorisiert!
 
-    return jsonify({"message": "Login erfolgreich", "user": result}), 200
+    # Token erzeugen
+    access_token = create_access_token(identity=result["data"]["id"])
+
+    return jsonify({"message": "Login erfolgreich",
+                    "user": result["data"],
+                    "access_token": access_token}), 200
 
 @user_bp.route('/api/password-reset', methods=['POST'])
 def forgot_password():
@@ -56,12 +61,12 @@ def forgot_password():
         return jsonify({"error": "Email ist erforderlich"}), 400
 
     # Wieder Einbinden der Logik aus services (Hier wird allerdings nur ein Link an die E-Mail des Users gesendet, falls vorhanden!)
-    success, message = forgot_password_logic(email)
+    message = forgot_password_logic(email)
 
-    if not success:
-        return jsonify({"error": message}), 404
+    if not message["success"]:
+        return jsonify({"error": message["data"]}), 404
 
-    return jsonify({"message": message})
+    return jsonify({"message": message["data"]})
 
 @user_bp.route('/api/reset-password/confirm', methods=['POST'])
 def reset_password():
@@ -85,16 +90,17 @@ def delete_user(id):
     current_user_id = get_jwt_identity()
 
     # Sicherstellen, dass kein anderer User gelöscht wird außer sich selbst.
-    if current_user_id != id:
+    uuid_obj = uuid.UUID(current_user_id)
+    if uuid_obj != id:
         return jsonify({"error": "Du darfst nur deinen eigenen Account löschen!"}), 404
 
     # Logik in Services:
-    success, message = delete_user_logic(id)
+    message = delete_user_logic(id)
 
-    if not success:
+    if not message["success"]:
         return jsonify({"error": message}), 404
 
-    return jsonify({"message": message})
+    return jsonify({"message": message["data"]})
 
 @user_bp.route('/api/user', methods=['GET'])
 @jwt_required()
@@ -135,9 +141,9 @@ def update_password():
     if not old_pw or not new_pw:
         return jsonify({"error": "Altes und neues Passwort sind erforderlich"}), 400
 
-    success, result = update_password_logic(current_user_id, old_pw, new_pw)
+    result = update_password_logic(current_user_id, old_pw, new_pw)
 
-    if not success:
+    if not result["success"]:
         return jsonify({"error": result}), 404
 
     return jsonify({"message": result}), 200

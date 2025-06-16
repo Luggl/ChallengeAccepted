@@ -20,7 +20,7 @@ def find_user_by_username(username):
 def find_user_by_id(user_id):
     """Finde einen User anhand seiner UUID (user_id)."""
     with SessionLocal() as session:
-        return db.session.query(User).filter_by(user_id=user_id).first()
+        return session.query(User).filter_by(user_id=user_id).first()
 
 def save_user(user):
     """Speichere einen neuen User in die Datenbank."""
@@ -28,18 +28,21 @@ def save_user(user):
         session.add(user)
         session.commit()
         session.refresh(user)
-    return userö
+    return user
 
 def delete_user_by_id(user_id):
     """Lösche einen User anhand seiner user_id."""
-    user = find_user_by_id(user_id)
+    user = find_user_by_id(user_id.bytes)
     if user:
-        db.session.delete(user)
-        db.session.commit()
+        with SessionLocal() as session:
+            session.delete(user)
+            session.commit()
         return True
     return False
 
 def update_user(user):
     """Aktualisiere einen existierenden User (alle Felder, die geändert wurden)."""
-    db.session.commit()
+    with SessionLocal() as session:
+        session.merge(user)
+        session.commit()
     return user

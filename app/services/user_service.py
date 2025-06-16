@@ -5,7 +5,9 @@ from app.database.models import User
 from app.repositories.user_repository import (
     find_user_by_email,
     save_user,
-    delete_user_by_id
+    delete_user_by_id,
+    find_user_by_id,
+    update_user
 )
 
 import uuid
@@ -37,7 +39,7 @@ def register_user_logic(username, email, password):
 
     # Erfolgreiche Rückgabe
     return response(True, data={
-        "id": saved_user.user_id.hex(),
+        "id": str(saved_user.user_id),
         "username": saved_user.username,
         "email": saved_user.email
     })
@@ -49,12 +51,12 @@ def login_user_logic(email, password):
         return response(False, error="User nicht gefunden.")
 
     # Passwort prüfen (gegen gehashtes PW aus DB)
-    if not check_password_hash(user.password_hash, password):
+    if not check_password_hash(user.passwordHash, password):
         return response(False, error="Passwort ist falsch.")
 
     # Login erfolgreich → Daten zurückgeben
     return response(True, data={
-        "id": user.id,
+        "id": user.user_id.hex(),
         "username": user.username,
         "email": user.email
     })
@@ -63,6 +65,24 @@ def login_user_logic(email, password):
 def forgot_password_logic(email):
     # TODO: Hier kommt später Logik mit Token, Mailversand etc.
     return response(True, data="Diese Funktion ist noch in Arbeit.")
+
+def update_password_logic(user_id_str, old_password, new_password):
+    try:
+        user_id = uuid.UUID(user_id_str).bytes  # DB nutzt BLOB
+    except ValueError:
+        return response(False, error="Ungültige Benutzer-ID")
+
+    user = find_user_by_id(user_id)
+    if not user:
+        return response(False, error="Benutzer nicht gefunden")
+
+    if not check_password_hash(user.passwordHash, old_password):
+        return response(False, error="Altes Passwort ist nicht korrekt")
+
+    user.passwordHash = generate_password_hash(new_password)
+    update_user(user)
+
+    return response(True, data="Passwort erfolgreich geändert")
 
 # User löschen (wird über ID angesprochen)
 def delete_user_logic(user_id):
