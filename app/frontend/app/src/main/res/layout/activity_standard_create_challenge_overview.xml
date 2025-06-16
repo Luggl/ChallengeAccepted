@@ -29,20 +29,16 @@
             android:paddingStart="8dp" />
     </LinearLayout>
 
-    <!-- 🔙 Zurück-Button oben links -->
+    <!-- Zurück-Button -->
     <ImageButton
         android:id="@+id/btn_back"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_margin="28dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
         android:src="@drawable/back_icon"
-        android:tint="@android:color/white"
-        tools:ignore="UseAppTint"
         android:background="@drawable/grey_background"
-        android:scaleType="center"
-        android:padding="8dp" />
+        android:tint="@android:color/white"
+        tools:ignore="UseAppTint"/>
 
     <!-- Hauptinhalt -->
     <LinearLayout
@@ -51,8 +47,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_below="@id/btn_back"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp">
+        android:layout_margin="16dp">
 
         <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"

@@ -225,7 +225,7 @@
                 android:layout_marginTop="12dp" />
         </LinearLayout>
 
-        <!-- Deaktivieren & Löschen -->
+        <!-- Ausloggen & Deaktivieren & Löschen -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -236,7 +236,7 @@
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Profil deaktivieren"
+                android:text="Ausloggen"
                 android:textColor="@color/white"
                 android:background="@drawable/grey_background"
                 android:layout_marginBottom="8dp" />
@@ -244,8 +244,8 @@
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Profil löschen"
-                android:textColor="#FF0000"
+                android:text="Profil deaktivieren / löschen"
+                android:textColor="@color/white"
                 android:background="@drawable/red_frame"
                 android:textStyle="bold" />
         </LinearLayout>
