@@ -57,31 +57,32 @@ def forgot_password():
     data = request.get_json()
     email = data.get('email')
 
-    if email is None:
+    if not email:
         return jsonify({"error": "Email ist erforderlich"}), 400
 
-    # Wieder Einbinden der Logik aus services (Hier wird allerdings nur ein Link an die E-Mail des Users gesendet, falls vorhanden!)
-    message = forgot_password_logic(email)
+    result = forgot_password_logic(email)
 
-    if not message["success"]:
-        return jsonify({"error": message["data"]}), 404
+    if not result["success"]:
+        return jsonify({"error": result["error"]}), 404
 
-    return jsonify({"message": message["data"]})
+    return jsonify({"message": result["data"]}), 200
 
-@user_bp.route('/api/reset-password/confirm', methods=['POST'])
+
+@user_bp.route('/api/password-reset/confirm', methods=['POST'])
 def reset_password():
-    token = request.json.get('token')
-    password = request.json.get('newPassword')
+    data = request.get_json()
+    token = data.get('token')
+    new_pw = data.get('newPassword')
 
-    if token is None or password is None:
-        return jsonify({"error": "Token und Password erforderlich"}), 400
+    if not token or not new_pw:
+        return jsonify({"error": "Token und neues Passwort sind erforderlich"}), 400
 
-    # Logik in Services - Prüfung ob Password / Token akzeptiert werden
-    success, message = reset_password_logic(token, password)
+    result = reset_password_logic(token, new_pw)
 
-    status = 200 if success else 400
-    return jsonify({"message": message, "status": status})
+    if not result["success"]:
+        return jsonify({"error": result["error"]}), 400
 
+    return jsonify({"message": result["data"]}), 200
 
 @user_bp.route('/api/user/<uuid:id>', methods=['DELETE'])
 @jwt_required() # Sicherstellen, dass User eingeloggt ist
@@ -107,28 +108,29 @@ def delete_user(id):
 def get_user():
     current_user_id = get_jwt_identity()
 
-    # Hier prüfen, wie wir den Kalender einbauen können, sowie die Streak
-    success, result = get_user_logic(current_user_id)
+    result = get_user_logic(current_user_id)
 
-    if not success:
-        return jsonify({"error": result}), 404
+    if not result["success"]:
+        return jsonify({"error": result["error"]}), 404
 
-    return jsonify({"message": result}), 200
+    return jsonify({"user": result["data"]}), 200
 
 @user_bp.route('/api/user/me', methods=['PATCH'])
 @jwt_required()
 def update_user():
     current_user_id = get_jwt_identity()
+    update_data = request.get_json()
 
-    updateData = request.get_json()
+    if not update_data:
+        return jsonify({"error": "Keine Daten übergeben."}), 400
 
-    #Hier muss geprüft werden, welche Daten überhaupt geändert werden und welche nicht! - Siehe Schnittstelle
-    success, result = update_user_logic(current_user_id, updateData)
+    result = update_user_logic(current_user_id, update_data)
 
-    if not success:
-        return jsonify({"error": result}), 404
+    if not result["success"]:
+        return jsonify({"error": result["error"]}), 404
 
-    return jsonify({"message": result}), 200
+    return jsonify({"message": result["data"]}), 200
+
 
 @user_bp.route('/api/user/password', methods=['PATCH'])
 @jwt_required()
