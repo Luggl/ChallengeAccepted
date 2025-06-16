@@ -76,10 +76,11 @@ class Membership(Base):
 
     user=relationship("User", back_populates="membership")
     gruppe=relationship("Gruppe", back_populates="memberships")
+
 class Gruppe(Base):
     __tablename__="gruppe"
     gruppe_id=Column(BLOB, primary_key=True, default=lambda: uuid.uuid4().bytes)
-    gruppenname=Column(String, nullable=False, unique=True)
+    gruppenname=Column(String, nullable=False, unique=False)
     beschreibung=Column(String)
     gruppenbild=Column(String)
     einladungscode=Column(String, nullable=False)

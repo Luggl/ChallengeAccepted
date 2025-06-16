@@ -22,12 +22,15 @@ def create_challenge_standard():
 
     return jsonify({"message": "Challenge erstellt", "challenge": result}), 201
 
-@challenge_bp.route('/api/challengesurvival')
-@jwt_required()
+@challenge_bp.route('/api/challengesurvival', methods=['POST'])
+# @jwt_required()
 def create_challenge_survival():
     data = request.get_json()
-    current_user_id = get_jwt_identity()
+    # current_user_id = get_jwt_identity()
     gid = request.args.get('gid', type=int)
+
+    ## Nur zum Testen!
+    current_user_id = 123
 
     success, result = create_challenge_survival_logic(current_user_id, data, gid)
 
