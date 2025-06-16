@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#1E1E1E"
+    android:background="@color/black"
     tools:context=".DashboardActivity">
 
     <LinearLayout
@@ -83,7 +83,7 @@
         android:layout_below="@id/cv_video"
         android:hint="Beschreibung:\nHallo..."
         android:gravity="top|start"
-        android:background="@drawable/bright_grey_frame"
+        android:background="@drawable/grey_background"
         android:textColor="@color/white"
         android:textColorHint="#cccccc"
         android:padding="12dp"
@@ -111,7 +111,7 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_marginTop="670dp"
-        android:background="#2A2A2A"
+        android:background="@color/grey_300"
         android:orientation="horizontal"
         android:weightSum="4"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -144,7 +144,7 @@
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/home_white_icon"/>
+                android:src="@drawable/home_blue_icon"/>
 
         </LinearLayout>
 
@@ -159,7 +159,7 @@
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/add_blue_icon" />
+                android:src="@drawable/add_white_icon" />
 
         </LinearLayout>
 
@@ -177,4 +177,5 @@
                 android:src="@drawable/profile_white_icon"/>
 
         </LinearLayout>
+
     </LinearLayout>

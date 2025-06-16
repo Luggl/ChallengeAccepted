@@ -4,14 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#1E1E1E"
+    android:background="@color/black"
     tools:context=".DashboardActivity">
 
     <LinearLayout
-        android:layout_width="400dp"
-        android:layout_height="80dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginBottom="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
         android:orientation="vertical"
         android:layout_centerHorizontal="true"
         android:background="@drawable/grey_background"
@@ -40,7 +39,7 @@
             android:paddingVertical="10dp"
             android:layout_marginLeft="40dp"
             android:text="Kämpfernatur"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/white"
             android:textSize="30dp" />
 
     </LinearLayout>
@@ -51,12 +50,13 @@
     <LinearLayout
         android:id="@+id/calendar"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="110dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginLeft="16dp"
         android:orientation="vertical"
         android:gravity="center_vertical"
         android:padding="8dp"
-        android:layout_marginTop="100dp"
-        android:layout_marginBottom="8dp"
         android:background="@drawable/grey_background"
         tools:ignore="DuplicateIds">
 
@@ -68,7 +68,7 @@
             android:padding="12dp"
             android:layout_margin="16dp"
             android:layout_gravity="center_horizontal"
-            android:backgroundTint="#1E1E1E"
+            android:backgroundTint="@color/black"
             android:layout_marginBottom="8dp">
 
             <!-- Erste Zeile: Challenge läuft seit + Icon -->
@@ -83,7 +83,7 @@
                     android:layout_width="150dp"
                     android:layout_height="wrap_content"
                     android:text="Challenge läuft seit "
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/white"
                     android:textSize="16sp"
                     android:textStyle="bold"/>
 
@@ -114,7 +114,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
                     android:text="Dead:"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/white"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
@@ -205,7 +205,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:text="Mara"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/white"
                 android:textSize="14sp" />
 
         </LinearLayout>
@@ -314,20 +314,17 @@
             android:textColor="@color/button_red" />
     </LinearLayout>
 
-    <!-- Bottom Navigation -->
+      <!-- Bottom Navigation -->
     <LinearLayout
         android:id="@+id/ll_bottom_navigation"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_marginTop="670dp"
-        android:background="#2A2A2A"
+        android:layout_alignParentBottom="true"
+        android:background="@color/grey_300"
         android:orientation="horizontal"
-        android:weightSum="4"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        android:weightSum="4">
 
-        <!-- Community Icon -->
+        <!-- Community -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -338,11 +335,10 @@
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/group_blue_icon"/>
-
+                android:src="@drawable/group_blue_icon" />
         </LinearLayout>
 
-        <!-- Home Icon -->
+        <!-- Home -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -353,11 +349,10 @@
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/home_white_icon"/>
-
+                android:src="@drawable/home_white_icon" />
         </LinearLayout>
 
-        <!-- Add Icon -->
+        <!-- Add -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -369,10 +364,9 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:src="@drawable/add_white_icon" />
-
         </LinearLayout>
 
-        <!-- Profile Icon -->
+        <!-- Profile -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -383,8 +377,8 @@
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/profile_white_icon"/>
-
+                android:src="@drawable/profile_white_icon" />
         </LinearLayout>
     </LinearLayout>
+
 </RelativeLayout>

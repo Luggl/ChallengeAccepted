@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#1E1E1E"
+    android:background="@color/black"
     tools:context=".DashboardActivity">
 
     <!-- Greeting Section with Profile Background -->
@@ -25,19 +25,28 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:src="@drawable/group_overview_pic" />
+            android:src="@drawable/group_picture_bg" />
 
-        <TextView
-            android:id="@+id/tv_greeting"
-            android:layout_width="300dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:fontFamily="sans-serif-medium"
+            android:layout_margin="16dp"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:layout_centerHorizontal="true"
             android:background="@drawable/grey_background"
-            android:text="   Meine Gruppen"
-            android:textColor="@color/white"
-            android:textSize="35sp"
-            android:textStyle="bold" />
+            android:padding="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="The Hustlers"
+                android:textColor="@color/white"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                android:paddingStart="8dp" />
+        </LinearLayout>
+
 
     </androidx.cardview.widget.CardView>
 
@@ -48,7 +57,7 @@
         android:layout_marginTop="20dp"
         android:layout_centerHorizontal="true"
         android:text="Aktiv in 4 Gruppen:"
-        android:textColor="#FFFFFF"
+        android:textColor="@color/white"
         android:textSize="18sp"
         android:textStyle="bold" />
 
@@ -59,8 +68,9 @@
         android:orientation="vertical"
         android:layout_below="@id/cv_greeting"
         android:layout_marginTop="70dp"
-        android:padding="16dp"
-        android:background="#000000">
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:padding="16dp">
 
         <!-- Eine Gruppe (kann kopiert werden) -->
         <LinearLayout
@@ -88,7 +98,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Kämpfernatur"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/white"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:gravity="center_vertical"
@@ -166,7 +176,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Däumchen drehen"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/white"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:gravity="center_vertical"
@@ -199,7 +209,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="The Hustlers"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/white"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:gravity="center_vertical"
@@ -277,7 +287,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Better together!"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/white"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:gravity="center_vertical"
@@ -341,7 +351,7 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_marginTop="670dp"
-        android:background="#2A2A2A"
+        android:background="@color/grey_300"
         android:orientation="horizontal"
         android:weightSum="4"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -359,7 +369,7 @@
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/group_blue_icon"/>
+                android:src="@drawable/group_white_icon"/>
 
         </LinearLayout>
 
@@ -374,7 +384,7 @@
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/home_white_icon"/>
+                android:src="@drawable/home_blue_icon"/>
 
         </LinearLayout>
 

@@ -18,7 +18,7 @@
         android:layout_height="match_parent"
         android:background="#99000000" />
 
-    <!-- Logo oben links -->
+    <!-- Logo -->
     <ImageView
         android:id="@+id/logo_top"
         android:layout_width="100dp"
@@ -48,7 +48,7 @@
         android:layout_height="50dp"
         android:layout_below="@id/title_login"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="150dp"
+        android:layout_marginTop="120dp"
         android:hint="Benutzername/Email"
         android:textColorHint="@color/black"
         android:background="@drawable/textfield"

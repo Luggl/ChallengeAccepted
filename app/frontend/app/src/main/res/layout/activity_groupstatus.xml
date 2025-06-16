@@ -4,17 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#1E1E1E"
+    android:background="@color/black"
     tools:context=".DashboardActivity">
 
     <!-- Greeting Section with Profile Background -->
     <androidx.cardview.widget.CardView
         android:id="@+id/cv_greeting"
-        android:layout_width="400dp"
+        android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_margin="16dp"
         app:cardCornerRadius="12dp"
         app:cardElevation="4dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -28,17 +26,26 @@
             android:scaleType="centerCrop"
             android:src="@drawable/group_profile_picture"/>
 
-        <TextView
-            android:id="@+id/tv_greeting"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            android:fontFamily="sans-serif-medium"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:layout_centerHorizontal="true"
             android:background="@drawable/grey_background"
-            android:text="Kämpfernatur"
-            android:textColor="@color/white"
-            android:textSize="30sp"
-            android:textStyle="bold" />
+            android:padding="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="The Hustlers"
+                android:textColor="@color/white"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                android:paddingStart="8dp" />
+        </LinearLayout>
+
 
         <!-- Button -->
         <Button
@@ -64,7 +71,6 @@
         android:layout_centerVertical="true"
         android:layout_below="@id/cv_greeting"
         android:orientation="vertical"
-        android:background="@drawable/grey_background"
         android:padding="16dp"
         android:layout_margin="16dp">
 
@@ -76,7 +82,7 @@
                 android:layout_height="wrap_content"
                 android:hint="Beschreibung:\nHallo..."
                 android:gravity="top|start"
-                android:background="@drawable/bright_grey_frame"
+                android:background="@drawable/grey_background"
                 android:textColor="@color/white"
                 android:textColorHint="#cccccc"
                 android:padding="12dp"
@@ -87,7 +93,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:background="@drawable/bright_grey_frame"
+            android:background="@drawable/grey_background"
             android:padding="12dp">
 
             <!-- Titel -->
@@ -95,7 +101,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Gruppen Members:"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/white"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:layout_marginBottom="12dp" />
@@ -242,8 +248,8 @@
         android:id="@+id/button_finish"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
         android:text="Gruppe verlassen"
         android:textColor="@color/button_red"
         android:background="@drawable/red_frame"
@@ -259,7 +265,7 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_marginTop="670dp"
-        android:background="#2A2A2A"
+        android:background="@color/grey_300"
         android:orientation="horizontal"
         android:weightSum="4"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -277,7 +283,7 @@
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/group_blue_icon"/>
+                android:src="@drawable/group_white_icon"/>
 
         </LinearLayout>
 
@@ -292,7 +298,7 @@
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/home_white_icon"/>
+                android:src="@drawable/home_blue_icon"/>
 
         </LinearLayout>
 
@@ -325,4 +331,5 @@
                 android:src="@drawable/profile_white_icon"/>
 
         </LinearLayout>
+
     </LinearLayout>

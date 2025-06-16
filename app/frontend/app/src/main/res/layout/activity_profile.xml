@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#1E1E1E"
+    android:background="@color/black"
     tools:context=".DashboardActivity">
 
     <!-- Greeting Section with Profile Background -->
@@ -12,9 +12,7 @@
         android:id="@+id/cv_greeting"
         android:layout_width="400dp"
         android:layout_height="80dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_margin="16dp"
         app:cardCornerRadius="12dp"
         app:cardElevation="4dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -45,12 +43,13 @@
     <!-- Persönliche Daten -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="wrap_content"
         android:layout_below="@id/cv_greeting"
         android:layout_marginTop="25dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
         android:orientation="horizontal"
-        android:background="@drawable/grey_background"
+        android:background="@drawable/bright_grey_frame"
         android:gravity="center_vertical"
         android:padding="8dp">
 
@@ -70,7 +69,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Mara"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/white"
             android:textSize="18sp"
             android:textStyle="bold"
             android:gravity="center_vertical"
@@ -109,7 +108,7 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_marginTop="670dp"
-        android:background="#2A2A2A"
+        android:background="@color/grey_300"
         android:orientation="horizontal"
         android:weightSum="4"
         app:layout_constraintBottom_toBottomOf="parent"

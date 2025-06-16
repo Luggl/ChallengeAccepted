@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#1E1E1E"
+    android:background="@color/black"
     tools:context=".DashboardActivity">
 
     <LinearLayout
@@ -30,18 +30,16 @@
             android:paddingStart="8dp" />
     </LinearLayout>
 
-    <!-- 🔙 Zurück-Button oben links -->
+    <!-- Zurück-Button -->
     <ImageButton
         android:id="@+id/btn_back"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_margin="16dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
+        android:layout_margin="28dp"
         android:src="@drawable/back_icon"
         android:background="@drawable/grey_background"
-        android:scaleType="center"
-        android:padding="8dp" />
+        android:tint="@android:color/white"
+        tools:ignore="UseAppTint"/>
 
 
     <!-- Persönliche Daten -->
@@ -79,7 +77,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Mara"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/white"
             android:textSize="18sp"
             android:textStyle="bold"
             android:layout_marginLeft="100dp"
@@ -140,7 +138,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="aLTES pASSWORT"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/white"
                 android:background="@drawable/grey_background"
                 android:layout_marginTop="12dp" />
 
@@ -157,7 +155,7 @@
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:text="NEUES PASSWORT"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/white"
                     android:background="@drawable/grey_background" />
 
             </LinearLayout>
@@ -174,7 +172,7 @@
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:text="Passwort wiederholen"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/white"
                     android:background="@drawable/grey_background" />
 
             </LinearLayout>
@@ -191,11 +189,11 @@
         android:gravity="center_vertical">
 
         <Button
-            android:layout_width="400dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="5"
+            android:layout_margin="16dp"
             android:text="Passwort ändern"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/white"
             android:background="@drawable/green_button" />
 
     </LinearLayout>
@@ -206,7 +204,7 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_marginTop="670dp"
-        android:background="#2A2A2A"
+        android:background="@color/grey_300"
         android:orientation="horizontal"
         android:weightSum="4"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -272,4 +270,5 @@
                 android:src="@drawable/profile_blue_icon"/>
 
         </LinearLayout>
+
     </LinearLayout>

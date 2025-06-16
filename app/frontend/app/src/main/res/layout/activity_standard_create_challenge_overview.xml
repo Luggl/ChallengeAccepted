@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#1E1E1E"
+    android:background="@color/black"
     tools:context=".DashboardActivity">
 
     <LinearLayout
@@ -176,7 +176,7 @@
         android:id="@+id/btn_confirm_selection"
         android:layout_width="80dp"
         android:layout_height="50dp"
-        android:layout_below="@id/main_content"
+        android:layout_above="@id/ll_bottom_navigation"
         android:layout_alignParentEnd="true"
         android:layout_margin="16dp"
         android:background="@drawable/green_button"
@@ -188,14 +188,11 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_alignParentBottom="true"
-        android:background="#2A2A2A"
+        android:background="@color/grey_300"
         android:orientation="horizontal"
-        android:weightSum="4"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        android:weightSum="4">
 
-        <!-- Community Icon -->
+        <!-- Community -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -206,11 +203,10 @@
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/group_white_icon"/>
-
+                android:src="@drawable/group_white_icon" />
         </LinearLayout>
 
-        <!-- Home Icon -->
+        <!-- Home -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -221,11 +217,10 @@
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/home_white_icon"/>
-
+                android:src="@drawable/home_white_icon" />
         </LinearLayout>
 
-        <!-- Add Icon -->
+        <!-- Add -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -237,10 +232,9 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:src="@drawable/add_blue_icon" />
-
         </LinearLayout>
 
-        <!-- Profile Icon -->
+        <!-- Profile -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -251,7 +245,8 @@
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/profile_white_icon"/>
-
+                android:src="@drawable/profile_white_icon" />
         </LinearLayout>
     </LinearLayout>
+
+</RelativeLayout>

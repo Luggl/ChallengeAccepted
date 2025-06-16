@@ -18,7 +18,7 @@
         android:layout_height="match_parent"
         android:background="#99000000"/>
 
-    <!-- App Logo -->
+    <!-- Logo -->
     <ImageView
         android:id="@+id/imgLogo"
         android:layout_width="200dp"
