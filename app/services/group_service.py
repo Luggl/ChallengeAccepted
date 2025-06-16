@@ -40,14 +40,14 @@ def invitation_link_logic(group_id):
     if not group:
         return response(False, "Gruppe nicht gefunden.")
 
-    group.invite_link = str(uuid.uuid4())
+    group.einladungscode = str(uuid.uuid4())
     group.invite_expires_at = now_berlin() + timedelta(minutes=30)  # Link ist 30 min gültig
 
     updated = update_group(group)
     if not updated:
         return response(False, "Link konnte nicht aktualisiert werden.")
 
-    return response(True, group.invite_link)
+    return response(True, group.einladungscode)
 
 # Gruppe beitreten per Link
 def join_group_via_link_logic(user_id, invitation_link):
@@ -56,10 +56,11 @@ def join_group_via_link_logic(user_id, invitation_link):
         return response(False, "Ungültiger Einladungslink.")
 
     # Ist Ablaufdatum kleiner als aktuelles
-    if group.invite_expires_at < now_berlin():
-        return response(False, "Einladungslink ist abgelaufen.")
+    # if group.invite_expires_at < now_berlin():
+    #     return response(False, "Einladungslink ist abgelaufen.")
 
-    result = add_user_to_group(user_id, group.id)
+    membership = Membership(user_id, group.gruppe_id)
+    result = create_membership(membership)
     if not result:
         return response(False, "User konnte nicht zur Gruppe hinzugefügt werden.")
 

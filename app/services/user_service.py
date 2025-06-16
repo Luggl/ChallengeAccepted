@@ -39,7 +39,7 @@ def register_user_logic(username, email, password):
 
     # Erfolgreiche Rückgabe
     return response(True, data={
-        "id": str(saved_user.user_id),
+        "id": str(uuid.UUID(bytes=saved_user.user_id)),
         "username": saved_user.username,
         "email": saved_user.email
     })

@@ -3,10 +3,20 @@
 from app.database.models import Gruppe
 from app import db
 from database.database import SessionLocal
+import uuid
 
 def find_group_by_id(gruppe_id):
     """Finde eine Gruppe anhand der ID."""
-    return db.session.query(Gruppe).filter_by(gruppe_id=gruppe_id).first()
+
+    try:
+        gruppe_uuid_bytes = uuid.UUID(gruppe_id).bytes      # Die übergebene Gruppe_id ist ein String - Muss in UUID geparsed werden
+    except ValueError:
+        return None  # ungültiges UUID-Format
+
+
+    with SessionLocal() as session:
+       gruppe = session.query(Gruppe).filter_by(gruppe_id=gruppe_uuid_bytes).first()
+    return gruppe
 
 def find_group_by_name(gruppenname):
     """Finde eine Gruppe anhand des Gruppennamens."""
@@ -14,7 +24,8 @@ def find_group_by_name(gruppenname):
 
 def find_group_by_invite_code(einladungscode):
     """Finde eine Gruppe anhand des Einladungscodes."""
-    return db.session.query(Gruppe).filter_by(einladungscode=einladungscode).first()
+    with SessionLocal() as session:
+        return session.query(Gruppe).filter_by(einladungscode=einladungscode).first()
 
 def create_group(gruppe):
     """Erstelle und speichere eine neue Gruppe."""
@@ -44,7 +55,9 @@ def delete_group_by_id(gruppe_id):
 
 def update_group(gruppe):
     """Aktualisiere eine bestehende Gruppe."""
-    db.session.commit()
+    with SessionLocal() as session:
+        session.merge(gruppe)
+        session.commit()
     return gruppe
 
 def get_all_groups():
