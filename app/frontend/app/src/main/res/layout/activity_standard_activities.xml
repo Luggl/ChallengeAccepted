@@ -10,23 +10,23 @@
     <LinearLayout
         android:layout_width="300dp"
         android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
-        android:orientation="vertical"
-        android:gravity="center_horizontal"
-        android:layout_centerHorizontal="true"
         android:background="@drawable/grey_background"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
         android:padding="8dp">
 
         <!-- Gruppenname -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingStart="8dp"
             android:text="Kämpfernatur\nStandard Challenge"
             android:textColor="@color/white"
             android:textSize="25sp"
-            android:textStyle="bold"
-            android:paddingStart="8dp" />
+            android:textStyle="bold" />
     </LinearLayout>
 
     <!-- Zurück-Button -->
@@ -35,22 +35,22 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_margin="28dp"
-        android:src="@drawable/back_icon"
         android:background="@drawable/grey_background"
+        android:src="@drawable/back_icon"
         android:tint="@android:color/white"
-        tools:ignore="UseAppTint"/>
+        tools:ignore="UseAppTint" />
 
 
     <TextView
         android:id="@+id/tv_sport_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="130dp"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="130dp"
         android:text="Sportaktivitäten"
+        android:textColor="@color/white"
         android:textSize="30sp"
-        android:textStyle="bold"
-        android:textColor="@color/white" />
+        android:textStyle="bold" />
 
 
     <!-- Container für Grid -->
@@ -60,184 +60,184 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_sport_title"
         android:layout_margin="16dp"
+        android:background="@drawable/grey_background"
         android:columnCount="2"
-        android:rowCount="3"
-        android:background="@drawable/grey_background">
+        android:rowCount="3">
 
 
-    <!-- Push-Ups -->
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="120dp"
-                android:layout_margin="8dp"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:layout_columnWeight="1"
-                android:layout_rowWeight="1"
-                android:background="@drawable/green_frame">
+        <!-- Push-Ups -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="120dp"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:layout_margin="8dp"
+            android:background="@drawable/green_frame"
+            android:gravity="center"
+            android:orientation="vertical">
 
-                <ImageView
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:src="@drawable/pushups_icon"
-                    android:tint="@android:color/white"
-                    tools:ignore="UseAppTint" />
+            <ImageView
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/pushups_icon"
+                android:tint="@android:color/white"
+                tools:ignore="UseAppTint" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Push-Ups"
-                    android:textColor="@android:color/white"
-                    android:textStyle="bold"
-                    android:textSize="16sp"/>
-            </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Push-Ups"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </LinearLayout>
 
-            <!-- Sit-Ups -->
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="120dp"
-                android:layout_margin="8dp"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:layout_columnWeight="1"
-                android:layout_rowWeight="1"
-                android:background="@drawable/grey_background">
+        <!-- Sit-Ups -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="120dp"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:layout_margin="8dp"
+            android:background="@drawable/grey_background"
+            android:gravity="center"
+            android:orientation="vertical">
 
-                <ImageView
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:src="@drawable/situps_icon"
-                    android:tint="@android:color/white"
-                    tools:ignore="UseAppTint"/>
+            <ImageView
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/situps_icon"
+                android:tint="@android:color/white"
+                tools:ignore="UseAppTint" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Sit-Ups"
-                    android:textColor="@android:color/white"
-                    android:textStyle="bold"
-                    android:textSize="16sp"/>
-            </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sit-Ups"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </LinearLayout>
 
-            <!-- Burpees -->
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="120dp"
-                android:layout_margin="8dp"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:layout_columnWeight="1"
-                android:layout_rowWeight="1"
-                android:background="@drawable/grey_background">
+        <!-- Burpees -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="120dp"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:layout_margin="8dp"
+            android:background="@drawable/grey_background"
+            android:gravity="center"
+            android:orientation="vertical">
 
-                <ImageView
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:src="@drawable/burpees_icon"
-                    android:tint="@android:color/white"
-                    tools:ignore="UseAppTint" />
+            <ImageView
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/burpees_icon"
+                android:tint="@android:color/white"
+                tools:ignore="UseAppTint" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Burpees"
-                    android:textColor="@android:color/white"
-                    android:textStyle="bold"
-                    android:textSize="16sp"/>
-            </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Burpees"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </LinearLayout>
 
-            <!-- Planks -->
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="120dp"
-                android:layout_margin="8dp"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:layout_columnWeight="1"
-                android:layout_rowWeight="1"
-                android:background="@drawable/green_frame">
+        <!-- Planks -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="120dp"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:layout_margin="8dp"
+            android:background="@drawable/green_frame"
+            android:gravity="center"
+            android:orientation="vertical">
 
-                <ImageView
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:src="@drawable/plank_icon"
-                    android:tint="@android:color/white"
-                    tools:ignore="UseAppTint"/>
+            <ImageView
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/plank_icon"
+                android:tint="@android:color/white"
+                tools:ignore="UseAppTint" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Planks"
-                    android:textColor="@android:color/white"
-                    android:textStyle="bold"
-                    android:textSize="16sp"/>
-            </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Planks"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </LinearLayout>
 
-            <!-- Squats -->
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="120dp"
-                android:layout_margin="8dp"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:layout_columnWeight="1"
-                android:layout_rowWeight="1"
-                android:background="@drawable/grey_background">
+        <!-- Squats -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="120dp"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:layout_margin="8dp"
+            android:background="@drawable/grey_background"
+            android:gravity="center"
+            android:orientation="vertical">
 
-                <ImageView
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:src="@drawable/squat_icon"
-                    android:tint="@android:color/white"
-                    tools:ignore="UseAppTint"/>
+            <ImageView
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/squat_icon"
+                android:tint="@android:color/white"
+                tools:ignore="UseAppTint" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Squats"
-                    android:textColor="@android:color/white"
-                    android:textStyle="bold"
-                    android:textSize="16sp"/>
-            </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Squats"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </LinearLayout>
 
-            <!-- Lunges -->
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="120dp"
-                android:layout_margin="8dp"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:layout_columnWeight="1"
-                android:layout_rowWeight="1"
-                android:background="@drawable/grey_background">
+        <!-- Lunges -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="120dp"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:layout_margin="8dp"
+            android:background="@drawable/grey_background"
+            android:gravity="center"
+            android:orientation="vertical">
 
-                <ImageView
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:src="@drawable/lunges_icon"
-                    android:tint="@android:color/white"
-                    tools:ignore="UseAppTint"/>
+            <ImageView
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/lunges_icon"
+                android:tint="@android:color/white"
+                tools:ignore="UseAppTint" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Lunges"
-                    android:textColor="@android:color/white"
-                    android:textStyle="bold"
-                    android:textSize="16sp"/>
-            </LinearLayout>
-        </GridLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Lunges"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </GridLayout>
 
-        <!-- Check Button -->
-        <ImageButton
-            android:id="@+id/btn_confirm_selection"
-            android:layout_width="80dp"
-            android:layout_height="50dp"
-            android:layout_below="@id/grid_exercises"
-            android:layout_alignParentEnd="true"
-            android:layout_margin="16dp"
-            android:background="@drawable/green_button"
-            android:src="@drawable/check_icon"/>
+    <!-- Check Button -->
+    <ImageButton
+        android:id="@+id/btn_confirm_selection"
+        android:layout_width="80dp"
+        android:layout_height="50dp"
+        android:layout_below="@id/grid_exercises"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="16dp"
+        android:background="@drawable/green_button"
+        android:src="@drawable/check_icon" />
 
     <!-- Bottom Navigation -->
     <LinearLayout
@@ -263,7 +263,7 @@
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/group_white_icon"/>
+                android:src="@drawable/group_white_icon" />
 
         </LinearLayout>
 
@@ -278,7 +278,7 @@
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/home_blue_icon"/>
+                android:src="@drawable/home_blue_icon" />
 
         </LinearLayout>
 
@@ -308,8 +308,9 @@
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/profile_white_icon"/>
+                android:src="@drawable/profile_white_icon" />
 
         </LinearLayout>
 
     </LinearLayout>
+</RelativeLayout>

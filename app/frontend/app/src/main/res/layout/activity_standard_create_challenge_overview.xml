@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,23 +9,23 @@
     <LinearLayout
         android:layout_width="300dp"
         android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
-        android:orientation="vertical"
-        android:gravity="center_horizontal"
-        android:layout_centerHorizontal="true"
         android:background="@drawable/grey_background"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
         android:padding="8dp">
 
         <!-- Gruppenname -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingStart="8dp"
             android:text="Kämpfernatur\nStandard Challenge"
             android:textColor="@color/white"
             android:textSize="25sp"
-            android:textStyle="bold"
-            android:paddingStart="8dp" />
+            android:textStyle="bold" />
     </LinearLayout>
 
     <!-- Zurück-Button -->
@@ -35,61 +34,61 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_margin="28dp"
-        android:src="@drawable/back_icon"
         android:background="@drawable/grey_background"
+        android:src="@drawable/back_icon"
         android:tint="@android:color/white"
-        tools:ignore="UseAppTint"/>
+        tools:ignore="UseAppTint" />
 
     <!-- Hauptinhalt -->
     <LinearLayout
         android:id="@+id/main_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_below="@id/btn_back"
-        android:layout_margin="16dp">
+        android:layout_margin="16dp"
+        android:orientation="vertical">
 
         <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="16dp"
-            android:background="@color/black">
+            android:background="@color/black"
+            android:padding="16dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center_horizontal">
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
 
                 <!-- Titel -->
                 <TextView
                     android:id="@+id/titleKalender"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
                     android:text="Trainingszeitraum wählen:"
                     android:textColor="@color/white"
-                    android:textSize="16sp"
-                    android:layout_marginBottom="8dp"/>
+                    android:textSize="16sp" />
 
                 <!-- Kalender -->
                 <GridLayout
                     android:id="@+id/kalenderGrid"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:background="@drawable/green_frame"
                     android:columnCount="7"
-                    android:rowCount="5"
                     android:padding="8dp"
-                    android:background="@drawable/green_frame">
+                    android:rowCount="5">
 
                     <!-- Beispiel für ein markiertes Datum -->
                     <TextView
                         android:layout_width="40dp"
                         android:layout_height="40dp"
-                        android:text="8"
-                        android:gravity="center"
-                        android:textColor="@color/white"
+                        android:layout_margin="4dp"
                         android:background="@drawable/round_background"
-                        android:layout_margin="4dp" />
+                        android:gravity="center"
+                        android:text="8"
+                        android:textColor="@color/white" />
 
                     <!-- Weitere Tage kannst du dynamisch hinzufügen -->
                 </GridLayout>
@@ -103,63 +102,125 @@
                 <TableLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:stretchColumns="0,1,2"
                     android:background="@color/grey_100"
-                    android:padding="8dp">
+                    android:padding="8dp"
+                    android:stretchColumns="0,1,2">
 
                     <!-- Kopfzeile -->
                     <TableRow>
-                        <TextView android:text="Aktivitäten"
-                            android:textStyle="bold"
-                            android:textColor="@color/white"/>
-                        <TextView android:text="Start"
-                            android:textStyle="bold"
-                            android:textColor="@color/white"/>
-                        <TextView android:text="Ende"
-                            android:textStyle="bold"
-                            android:textColor="@color/white"/>
+
+                        <TextView
+                            android:text="Aktivitäten"
+                            android:textColor="@color/white"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:text="Start"
+                            android:textColor="@color/white"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:text="Ende"
+                            android:textColor="@color/white"
+                            android:textStyle="bold" />
                     </TableRow>
-                    <TextView android:text=""/>
+
+                    <TextView android:text="" />
+
                     <TableRow>
 
                     </TableRow>
                     <!-- Push-Ups -->
                     <TableRow>
-                        <TextView android:text="Push-Ups" android:textColor="@color/primary"/>
-                        <TextView android:text="10 St." android:textColor="@color/primary"/>
-                        <TextView android:text="30 St." android:textColor="@color/primary"/>
+
+                        <TextView
+                            android:text="Push-Ups"
+                            android:textColor="@color/primary" />
+
+                        <TextView
+                            android:text="10 St."
+                            android:textColor="@color/primary" />
+
+                        <TextView
+                            android:text="30 St."
+                            android:textColor="@color/primary" />
                     </TableRow>
 
                     <!-- Planks -->
                     <TableRow>
-                        <TextView android:text="Planks" android:textColor="@color/primary"/>
-                        <TextView android:text="20 Sek." android:textColor="@color/primary"/>
-                        <TextView android:text="40 Sek." android:textColor="@color/primary"/>
+
+                        <TextView
+                            android:text="Planks"
+                            android:textColor="@color/primary" />
+
+                        <TextView
+                            android:text="20 Sek."
+                            android:textColor="@color/primary" />
+
+                        <TextView
+                            android:text="40 Sek."
+                            android:textColor="@color/primary" />
                     </TableRow>
 
                     <!-- Weitere Aktivitäten -->
                     <TableRow>
-                        <TextView android:text="Sit-Ups" android:textColor="@color/white"/>
-                        <TextView android:text="0" android:textColor="@color/white"/>
-                        <TextView android:text="0" android:textColor="@color/white"/>
+
+                        <TextView
+                            android:text="Sit-Ups"
+                            android:textColor="@color/white" />
+
+                        <TextView
+                            android:text="0"
+                            android:textColor="@color/white" />
+
+                        <TextView
+                            android:text="0"
+                            android:textColor="@color/white" />
                     </TableRow>
 
                     <TableRow>
-                        <TextView android:text="Burpees" android:textColor="@color/white"/>
-                        <TextView android:text="0" android:textColor="@color/white"/>
-                        <TextView android:text="0" android:textColor="@color/white"/>
+
+                        <TextView
+                            android:text="Burpees"
+                            android:textColor="@color/white" />
+
+                        <TextView
+                            android:text="0"
+                            android:textColor="@color/white" />
+
+                        <TextView
+                            android:text="0"
+                            android:textColor="@color/white" />
                     </TableRow>
 
                     <TableRow>
-                        <TextView android:text="Squats" android:textColor="@color/white"/>
-                        <TextView android:text="0" android:textColor="@color/white"/>
-                        <TextView android:text="0" android:textColor="@color/white"/>
+
+                        <TextView
+                            android:text="Squats"
+                            android:textColor="@color/white" />
+
+                        <TextView
+                            android:text="0"
+                            android:textColor="@color/white" />
+
+                        <TextView
+                            android:text="0"
+                            android:textColor="@color/white" />
                     </TableRow>
 
                     <TableRow>
-                        <TextView android:text="Lunges" android:textColor="@color/white"/>
-                        <TextView android:text="0" android:textColor="@color/white"/>
-                        <TextView android:text="0" android:textColor="@color/white"/>
+
+                        <TextView
+                            android:text="Lunges"
+                            android:textColor="@color/white" />
+
+                        <TextView
+                            android:text="0"
+                            android:textColor="@color/white" />
+
+                        <TextView
+                            android:text="0"
+                            android:textColor="@color/white" />
                     </TableRow>
                 </TableLayout>
             </LinearLayout>

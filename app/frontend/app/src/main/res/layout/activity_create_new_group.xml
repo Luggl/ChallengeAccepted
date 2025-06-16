@@ -27,21 +27,21 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:orientation="vertical"
-            android:gravity="center_horizontal"
             android:layout_centerHorizontal="true"
+            android:layout_margin="16dp"
             android:background="@drawable/grey_background"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
             android:padding="8dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingStart="8dp"
                 android:text="Neue Gruppe erstellen"
                 android:textColor="@color/white"
                 android:textSize="25sp"
-                android:textStyle="bold"
-                android:paddingStart="8dp" />
+                android:textStyle="bold" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
@@ -51,31 +51,31 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/cv_greeting"
-        android:orientation="vertical"
-        android:padding="16dp"
         android:layout_marginLeft="16dp"
+        android:layout_marginTop="50dp"
         android:layout_marginRight="16dp"
-        android:layout_marginTop="50dp">
+        android:orientation="vertical"
+        android:padding="16dp">
 
         <!-- Gruppenbild + Name -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
+            android:layout_marginBottom="16dp"
             android:background="@drawable/grey_background"
-            android:padding="8dp"
-            android:layout_marginBottom="16dp">
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="8dp">
 
             <ImageView
                 android:id="@+id/iv_group_image"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:src="@drawable/camera_icon"
+                android:layout_marginEnd="8dp"
                 android:background="@drawable/round_background"
                 android:padding="10dp"
-                android:layout_marginEnd="8dp"
-                android:scaleType="centerInside" />
+                android:scaleType="centerInside"
+                android:src="@drawable/camera_icon" />
 
             <TextView
                 android:id="@+id/tv_group_name"
@@ -92,26 +92,26 @@
             android:id="@+id/et_group_description"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:hint="Beschreibung:\nHallo..."
-            android:gravity="top|start"
-            android:background="@drawable/grey_background"
-            android:textColor="@color/white"
-            android:textColorHint="@color/white"
-            android:padding="12dp"
             android:layout_marginBottom="16dp"
-            android:inputType="textMultiLine" />
+            android:background="@drawable/grey_background"
+            android:gravity="top|start"
+            android:hint="Beschreibung:\nHallo..."
+            android:inputType="textMultiLine"
+            android:padding="12dp"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white" />
 
         <!-- Freunde einladen Button -->
         <Button
             android:id="@+id/btn_invite_friends"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/green_frame"
+            android:padding="12dp"
             android:text="Lade Freunde ein!"
             android:textColor="@color/white"
-            android:background="@drawable/green_frame"
-            android:textStyle="bold"
             android:textSize="16sp"
-            android:padding="12dp" />
+            android:textStyle="bold" />
     </LinearLayout>
 
     <!-- Gruppe erstellen Button -->
@@ -121,14 +121,14 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/green_box"
         android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
         android:layout_marginTop="30dp"
+        android:layout_marginRight="16dp"
+        android:background="@drawable/green_button"
+        android:padding="12dp"
         android:text="Gruppe erstellen"
         android:textColor="@color/white"
-        android:background="@drawable/green_button"
-        android:textStyle="bold"
         android:textSize="16sp"
-        android:padding="12dp" />
+        android:textStyle="bold" />
 
     <!-- Bottom Navigation -->
     <LinearLayout
@@ -154,7 +154,7 @@
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/group_white_icon"/>
+                android:src="@drawable/group_white_icon" />
 
         </LinearLayout>
 
@@ -169,7 +169,7 @@
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/home_blue_icon"/>
+                android:src="@drawable/home_blue_icon" />
 
         </LinearLayout>
 
@@ -199,7 +199,7 @@
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/profile_white_icon"/>
+                android:src="@drawable/profile_white_icon" />
 
         </LinearLayout>
 

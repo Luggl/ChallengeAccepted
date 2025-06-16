@@ -10,23 +10,23 @@
     <LinearLayout
         android:layout_width="300dp"
         android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
-        android:orientation="vertical"
-        android:gravity="center_horizontal"
-        android:layout_centerHorizontal="true"
         android:background="@drawable/grey_background"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
         android:padding="8dp">
 
         <!-- Gruppenname -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingStart="8dp"
             android:text="Kämpfernatur\nBeitrag bearbeiten"
             android:textColor="@color/white"
             android:textSize="25sp"
-            android:textStyle="bold"
-            android:paddingStart="8dp" />
+            android:textStyle="bold" />
     </LinearLayout>
 
     <!-- Abbruch Button -->
@@ -35,11 +35,11 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_margin="40dp"
-        android:src="@drawable/x_icon"
-        tools:ignore="UseAppTint"
         android:background="@drawable/grey_background"
+        android:padding="8dp"
         android:scaleType="center"
-        android:padding="8dp" />
+        android:src="@drawable/x_icon"
+        tools:ignore="UseAppTint" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cv_video"
@@ -49,23 +49,23 @@
         android:layout_centerHorizontal="true"
         app:cardCornerRadius="12dp"
         app:cardElevation="4dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
         <ImageView
             android:id="@+id/video_placeholder"
             android:layout_width="wrap_content"
             android:layout_height="400dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/survival_mode_pic"/>
+            android:src="@drawable/survival_mode_pic" />
 
         <TextView
             android:id="@+id/activity"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="50dp"
-            android:layout_centerHorizontal="true"
             android:layout_below="@id/ll_user_profiles"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="50dp"
             android:layout_marginTop="10dp"
             android:background="@drawable/grey_background"
             android:text="    Sit-Ups - 10 Stück"
@@ -81,14 +81,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/cv_video"
-        android:hint="Beschreibung:\nHallo..."
-        android:gravity="top|start"
-        android:background="@drawable/grey_background"
-        android:textColor="@color/white"
-        android:textColorHint="#cccccc"
-        android:padding="12dp"
         android:layout_margin="16dp"
-        android:inputType="textMultiLine" />
+        android:background="@drawable/grey_background"
+        android:gravity="top|start"
+        android:hint="Beschreibung:\nHallo..."
+        android:inputType="textMultiLine"
+        android:padding="12dp"
+        android:textColor="@color/white"
+        android:textColorHint="#cccccc" />
 
 
     <!-- Check Button -->
@@ -128,7 +128,7 @@
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/group_white_icon"/>
+                android:src="@drawable/group_white_icon" />
 
         </LinearLayout>
 
@@ -143,7 +143,7 @@
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/home_blue_icon"/>
+                android:src="@drawable/home_blue_icon" />
 
         </LinearLayout>
 
@@ -173,8 +173,10 @@
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/profile_white_icon"/>
+                android:src="@drawable/profile_white_icon" />
 
         </LinearLayout>
 
     </LinearLayout>
+
+</RelativeLayout>

@@ -23,10 +23,10 @@
         android:id="@+id/logo_top"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_marginTop="40dp"
         android:layout_marginStart="10dp"
-        android:src="@drawable/logo"
-        android:contentDescription="App Logo" />
+        android:layout_marginTop="40dp"
+        android:contentDescription="App Logo"
+        android:src="@drawable/logo" />
 
     <!-- Titel -->
     <TextView
@@ -34,12 +34,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/logo_top"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
         android:text="Registrieren"
         android:textColor="@color/accent_bright"
         android:textSize="40sp"
-        android:textStyle="bold"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp" />
+        android:textStyle="bold" />
 
     <!-- Benutzername -->
     <EditText
@@ -49,12 +49,12 @@
         android:layout_below="@id/title_registrieren"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="60dp"
-        android:hint="Benutzername"
-        android:textColorHint="@color/black"
         android:background="@drawable/textfield"
+        android:hint="Benutzername"
+        android:inputType="textEmailAddress"
         android:paddingHorizontal="16dp"
         android:textColor="@color/black"
-        android:inputType="textEmailAddress" />
+        android:textColorHint="@color/black" />
 
     <!-- Email -->
     <EditText
@@ -64,12 +64,12 @@
         android:layout_below="@id/edit_username"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
-        android:hint="Email"
-        android:textColorHint="@color/black"
         android:background="@drawable/textfield"
+        android:hint="Email"
+        android:inputType="textEmailAddress"
         android:paddingHorizontal="16dp"
         android:textColor="@color/black"
-        android:inputType="textEmailAddress" />
+        android:textColorHint="@color/black" />
 
     <!-- Passwort -->
     <EditText
@@ -79,12 +79,12 @@
         android:layout_below="@id/edit_email"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
-        android:hint="Passwort"
-        android:textColorHint="@color/black"
         android:background="@drawable/textfield"
+        android:hint="Passwort"
+        android:inputType="textPassword"
         android:paddingHorizontal="16dp"
         android:textColor="@color/black"
-        android:inputType="textPassword" />
+        android:textColorHint="@color/black" />
 
     <!-- Passwort wiederholen -->
     <EditText
@@ -94,12 +94,12 @@
         android:layout_below="@id/edit_password1"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
-        android:hint="Passwort wiederholen"
-        android:textColorHint="@color/black"
         android:background="@drawable/textfield"
+        android:hint="Passwort wiederholen"
+        android:inputType="textPassword"
         android:paddingHorizontal="16dp"
         android:textColor="@color/black"
-        android:inputType="textPassword" />
+        android:textColorHint="@color/black" />
 
     <!-- Schon Registriert -->
     <TextView
@@ -110,8 +110,8 @@
         android:layout_alignStart="@id/edit_password2"
         android:layout_marginTop="8dp"
         android:text="Schon Registriert?"
-        android:textSize="12sp"
-        android:textColor="@color/white" />
+        android:textColor="@color/white"
+        android:textSize="12sp" />
 
     <!-- Los geht's Button -->
     <Button
@@ -120,10 +120,10 @@
         android:layout_height="60dp"
         android:layout_centerHorizontal="true"
         android:layout_margin="650dp"
+        android:background="@drawable/green_button"
         android:text="Los gehts!"
         android:textColor="@color/white"
         android:textSize="26sp"
-        android:textStyle="bold"
-        android:background="@drawable/green_button" />
+        android:textStyle="bold" />
 
 </RelativeLayout>

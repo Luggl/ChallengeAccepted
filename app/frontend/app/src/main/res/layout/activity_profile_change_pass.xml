@@ -10,24 +10,24 @@
     <LinearLayout
         android:layout_width="300dp"
         android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
-        android:orientation="vertical"
-        android:gravity="center_horizontal"
-        android:layout_centerHorizontal="true"
         android:background="@drawable/grey_background"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
         android:padding="8dp">
 
         <!-- Passwort ändern Überschrift-->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingStart="8dp"
+            android:scaleType="centerCrop"
             android:text="Passwort ändern"
             android:textColor="@color/white"
             android:textSize="25sp"
-            android:textStyle="bold"
-            android:scaleType="centerCrop"
-            android:paddingStart="8dp" />
+            android:textStyle="bold" />
     </LinearLayout>
 
     <!-- Zurück-Button -->
@@ -36,10 +36,10 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_margin="28dp"
-        android:src="@drawable/back_icon"
         android:background="@drawable/grey_background"
+        android:src="@drawable/back_icon"
         android:tint="@android:color/white"
-        tools:ignore="UseAppTint"/>
+        tools:ignore="UseAppTint" />
 
 
     <!-- Persönliche Daten -->
@@ -47,12 +47,12 @@
         android:layout_width="400dp"
         android:layout_height="100dp"
         android:layout_below="@id/btn_back"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="15dp"
         android:layout_marginBottom="16dp"
-        android:orientation="horizontal"
-        android:layout_centerHorizontal="true"
         android:background="@drawable/grey_background"
         android:gravity="center_vertical"
+        android:orientation="horizontal"
         android:padding="8dp">
 
         <LinearLayout
@@ -65,10 +65,10 @@
             <ImageView
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:src="@drawable/profile_picture"
-                android:scaleType="centerCrop"
                 android:background="@drawable/round_background"
-                android:clipToOutline="true" />
+                android:clipToOutline="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/profile_picture" />
 
         </LinearLayout>
 
@@ -76,21 +76,21 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="100dp"
+            android:gravity="center_vertical"
+            android:paddingStart="8dp"
             android:text="Mara"
             android:textColor="@color/white"
             android:textSize="18sp"
-            android:textStyle="bold"
-            android:layout_marginLeft="100dp"
-            android:gravity="center_vertical"
-            android:paddingStart="8dp" />
+            android:textStyle="bold" />
 
         <!-- Indikatoren -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
+            android:layout_marginLeft="100dp"
             android:gravity="center"
-            android:layout_marginLeft="100dp"/>
+            android:orientation="vertical" />
     </LinearLayout>
 
     <LinearLayout
@@ -105,24 +105,24 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
+            android:layout_marginBottom="12dp"
             android:background="@drawable/green_frame"
-            android:padding="12dp"
-            android:layout_marginBottom="12dp">
+            android:orientation="vertical"
+            android:padding="12dp">
 
             <!-- Titel -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
+                    android:layout_marginEnd="8dp"
                     android:src="@drawable/profile_blue_icon"
-                    android:tint="#00d5cf"
-                    android:layout_marginEnd="8dp" />
+                    android:tint="#00d5cf" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -137,26 +137,26 @@
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="aLTES pASSWORT"
-                android:textColor="@color/white"
+                android:layout_marginTop="12dp"
                 android:background="@drawable/grey_background"
-                android:layout_marginTop="12dp" />
+                android:text="aLTES pASSWORT"
+                android:textColor="@color/white" />
 
             <!-- Passwort ändern mit Icon -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
                 <Button
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/grey_background"
                     android:text="NEUES PASSWORT"
-                    android:textColor="@color/white"
-                    android:background="@drawable/grey_background" />
+                    android:textColor="@color/white" />
 
             </LinearLayout>
 
@@ -164,16 +164,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
                 <Button
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/grey_background"
                     android:text="Passwort wiederholen"
-                    android:textColor="@color/white"
-                    android:background="@drawable/grey_background" />
+                    android:textColor="@color/white" />
 
             </LinearLayout>
         </LinearLayout>
@@ -183,18 +183,18 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="600dp"
         android:layout_centerHorizontal="true"
-        android:orientation="horizontal"
-        android:gravity="center_vertical">
+        android:layout_marginTop="600dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
+            android:background="@drawable/green_button"
             android:text="Passwort ändern"
-            android:textColor="@color/white"
-            android:background="@drawable/green_button" />
+            android:textColor="@color/white" />
 
     </LinearLayout>
 
@@ -222,7 +222,7 @@
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/group_white_icon"/>
+                android:src="@drawable/group_white_icon" />
 
         </LinearLayout>
 
@@ -237,7 +237,7 @@
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/home_white_icon"/>
+                android:src="@drawable/home_white_icon" />
 
         </LinearLayout>
 
@@ -267,8 +267,9 @@
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/profile_blue_icon"/>
+                android:src="@drawable/profile_blue_icon" />
 
         </LinearLayout>
 
     </LinearLayout>
+</RelativeLayout>

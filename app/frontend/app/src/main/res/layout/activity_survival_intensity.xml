@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,22 +10,22 @@
     <LinearLayout
         android:layout_width="300dp"
         android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
-        android:layout_centerHorizontal="true"
-        android:orientation="vertical"
-        android:gravity="center_horizontal"
         android:background="@drawable/grey_background"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
         android:padding="8dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingStart="8dp"
             android:text="Kämpfernatur\nSurvival Challenge"
             android:textColor="@color/white"
             android:textSize="25sp"
-            android:textStyle="bold"
-            android:paddingStart="8dp" />
+            android:textStyle="bold" />
     </LinearLayout>
 
     <!-- Zurück-Button -->
@@ -35,10 +34,10 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_margin="28dp"
-        android:src="@drawable/back_icon"
         android:background="@drawable/grey_background"
+        android:src="@drawable/back_icon"
         android:tint="@android:color/white"
-        tools:ignore="UseAppTint"/>
+        tools:ignore="UseAppTint" />
 
     <!-- Hauptinhalt -->
     <LinearLayout
@@ -46,8 +45,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/btn_back"
-        android:layout_marginTop="20dp"
         android:layout_marginLeft="16dp"
+        android:layout_marginTop="20dp"
         android:layout_marginRight="16dp"
         android:orientation="vertical">
 
@@ -55,21 +54,21 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
+            android:layout_marginBottom="10dp"
             android:background="@drawable/grey_background"
-            android:padding="12dp"
-            android:layout_marginBottom="10dp">
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="12dp">
 
             <ImageView
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_marginEnd="12dp"
+                android:background="@drawable/green_frame"
+                android:padding="6dp"
                 android:src="@drawable/pushups_icon"
                 android:tint="@color/primary"
-                tools:ignore="UseAppTint"
-                android:background="@drawable/green_frame"
-                android:padding="6dp" />
+                tools:ignore="UseAppTint" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -85,24 +84,24 @@
             android:layout_width="match_parent"
             android:layout_height="350dp"
             android:layout_marginBottom="16dp"
-            android:orientation="vertical"
+            android:background="@drawable/grey_background"
             android:gravity="center"
-            android:background="@drawable/grey_background">
+            android:orientation="vertical">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="30dp"
                 android:text="Intensität"
                 android:textColor="@color/white"
                 android:textSize="25sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="30dp" />
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center">
+                android:gravity="center"
+                android:orientation="vertical">
 
                 <!-- Auswahl-Buttons -->
                 <TextView

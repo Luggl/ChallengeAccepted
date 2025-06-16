@@ -23,18 +23,18 @@
         android:id="@+id/logo_top"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_marginTop="40dp"
         android:layout_marginStart="10dp"
-        android:src="@drawable/logo"
-        android:contentDescription="App Logo" />
+        android:layout_marginTop="40dp"
+        android:contentDescription="App Logo"
+        android:src="@drawable/logo" />
 
     <!-- Titel -->
     <TextView
         android:id="@+id/title_passwort_vergessen"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
         android:layout_below="@id/logo_top"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"
         android:text=" Passwort\nVergessen"
         android:textColor="@color/accent_bright"
@@ -49,12 +49,12 @@
         android:layout_below="@id/title_passwort_vergessen"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="120dp"
-        android:hint="Email"
-        android:textColorHint="@color/black"
         android:background="@drawable/textfield"
+        android:hint="Email"
+        android:inputType="textEmailAddress"
         android:paddingHorizontal="16dp"
         android:textColor="@color/black"
-        android:inputType="textEmailAddress" />
+        android:textColorHint="@color/black" />
 
     <!-- Los geht's Button -->
     <Button
@@ -63,10 +63,10 @@
         android:layout_height="60dp"
         android:layout_centerHorizontal="true"
         android:layout_margin="650dp"
+        android:background="@drawable/green_button"
         android:text="Mail anfordern"
         android:textColor="@color/white"
         android:textSize="26sp"
-        android:textStyle="bold"
-        android:background="@drawable/green_button" />
+        android:textStyle="bold" />
 
 </RelativeLayout>

@@ -10,23 +10,23 @@
     <LinearLayout
         android:layout_width="300dp"
         android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
-        android:orientation="vertical"
-        android:gravity="center_horizontal"
-        android:layout_centerHorizontal="true"
         android:background="@drawable/grey_background"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
         android:padding="8dp">
 
         <!-- Gruppenname -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingStart="8dp"
             android:text="Kämpfernatur\nStandard Challenge"
             android:textColor="@color/white"
             android:textSize="25sp"
-            android:textStyle="bold"
-            android:paddingStart="8dp" />
+            android:textStyle="bold" />
     </LinearLayout>
 
     <!-- Zurück-Button -->
@@ -35,42 +35,42 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_margin="28dp"
-        android:src="@drawable/back_icon"
         android:background="@drawable/grey_background"
+        android:src="@drawable/back_icon"
         android:tint="@android:color/white"
-        tools:ignore="UseAppTint"/>
+        tools:ignore="UseAppTint" />
 
     <!-- Hauptinhalt -->
     <LinearLayout
         android:id="@+id/main_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_below="@id/btn_back"
         android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp">
+        android:layout_marginRight="16dp"
+        android:orientation="vertical">
 
         <!-- Header mit Icon und Titel -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
+            android:layout_marginBottom="10dp"
             android:background="@drawable/grey_background"
-            android:padding="12dp"
-            android:layout_marginBottom="10dp">
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="12dp">
 
             <ImageView
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_marginEnd="12dp"
+                android:background="@drawable/green_frame"
+                android:clipToOutline="true"
+                android:padding="6dp"
+                android:scaleType="centerInside"
                 android:src="@drawable/pushups_icon"
                 android:tint="@android:color/holo_blue_bright"
-                tools:ignore="UseAppTint"
-                android:background="@drawable/green_frame"
-                android:scaleType="centerInside"
-                android:padding="6dp"
-                android:clipToOutline="true" />
+                tools:ignore="UseAppTint" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -86,36 +86,36 @@
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:layout_marginBottom="16dp"
-            android:orientation="vertical"
+            android:background="@drawable/grey_background"
             android:gravity="center"
-            android:background="@drawable/grey_background">
+            android:orientation="vertical">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
                 android:text="Startintensität"
                 android:textColor="@color/white"
                 android:textSize="25dp"
-                android:textStyle="bold"
-                android:layout_marginBottom="8dp"/>
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center">
+                android:gravity="center"
+                android:orientation="vertical">
 
 
                 <TextView
                     android:layout_width="60dp"
                     android:layout_height="60dp"
+                    android:layout_marginVertical="4dp"
                     android:background="@drawable/green_frame"
                     android:gravity="center"
                     android:text="0"
                     android:textColor="@color/white"
                     android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:layout_marginVertical="4dp" />
+                    android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="40dp"
@@ -132,25 +132,25 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:orientation="vertical"
+            android:background="@drawable/green_frame"
             android:gravity="center"
-            android:background="@drawable/green_frame">
+            android:orientation="vertical">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
                 android:text="Endintensität"
                 android:textColor="@color/white"
                 android:textSize="25dp"
-                android:textStyle="bold"
-                android:layout_marginBottom="8dp"/>
+                android:textStyle="bold" />
 
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center">
+                android:gravity="center"
+                android:orientation="vertical">
 
                 <TextView
                     android:layout_width="40dp"
@@ -164,13 +164,13 @@
                 <TextView
                     android:layout_width="60dp"
                     android:layout_height="60dp"
+                    android:layout_marginVertical="4dp"
                     android:background="@drawable/green_frame"
                     android:gravity="center"
                     android:text="10"
                     android:textColor="@color/white"
                     android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:layout_marginVertical="4dp" />
+                    android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="40dp"
@@ -183,19 +183,19 @@
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
-    
-        <!-- Check Button -->
-        <ImageButton
-            android:id="@+id/btn_confirm_selection"
-            android:layout_width="80dp"
-            android:layout_height="50dp"
-            android:layout_below="@id/main_content"
-            android:layout_alignParentEnd="true"
-            android:layout_margin="16dp"
-            android:background="@drawable/green_button"
-            android:src="@drawable/check_icon" />
 
-        <!-- Bottom Navigation -->
+    <!-- Check Button -->
+    <ImageButton
+        android:id="@+id/btn_confirm_selection"
+        android:layout_width="80dp"
+        android:layout_height="50dp"
+        android:layout_below="@id/main_content"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="16dp"
+        android:background="@drawable/green_button"
+        android:src="@drawable/check_icon" />
+
+    <!-- Bottom Navigation -->
     <LinearLayout
         android:id="@+id/ll_bottom_navigation"
         android:layout_width="match_parent"
@@ -219,7 +219,7 @@
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/group_white_icon"/>
+                android:src="@drawable/group_white_icon" />
 
         </LinearLayout>
 
@@ -234,7 +234,7 @@
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/home_blue_icon"/>
+                android:src="@drawable/home_blue_icon" />
 
         </LinearLayout>
 
@@ -264,8 +264,9 @@
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/profile_white_icon"/>
+                android:src="@drawable/profile_white_icon" />
 
         </LinearLayout>
 
     </LinearLayout>
+</RelativeLayout>
