@@ -22,7 +22,7 @@ def create_challenge_standard():
 
     return jsonify({"message": "Challenge erstellt", "challenge": result}), 201
 
-@challenge_bp.route('/api/challengesurvival')
+@challenge_bp.route('/api/challengesurvival', methods=['POST'])
 @jwt_required()
 def create_challenge_survival():
     data = request.get_json()
