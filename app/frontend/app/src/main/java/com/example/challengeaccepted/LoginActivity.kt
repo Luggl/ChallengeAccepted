@@ -28,9 +28,8 @@ class LoginActivity : AppCompatActivity() {
             val user = username.text.toString()
             val pw = password.text.toString()
 
-            // TODO: Authentifizierung einbauen
             if (user.isNotEmpty() && pw.isNotEmpty()) {
-                val intent = Intent(this, MainActivity::class.java)
+                val intent = Intent(this, DashboardActivity::class.java)
                 startActivity(intent)
             }
         }

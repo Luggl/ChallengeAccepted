@@ -23,11 +23,6 @@ class MainActivity : AppCompatActivity() {
         val registerButton = findViewById<Button>(R.id.btnStart)
         val loginText = findViewById<TextView>(R.id.txtLogin)
 
-        /*registerButton.setOnClickListener {
-            Toast.makeText(this, "RegisterButton funktioniert!", Toast.LENGTH_SHORT).show()
-            val intent = Intent(this, RegisterActivity::class.java)
-            startActivity(intent)
-        }*/
 
         registerButton.setOnClickListener {
             // Weiterleitung zur Register-Seite
@@ -42,3 +37,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 }
+
+
+/*registerButton.setOnClickListener {
+    Toast.makeText(this, "RegisterButton funktioniert!", Toast.LENGTH_SHORT).show()
+    val intent = Intent(this, RegisterActivity::class.java)
+    startActivity(intent)
+}*/

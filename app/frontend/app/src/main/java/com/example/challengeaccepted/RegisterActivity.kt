@@ -32,8 +32,7 @@ class RegisterActivity : AppCompatActivity() {
         val alreadyAccount = findViewById<TextView>(R.id.text_already_account)
 
         registerButton.setOnClickListener {
-            // TODO: Registrierungsvorgang einbauen
-            val intent = Intent(this, MainActivity::class.java)
+            val intent = Intent(this, DashboardActivity::class.java)
             startActivity(intent)
         }
 
