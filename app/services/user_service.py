@@ -10,6 +10,8 @@ from app.repositories.user_repository import (
 
 import uuid
 
+from database.database import engine
+
 
 # Registrierung eines neuen Users
 def register_user_logic(username, email, password):
@@ -23,10 +25,10 @@ def register_user_logic(username, email, password):
 
     # User-Objekt anlegen (UUID statt Integer-ID)
     user = User(
-        id=str(uuid.uuid4()),
+        user_id=uuid.uuid4().bytes,
         username=username,
         email=email,
-        password_hash=hashed_pw
+        passwordHash=hashed_pw
         # Weitere Felder wie Profilbild oder Rolle später ergänzen
     )
 
@@ -35,7 +37,7 @@ def register_user_logic(username, email, password):
 
     # Erfolgreiche Rückgabe
     return response(True, data={
-        "id": saved_user.id,
+        "id": saved_user.user_id.hex(),
         "username": saved_user.username,
         "email": saved_user.email
     })

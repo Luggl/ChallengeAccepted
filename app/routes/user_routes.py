@@ -21,12 +21,15 @@ def register_user():
         return jsonify({"error": "Username, Password und Email sind erforderlich"}), 400
 
     # Hier die Methode einbinden, die prüft ob Werte i. O.!
-    success, result = register_user_logic(username, email, password)
+    result = register_user_logic(username, email, password)
 
-    if not success:
-        return jsonify({"error": result}), 400
+    if not result["success"]:
+        return jsonify({"error": result["error"]}), 400
 
-    return jsonify({"message": "User erfolgreich registriert", "user": result}), 201
+    return jsonify({
+        "message": "User erfolgreich registriert",
+        "user": result["data"]
+    }), 201
 
 @user_bp.route('/api/login', methods=['POST'])
 def login_user():
@@ -75,7 +78,7 @@ def reset_password():
     return jsonify({"message": message, "status": status})
 
 
-@user_bp.route('/api/users/<int:id>', methods=['DELETE'])
+@user_bp.route('/api/user/<uuid:id>', methods=['DELETE'])
 @jwt_required() # Sicherstellen, dass User eingeloggt ist
 def delete_user(id):
     # Prüfen, wer der aktuell eingeloggte User ist

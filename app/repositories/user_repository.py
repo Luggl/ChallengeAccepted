@@ -3,23 +3,32 @@
 from app.database.models import User  # falls User direkt in models/__init__.py steht, sonst: from app.models.user import User
 from app import db  # Das ist die SQLAlchemy-Instanz (db.session)
 
+from sqlalchemy import inspect
+
+from database.database import engine, SessionLocal
+
+
 def find_user_by_email(email):
     """Finde einen User anhand seiner E-Mail."""
-    return db.session.query(User).filter_by(email=email).first()
+    with SessionLocal() as session:
+        return session.query(User).filter_by(email=email).first()
 
 def find_user_by_username(username):
-    """Finde einen User anhand seines Usernames."""
-    return db.session.query(User).filter_by(username=username).first()
+    with SessionLocal() as session:
+        return session.query(User).filter_by(username=username).first()
 
 def find_user_by_id(user_id):
     """Finde einen User anhand seiner UUID (user_id)."""
-    return db.session.query(User).filter_by(user_id=user_id).first()
+    with SessionLocal() as session:
+        return db.session.query(User).filter_by(user_id=user_id).first()
 
 def save_user(user):
     """Speichere einen neuen User in die Datenbank."""
-    db.session.add(user)
-    db.session.commit()
-    return user
+    with SessionLocal() as session:
+        session.add(user)
+        session.commit()
+        session.refresh(user)
+    return userö
 
 def delete_user_by_id(user_id):
     """Lösche einen User anhand seiner user_id."""
