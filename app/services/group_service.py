@@ -23,7 +23,9 @@ def create_group_logic(name, beschreibung, gruppenbild, created_by):
         gruppe_id=created_group.gruppe_id,
         isAdmin=True
     )
-    created_membership = create_membership(membership)
+
+
+    create_membership(membership)
 
     return response(True, {
         "id": str(uuid.UUID(bytes=created_group.gruppe_id)),
