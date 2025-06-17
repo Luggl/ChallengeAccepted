@@ -32,10 +32,10 @@ class CreateChallengeModeActivity : AppCompatActivity() {
             val intent = Intent(this, ProfileActivity::class.java)
             startActivity(intent)
         }
-        confirmButton.setOnClickListener {
-            val intent = Intent(this, StandardActivitiesActivity::class.java)
-            startActivity(intent)
-        }
+//        confirmButton.setOnClickListener {
+//            val intent = Intent(this, StandardActivitiesActivity::class.java)
+//            startActivity(intent)
+//        }
 
         //Standard-Modus visuelle hervorheben beim Start
         imageStandard.setBackgroundResource(R.drawable.green_frame)
@@ -56,8 +56,8 @@ class CreateChallengeModeActivity : AppCompatActivity() {
         //auswahl bestätigen
         confirmButton.setOnClickListener{
             val intent=when (selectedMode) {
-                "standard" -> Intent(this, StandardChallengeOverviewActivity::class.java)
-                "survival" -> Intent(this, SurvivalChallengeOverviewActivity::class.java)
+                "standard" -> Intent(this, StandardActivitiesActivity::class.java)
+                "survival" -> Intent(this, SurvivalActivitiesActivity::class.java)
                 else -> null
             }
             if (intent!=null){

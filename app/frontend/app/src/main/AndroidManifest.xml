@@ -48,7 +48,7 @@
         <activity android:name=".CreateChallengeModeActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>-->
 
         <!-- Standard -->
-        <!-- <activity android:name=".StandardActivitiesActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>-->
+        <activity android:name=".StandardActivitiesActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
          <!--<activity android:name=".StandardChallengeOverviewActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>-->
          <!--<activity android:name=".StandardCreateChallengeOverviewActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>-->
          <!--<activity android:name=".StandardIntenstityActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>-->
