@@ -28,10 +28,10 @@ class LoginActivity : AppCompatActivity() {
             val user = username.text.toString()
             val pw = password.text.toString()
 
-            if (user.isNotEmpty() && pw.isNotEmpty()) {
+           // if (user.isNotEmpty() && pw.isNotEmpty()) {
                 val intent = Intent(this, CreateChallengeModeActivity::class.java)
                 startActivity(intent)
-            }
+            //}
         }
 
         forgotText.setOnClickListener {

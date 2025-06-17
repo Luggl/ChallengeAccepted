@@ -11,10 +11,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 
 class CreateChallengeModeActivity : AppCompatActivity() {
-    //Bottom Navigation
-    private lateinit var navGroup: ImageView
-    private lateinit var navHome: ImageView
-    private lateinit var navProfile: ImageView
     //Modusauswahl (Standard voreingestellt)
     private var selectedMode: String="standard"
 
@@ -26,10 +22,20 @@ class CreateChallengeModeActivity : AppCompatActivity() {
         setContentView(R.layout.activity_create_challenge_mode)
 
         //Views aus dem XML holen 
-        val backButton=findViewById<ImageButton>(R.id.btn_back)
+        val navBack = findViewById<ImageView>(R.id.btn_back)
         val confirmButton=findViewById<ImageButton>(R.id.btn_confirm_selection)
         val imageStandard=findViewById<ImageView>(R.id.iv_standard)
         val imageSurvival=findViewById<ImageView>(R.id.iv_survival)
+
+
+        navBack.setOnClickListener {
+            val intent = Intent(this, ProfileActivity::class.java)
+            startActivity(intent)
+        }
+        confirmButton.setOnClickListener {
+            val intent = Intent(this, StandardActivitiesActivity::class.java)
+            startActivity(intent)
+        }
 
         //Standard-Modus visuelle hervorheben beim Start
         imageStandard.setBackgroundResource(R.drawable.green_frame)
@@ -60,6 +66,11 @@ class CreateChallengeModeActivity : AppCompatActivity() {
                 Toast.makeText(this, "Ungültiger Modus", Toast.LENGTH_SHORT).show()
             }
         }
+        // Initialisieren
+        val navGroup = findViewById<ImageView>(R.id.nav_group)
+        val navHome = findViewById<ImageView>(R.id.nav_home)
+        val navProfile = findViewById<ImageView>(R.id.nav_profile)
+
         navGroup.setOnClickListener{
             startActivity(Intent(this, GroupOverviewActivity::class.java))
         }
@@ -68,9 +79,6 @@ class CreateChallengeModeActivity : AppCompatActivity() {
         }
         navProfile.setOnClickListener{
             startActivity(Intent(this, ProfileActivity::class.java))
-        }
-        backButton.setOnClickListener{
-            finish()
         }
     }
 }

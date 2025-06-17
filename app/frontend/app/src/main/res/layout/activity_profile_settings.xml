@@ -78,8 +78,9 @@
                 android:src="@drawable/camera_icon" />
         </LinearLayout>
 
-        <!-- Gruppenname -->
-        <TextView
+        <!-- Benutzername -->
+        <EditText
+            android:id="@+id/et_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="100dp"
