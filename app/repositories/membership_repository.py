@@ -2,10 +2,13 @@
 
 from app.database.models import Membership
 from app import db
+from app.database.database import SessionLocal
 
 def find_membership(user_id, gruppe_id):
     """Finde die Mitgliedschaft eines Users in einer Gruppe."""
-    return db.session.query(Membership).filter_by(user_id=user_id, gruppe_id=gruppe_id).first()
+    with SessionLocal() as session:
+        membership = session.query(Membership).filter_by(user_id=user_id, gruppe_id=gruppe_id).first()
+    return membership
 
 def find_memberships_by_user(user_id):
     """Finde alle Gruppen-Mitgliedschaften eines Users."""

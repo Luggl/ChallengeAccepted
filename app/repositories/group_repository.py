@@ -47,11 +47,13 @@ def create_membership(membership):
 def delete_group_by_id(gruppe_id):
     """Lösche eine Gruppe anhand ihrer ID."""
     gruppe = find_group_by_id(gruppe_id)
-    if gruppe:
-        db.session.delete(gruppe)
-        db.session.commit()
-        return True
-    return False
+
+    with SessionLocal() as session:
+        if gruppe:
+            session.delete(gruppe)
+            session.commit()
+            return True
+        return False
 
 def update_group(gruppe):
     """Aktualisiere eine bestehende Gruppe."""

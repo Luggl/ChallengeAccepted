@@ -65,15 +65,16 @@ def join_group_via_link():
 
     return jsonify({"message": result}), 200
 
-@group_bp.route('/api/group/<int:id>', methods=['DELETE'])
+@group_bp.route('/api/group', methods=['DELETE'])
 @jwt_required()
-def delete_group(id):
+def delete_group():
     current_user_id = get_jwt_identity()        # aktuell eingeloggter User prüfen
+    group_id = request.args.get('group_id')
 
     # Logik in Services erhält sowohl die Group-ID, als auch die User_Id um zu prüfen, ob Löschaufruf erlaubt
-    success, result = delete_group_logic(id, current_user_id)
+    result = delete_group_logic(group_id, current_user_id)
 
-    if not success:
+    if not result["success"]:
         return jsonify({"error": result}), 403 # Keine Berechtigung oder Fehler
 
     return jsonify({"message": result}), 204

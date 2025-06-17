@@ -1,6 +1,7 @@
 import uuid
 import sqlalchemy
 from sqlalchemy import Column, String, Integer,Boolean, Date, ForeignKey, Table
+from sqlalchemy.dialects.mysql import DATETIME
 from sqlalchemy.dialects.sqlite import BLOB
 from sqlalchemy.orm import relationship
 from .database import Base
@@ -84,7 +85,7 @@ class Gruppe(Base):
     beschreibung=Column(String)
     gruppenbild=Column(String)
     einladungscode=Column(String, nullable=False)
-    einladungscodeDatum=Column(Date)
+    einladungscode_gueltig_bis=Column(DATETIME)
     erstellungsDatum=Column(Date)
 
     memberships= relationship("Membership", back_populates="gruppe")
