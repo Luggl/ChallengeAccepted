@@ -4,7 +4,7 @@
     <selectionStates>
       <SelectionState runConfigName="Challenge_Accepted.app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2025-06-17T11:57:14.991420Z">
+        <DropdownSelection timestamp="2025-06-17T20:50:35.043965200Z">
           <Target type="DEFAULT_BOOT">
             <handle>
               <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\dilan\.android\avd\Medium_Phone.avd" />

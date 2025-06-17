@@ -22,10 +22,20 @@ class CreateChallengeModeActivity : AppCompatActivity() {
         setContentView(R.layout.activity_create_challenge_mode)
 
         //Views aus dem XML holen 
-        val backButton=findViewById<ImageButton>(R.id.btn_back)
+        val navBack = findViewById<ImageView>(R.id.btn_back)
         val confirmButton=findViewById<ImageButton>(R.id.btn_confirm_selection)
         val imageStandard=findViewById<ImageView>(R.id.iv_standard)
         val imageSurvival=findViewById<ImageView>(R.id.iv_survival)
+
+
+        navBack.setOnClickListener {
+            val intent = Intent(this, ProfileActivity::class.java)
+            startActivity(intent)
+        }
+        confirmButton.setOnClickListener {
+            val intent = Intent(this, StandardActivitiesActivity::class.java)
+            startActivity(intent)
+        }
 
         //Standard-Modus visuelle hervorheben beim Start
         imageStandard.setBackgroundResource(R.drawable.green_frame)
