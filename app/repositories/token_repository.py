@@ -1,6 +1,6 @@
 from sqlalchemy.orm import joinedload
 
-from database.database import SessionLocal
+from app.database.database import SessionLocal
 from app.database.models import ResetToken
 from app.utils.time import now_berlin
 

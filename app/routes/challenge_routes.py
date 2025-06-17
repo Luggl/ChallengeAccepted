@@ -26,35 +26,49 @@ def create_challenge_standard():
         return jsonify({"error": result["error"]}), 400
 
     return jsonify({
-        "message": "Challenge erstellt",
+        "message": "Challenge erfolgreich erstellt",
         "challenge": result["data"]
     }), 201
 
 @challenge_bp.route('/api/challengesurvival', methods=['POST'])
-# @jwt_required()
+@jwt_required()
 def create_challenge_survival():
     data = request.get_json()
-    # current_user_id = get_jwt_identity()
-    gid = request.args.get('gid', type=int)
-
-    ## Nur zum Testen!
-    current_user_id = 123
-
-    success, result = create_challenge_survival_logic(current_user_id, data, gid)
-
-    if not success:
-        return jsonify({"error": result}), 400
-
-    return jsonify({"message": "Challenge erstellt", "challenge": result}), 201
-
-@challenge_bp.route("/api/challenges/<int:id>", methods=["DELETE"])
-@jwt_required()  # Nur eingeloggte Nutzer dürfen Challenges löschen
-def delete_challenge(id):
     current_user_id = get_jwt_identity()
 
-    success, result = delete_challenge_logic(id, current_user_id)
+    # Gruppen-ID aus gid holen
+    group_id_str = request.args.get('gid')
+    try:
+        group_id = uuid.UUID(group_id_str).bytes
+    except Exception:
+        return jsonify({"error": "Ungültige Gruppen-ID"}), 400
 
-    if not success:
-        return jsonify({"error": result}), 403
+    result = create_challenge_survival_logic(current_user_id, data, group_id)
 
-    return '', 204  # Erfolgreich gelöscht, keine Rückgabe nötig
+    if not result["success"]:
+        return jsonify({"error": result["error"]}), 400
+
+    return jsonify({
+        "message": "Survival-Challenge erfolgreich erstellt",
+        "challenge": result["data"]
+    }), 201
+
+@challenge_bp.route("/api/challenges/<id>", methods=["DELETE"])
+@jwt_required()
+def delete_challenge(id):
+    try:
+        challenge_id = uuid.UUID(id).bytes
+    except ValueError:
+        return jsonify({"error": "Ungültige Challenge-ID"}), 400
+
+    try:
+        user_id = uuid.UUID(get_jwt_identity()).bytes
+    except ValueError:
+        return jsonify({"error": "Ungültige Benutzer-ID"}), 401
+
+    result = delete_challenge_logic(challenge_id, user_id)
+
+    if not result["success"]:
+        return jsonify({"error": result["error"]}), 403
+
+    return '', 204

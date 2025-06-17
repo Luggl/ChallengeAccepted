@@ -2,7 +2,7 @@
 
 from app.database.models import Gruppe
 from app import db
-from database.database import SessionLocal
+from app.database.database import SessionLocal
 
 def find_group_by_id(gruppe_id):
     """Finde eine Gruppe anhand der ID."""

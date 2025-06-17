@@ -7,8 +7,10 @@ from app.database.database import SessionLocal
 
 def find_sportart_by_id(sportart_id):
     """Finde eine Sportart anhand der ID."""
+
     with SessionLocal() as session:
-        return session.query(Sportart).filter_by(sportart_id=sportart_id).first()
+        sportart = session.query(Sportart).filter_by(sportart_id=sportart_id).first()
+        return sportart
 
 def find_sportart_by_bezeichnung(bezeichnung):
     """Finde eine Sportart anhand ihrer Bezeichnung (Name)."""
@@ -18,18 +20,19 @@ def find_sportart_by_bezeichnung(bezeichnung):
 def create_sportart(sportart):
     """Erstelle und speichere eine neue Sportart."""
     with SessionLocal() as session:
-        db.session.add(sportart)
-        db.session.commit()
+        session.add(sportart)
+        session.commit()
     return sportart
 
 def delete_sportart_by_id(sportart_id):
     """Lösche eine Sportart anhand ihrer ID."""
-    sportart = find_sportart_by_id(sportart_id)
-    if sportart:
-        db.session.delete(sportart)
-        db.session.commit()
-        return True
-    return False
+    with SessionLocal() as session:
+        sportart = find_sportart_by_id(sportart_id)
+        if sportart:
+            session.delete(sportart)
+            session.commit()
+            return True
+        return False
 
 def update_sportart(sportart):
     """Aktualisiere eine bestehende Sportart."""

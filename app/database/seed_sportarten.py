@@ -5,10 +5,10 @@ import uuid
 
 def seed_sportarten():
     sportarten = [
-        ("Liegestütze", "Wiederholungen"),
-        ("Plank", "Minuten"),
-        ("Laufen", "Kilometer"),
-        ("Burpees", "Wiederholungen"),
+        ("Liegestütze", "anzahl"),
+        ("Seilspringen", "dauer"),
+        ("Situps", "anzahl"),
+        ("Burpees", "anzahl"),
     ]
 
     for name, unit in sportarten:
