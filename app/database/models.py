@@ -91,20 +91,44 @@ class Gruppe(Base):
     challenges=relationship("Challenge", back_populates="gruppe")
 
 class Sportart(Base):
-    __tablename__="sportart"
+    __tablename__ = "sportart"
 
-    sportart_id=Column(BLOB, primary_key=True, default=lambda: uuid.uuid4().bytes)
-    bezeichnung= Column(String, nullable=False)
-    unit=Column(SQLEnum(StatusUnit), nullable=False)
+    sportart_id = Column(BLOB, primary_key=True, default=lambda: uuid.uuid4().bytes)
+    bezeichnung = Column(String, nullable=False)
+    unit = Column(SQLEnum(StatusUnit), nullable=False)
 
-    challenges=relationship("Challenge", secondary="challenge_sportart", back_populates="sportarten")
+    # Nur für alte Many-to-Many-Verknüpfung (wenn noch genutzt)
+    challenges = relationship("Challenge", secondary="challenge_sportart", back_populates="sportarten")
 
-challenge_sportart=Table(
-    "challenge_sportart",
-    Base.metadata,
-    Column("challenge_id",BLOB,ForeignKey("challenge.challenge_id"),primary_key=True),
-    Column("sportart_id",BLOB,ForeignKey("sportart.sportart_id"),primary_key=True)
-)
+    # Neu: separate Beziehungen für beide Challenge-Typen
+    standard_links = relationship("StandardChallengeSportart", back_populates="sportart")
+    survival_links = relationship("SurvivalChallengeSportart", back_populates="sportart")
+
+class StandardChallengeSportart(Base):
+    __tablename__ = "standard_challenge_sportart"
+
+    challenge_id = Column(BLOB, ForeignKey("standard_challenge.challenge_id"), primary_key=True)
+    sportart_id = Column(BLOB, ForeignKey("sportart.sportart_id"), primary_key=True)
+
+    startintensitaet = Column(Integer, nullable=False)
+    zielintensitaet = Column(Integer, nullable=False)
+
+    challenge = relationship("StandardChallenge", back_populates="sportarten_links")
+    sportart = relationship("Sportart")
+
+class SurvivalChallengeSportart(Base):
+    __tablename__ = "survival_challenge_sportart"
+
+    challenge_id = Column(BLOB, ForeignKey("survival_challenge.challenge_id"), primary_key=True)
+    sportart_id = Column(BLOB, ForeignKey("sportart.sportart_id"), primary_key=True)
+
+    schwierigkeitsgrad = Column(
+        sqlalchemy.Enum(Schwierigkeit), nullable=False
+    )
+
+    challenge = relationship("Survivalchallenge", back_populates="sportarten_links")
+    sportart = relationship("Sportart")
+
 
 class Challenge(Base):
     __tablename__="challenge"
@@ -143,12 +167,17 @@ class StandardChallenge(Challenge):
         "polymorphic_identity":"standard"
     }
 
+    sportarten_links = relationship("StandardChallengeSportart", back_populates="challenge")
+
 class Survivalchallenge(Challenge):
     __tablename__ = "survival_challenge"
     challenge_id = Column(BLOB, ForeignKey("challenge.challenge_id"), primary_key=True)
     __mapper_args_ = {
         "polymorphic_identity":"survival"
     }
+
+    sportarten_links = relationship("SurvivalChallengeSportart", back_populates="challenge")
+
 class Aufgabe(Base):
     __tablename__="aufgabe"
 

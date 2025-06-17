@@ -7,20 +7,28 @@ challenge_bp = Blueprint('challenge', __name__)
 
 
 # Split von Challenge Standard und Survival benötigt, da ChallengeSportart unterschiedlich definiert ist (Schwierigkeitsgrad und nicht Intensitätsangaben)
-@challenge_bp.route('/api/challengestandard')
+@challenge_bp.route('/api/challengestandard', methods=['POST'])
 @jwt_required()       #Sicherstellen, dass User eingeloggt ist!
 def create_challenge_standard():
     data = request.get_json()
     current_user_id = get_jwt_identity()
-    gid = request.args.get('gid', type=int)
 
+    # Falls deine Gruppen-ID als UUID gespeichert ist:
+    group_id_str = request.args.get('gid')
+    try:
+        group_id = uuid.UUID(group_id_str).bytes
+    except Exception:
+        return jsonify({"error": "Ungültige Gruppen-ID"}), 400
 
-    success, result = create_challenge_standard_logic(current_user_id, data, gid)
+    result = create_challenge_standard_logic(current_user_id, data, group_id)
 
-    if not success:
-        return jsonify({"error": result}), 400
+    if not result["success"]:
+        return jsonify({"error": result["error"]}), 400
 
-    return jsonify({"message": "Challenge erstellt", "challenge": result}), 201
+    return jsonify({
+        "message": "Challenge erstellt",
+        "challenge": result["data"]
+    }), 201
 
 @challenge_bp.route('/api/challengesurvival', methods=['POST'])
 # @jwt_required()
