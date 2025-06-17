@@ -5,7 +5,7 @@ from app import db  # Das ist die SQLAlchemy-Instanz (db.session)
 
 from sqlalchemy import inspect
 
-from database.database import engine, SessionLocal
+from app.database.database import engine, SessionLocal
 
 
 def find_user_by_email(email):
