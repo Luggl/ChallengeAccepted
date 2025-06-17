@@ -4,10 +4,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.WindowCompat
 
 class CreateNewGroupActivity : AppCompatActivity() {
 
 override fun onCreate(savedInstanceState: Bundle?) {
+    //Randloses Layout aktivieren (Edge-to-Edge)
+    WindowCompat.setDecorFitsSystemWindows(window, false)
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_create_new_group)
 

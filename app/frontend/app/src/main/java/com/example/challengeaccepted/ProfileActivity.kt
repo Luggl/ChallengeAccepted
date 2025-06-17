@@ -6,11 +6,14 @@ import android.os.Bundle
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.WindowCompat
 
 class ProfileActivity :  AppCompatActivity()  {
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
+        //Randloses Layout aktivieren (Edge-to-Edge)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
 
@@ -43,15 +46,15 @@ class ProfileActivity :  AppCompatActivity()  {
         }*/
 
         //Settings Seite
-        /*navSet.setOnClickListener {
+        navSet.setOnClickListener {
             val intent = Intent(this, ProfileSettingsActivity::class.java)
             startActivity(intent)
-        }*/
-
-        navSet.setOnClickListener {
-            Toast.makeText(this, "Funktioniert!", Toast.LENGTH_SHORT).show()
-            val intent = Intent(this, RegisterActivity::class.java)
-            startActivity(intent)
         }
+
+//        navSet.setOnClickListener {
+//            Toast.makeText(this, "Funktioniert!", Toast.LENGTH_SHORT).show()
+//            val intent = Intent(this, RegisterActivity::class.java)
+//            startActivity(intent)
+//        }
     }
 }
