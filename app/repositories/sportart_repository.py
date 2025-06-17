@@ -2,19 +2,24 @@
 
 from app.database.models import Sportart
 from app import db
+from app.database.database import SessionLocal
+
 
 def find_sportart_by_id(sportart_id):
     """Finde eine Sportart anhand der ID."""
-    return db.session.query(Sportart).filter_by(sportart_id=sportart_id).first()
+    with SessionLocal() as session:
+        return session.query(Sportart).filter_by(sportart_id=sportart_id).first()
 
 def find_sportart_by_bezeichnung(bezeichnung):
     """Finde eine Sportart anhand ihrer Bezeichnung (Name)."""
-    return db.session.query(Sportart).filter_by(bezeichnung=bezeichnung).first()
+    with SessionLocal() as session:
+        return session.query(Sportart).filter_by(bezeichnung=bezeichnung).first()
 
 def create_sportart(sportart):
     """Erstelle und speichere eine neue Sportart."""
-    db.session.add(sportart)
-    db.session.commit()
+    with SessionLocal() as session:
+        db.session.add(sportart)
+        db.session.commit()
     return sportart
 
 def delete_sportart_by_id(sportart_id):

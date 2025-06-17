@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token
 from app.services.user_service import *
 
 
@@ -21,105 +21,116 @@ def register_user():
         return jsonify({"error": "Username, Password und Email sind erforderlich"}), 400
 
     # Hier die Methode einbinden, die prüft ob Werte i. O.!
-    success, result = register_user_logic(username, email, password)
+    result = register_user_logic(username, email, password)
 
-    if not success:
-        return jsonify({"error": result}), 400
+    if not result["success"]:
+        return jsonify({"error": result["error"]}), 400
 
-    return jsonify({"message": "User erfolgreich registriert", "user": result}), 201
+    return jsonify({
+        "message": "User erfolgreich registriert",
+        "user": result["data"],
+    }), 201
 
 @user_bp.route('/api/login', methods=['POST'])
 def login_user():
     data = request.get_json()
-    login = data.get('login')
+    email = data.get('email')
     password = data.get('password')
 
-    if login is None or password is None:
+    if email is None or password is None:
         return jsonify({"error": "Login und Password sind erforderlich"}), 400
 
     # Hier Methode einbinden aus Services - login kann Username oder E-Mail sein!
-    success, result = login_user_logic(login, password)
-    if not success:
+    result = login_user_logic(email, password)
+    if not result["success"]:
         return jsonify({"error": result}), 401 # Nicht authorisiert!
 
-    return jsonify({"message": "Login erfolgreich", "user": result}), 200
+    # Token erzeugen
+    access_token = create_access_token(identity=result["data"]["id"])
+
+    return jsonify({"message": "Login erfolgreich",
+                    "user": result["data"],
+                    "access_token": access_token}), 200
 
 @user_bp.route('/api/password-reset', methods=['POST'])
 def forgot_password():
     data = request.get_json()
     email = data.get('email')
 
-    if email is None:
+    if not email:
         return jsonify({"error": "Email ist erforderlich"}), 400
 
-    # Wieder Einbinden der Logik aus services (Hier wird allerdings nur ein Link an die E-Mail des Users gesendet, falls vorhanden!)
-    success, message = forgot_password_logic(email)
+    result = forgot_password_logic(email)
 
-    if not success:
-        return jsonify({"error": message}), 404
+    if not result["success"]:
+        return jsonify({"error": result["error"]}), 404
 
-    return jsonify({"message": message})
+    return jsonify({"message": result["data"]}), 200
 
-@user_bp.route('/api/reset-password/confirm', methods=['POST'])
+
+@user_bp.route('/api/password-reset/confirm', methods=['POST'])
 def reset_password():
-    token = request.json.get('token')
-    password = request.json.get('newPassword')
+    data = request.get_json()
+    token = data.get('token')
+    new_pw = data.get('newPassword')
 
-    if token is None or password is None:
-        return jsonify({"error": "Token und Password erforderlich"}), 400
+    if not token or not new_pw:
+        return jsonify({"error": "Token und neues Passwort sind erforderlich"}), 400
 
-    # Logik in Services - Prüfung ob Password / Token akzeptiert werden
-    success, message = reset_password_logic(token, password)
+    result = reset_password_logic(token, new_pw)
 
-    status = 200 if success else 400
-    return jsonify({"message": message, "status": status})
+    if not result["success"]:
+        return jsonify({"error": result["error"]}), 400
 
+    return jsonify({"message": result["data"]}), 200
 
-@user_bp.route('/api/users/<int:id>', methods=['DELETE'])
+@user_bp.route('/api/user/<uuid:id>', methods=['DELETE'])
 @jwt_required() # Sicherstellen, dass User eingeloggt ist
 def delete_user(id):
     # Prüfen, wer der aktuell eingeloggte User ist
     current_user_id = get_jwt_identity()
 
     # Sicherstellen, dass kein anderer User gelöscht wird außer sich selbst.
-    if current_user_id != id:
+    uuid_obj = uuid.UUID(current_user_id)
+    if uuid_obj != id:
         return jsonify({"error": "Du darfst nur deinen eigenen Account löschen!"}), 404
 
     # Logik in Services:
-    success, message = delete_user_logic(id)
+    message = delete_user_logic(id)
 
-    if not success:
+    if not message["success"]:
         return jsonify({"error": message}), 404
 
-    return jsonify({"message": message})
+    return jsonify({"message": message["data"]})
 
 @user_bp.route('/api/user', methods=['GET'])
 @jwt_required()
 def get_user():
     current_user_id = get_jwt_identity()
 
-    # Hier prüfen, wie wir den Kalender einbauen können, sowie die Streak
-    success, result = get_user_logic(current_user_id)
+    result = get_user_logic(current_user_id)
 
-    if not success:
-        return jsonify({"error": result}), 404
+    if not result["success"]:
+        return jsonify({"error": result["error"]}), 404
 
-    return jsonify({"message": result}), 200
+    return jsonify({"user": result["data"]}), 200
 
 @user_bp.route('/api/user/me', methods=['PATCH'])
 @jwt_required()
 def update_user():
     current_user_id = get_jwt_identity()
+    update_data = request.get_json()
 
-    updateData = request.get_json()
+    if not update_data:
+        return jsonify({"error": "Keine Daten übergeben."}), 400
 
-    #Hier muss geprüft werden, welche Daten überhaupt geändert werden und welche nicht! - Siehe Schnittstelle
-    success, result = update_user_logic(current_user_id, updateData)
+    result = update_user_logic(current_user_id, update_data)
 
-    if not success:
-        return jsonify({"error": result}), 404
+    if not result["success"]:
+        return jsonify({"error": result["error"]}), 404
 
-    return jsonify({"message": result}), 200
+    return jsonify({"message": result["data"]}), 200
+
 
 @user_bp.route('/api/user/password', methods=['PATCH'])
 @jwt_required()
@@ -132,9 +143,9 @@ def update_password():
     if not old_pw or not new_pw:
         return jsonify({"error": "Altes und neues Passwort sind erforderlich"}), 400
 
-    success, result = update_password_logic(current_user_id, old_pw, new_pw)
+    result = update_password_logic(current_user_id, old_pw, new_pw)
 
-    if not success:
+    if not result["success"]:
         return jsonify({"error": result}), 404
 
     return jsonify({"message": result}), 200
