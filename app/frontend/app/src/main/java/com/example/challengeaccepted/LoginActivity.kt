@@ -29,7 +29,7 @@ class LoginActivity : AppCompatActivity() {
             val pw = password.text.toString()
 
             if (user.isNotEmpty() && pw.isNotEmpty()) {
-                val intent = Intent(this, DashboardActivity::class.java)
+                val intent = Intent(this, CreateChallengeModeActivity::class.java)
                 startActivity(intent)
             }
         }
