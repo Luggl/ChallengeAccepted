@@ -10,30 +10,60 @@ from datetime import datetime
 import uuid
 
 # ---------- Standard-Challenge erstellen ----------
-def create_challenge_standard_logic(user_id, data):
+def create_challenge_standard_logic(user_id, data, group_id):
     """Erstellt eine Standard-Challenge mit Dauer, Startdatum und Sportarten."""
-    required_fields = ["group_id", "startdatum", "dauer", "sportarten"]
+    # Pflichtfelder prüfen
+    required_fields = ["startdatum", "enddatum", "sportarten"]
     if not all(field in data for field in required_fields):
         return response(False, error="Pflichtfelder fehlen.")
 
+    # Datum validieren & umwandeln (Berlin-Zeit)
     try:
         startdatum = datetime.fromisoformat(data["startdatum"])
+        enddatum = datetime.fromisoformat(data["enddatum"])
+        # explizit Berlin-Zeitzone zuweisen
+        startdatum = now_berlin().replace(
+            year=startdatum.year, month=startdatum.month, day=startdatum.day
+        )
+        enddatum = now_berlin().replace(
+            year=enddatum.year, month=enddatum.month, day=enddatum.day
+        )
     except ValueError:
-        return response(False, error="Ungültiges Datumsformat für Startdatum.")
+        return response(False, error="Ungültiges Datumsformat.")
 
+    # Enddatum muss nach Startdatum liegen
+    if enddatum <= startdatum:
+        return response(False, error="Enddatum muss nach Startdatum liegen.")
+
+    # Dauer berechnen
+    dauer = (enddatum - startdatum).days
+
+    # Challenge-Objekt erzeugen
     challenge = StandardChallenge(
         challenge_id=uuid.uuid4().bytes,
-        gruppe_id=data["group_id"],
+        gruppe_id=group_id,
         ersteller_user_id=user_id,
-        ersteller_gruppe_id=data["group_id"],
-        startdatum=startdatum,
-        dauer=data["dauer"]
+        startdatum=startdatum.date(),
+        dauer=dauer
     )
 
-    for s_id in data["sportarten"]:
-        sportart = find_sportart_by_id(s_id)
-        if sportart:
-            challenge.sportarten.append(sportart)
+    # Sportarten zuweisen
+    for eintrag in data["sportarten"]:
+        sportart_id_str = eintrag.get("sportart_id")
+        if not sportart_id_str:
+            return response(False, error="Sportart-ID fehlt bei einem Eintrag.")
+
+        try:
+            sportart_uuid = uuid.UUID(sportart_id_str)
+        except ValueError:
+            return response(False, error="Ungültige Sportart-ID.")
+
+        sportart = find_sportart_by_id(sportart_uuid.bytes)
+        if not sportart:
+            return response(False, error=f"Sportart mit ID {sportart_id_str} nicht gefunden.")
+
+        # TODO: Start-/Zielintensität speichern (z.B. in ChallengeSportart-Zwischentabelle)
+        challenge.sportarten.append(sportart)
 
     created = create_challenge(challenge)
     if not created:
