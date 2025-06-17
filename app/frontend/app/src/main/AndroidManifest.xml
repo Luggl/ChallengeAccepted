@@ -45,7 +45,7 @@
         <!--<activity android:name=".GroupstatusActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>-->
 
         <!-- Challenge -->
-        <activity android:name=".CreateChallengeModeActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>-->
+        <activity android:name=".CreateChallengeModeActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
 
         <!-- Standard -->
         <activity android:name=".StandardActivitiesActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
