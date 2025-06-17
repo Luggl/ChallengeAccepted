@@ -28,19 +28,28 @@ def create_group():
 
     return jsonify({"message": "Gruppe erstellt", "gruppe": result["data"]}), 201
 
-@group_bp.route('/api/invitationlink/', methods=['GET'])
+@group_bp.route('/api/invitationlink', methods=['GET'])
+@jwt_required()
 def invitation_link():
-    # Gruppe-ID aus den Query-Parametern holen
-    gruppe_id = request.args.get('gruppe_id')
+    current_user_id = str(uuid.UUID(get_jwt_identity()))
 
-    if not gruppe_id:
+    # Gruppe-ID aus den Query-Parametern holen
+
+    gruppe_id_str = request.args.get('gruppe_id')
+
+    if not gruppe_id_str:
         return jsonify({"error": "gruppe_id ist erforderlich!"}), 400
 
+    # Check, ob String ein gültiges UUID Obj
+    try:
+        gruppe_id = uuid.UUID(gruppe_id_str)
+    except ValueError:
+        return jsonify({"error": "Ungültige Gruppen-ID!"}), 400
 
-    success, result = invitation_link_logic(gruppe_id)
+    result = invitation_link_logic(gruppe_id_str)
 
-    if not success:
-        return jsonify({"error": result}), 400
+    if not result['success']:
+        return jsonify({"error": result["data"]}), 400
 
     return jsonify({"message": "Einladungslink erstellt", "link": result}), 200
 
@@ -49,22 +58,23 @@ def join_group_via_link():
     user_id = request.args.get('user')
     invitation_link = request.args.get('invitationLink')
 
-    success, result = join_group_via_link_logic(user_id, invitation_link)
+    result = join_group_via_link_logic(user_id, invitation_link)
 
-    if not success:
+    if not result["success"]:
         return jsonify({"error": result}), 400
 
     return jsonify({"message": result}), 200
 
-@group_bp.route('/api/group/<int:id>', methods=['DELETE'])
+@group_bp.route('/api/group', methods=['DELETE'])
 @jwt_required()
-def delete_group(id):
+def delete_group():
     current_user_id = get_jwt_identity()        # aktuell eingeloggter User prüfen
+    group_id = request.args.get('group_id')
 
     # Logik in Services erhält sowohl die Group-ID, als auch die User_Id um zu prüfen, ob Löschaufruf erlaubt
-    success, result = delete_group_logic(id, current_user_id)
+    result = delete_group_logic(group_id, current_user_id)
 
-    if not success:
+    if not result["success"]:
         return jsonify({"error": result}), 403 # Keine Berechtigung oder Fehler
 
     return jsonify({"message": result}), 204
