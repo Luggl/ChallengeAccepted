@@ -25,7 +25,7 @@ class CreateChallengeModeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_dashboard)
 
-        //Views aus dem XML holen
+        //Views aus dem XML holen 
         val backButton=findViewById<ImageButton>(R.id.btn_back)
         val confirmButton=findViewById<ImageButton>(R.id.btn_confirm_selection)
         val imageStandard=findViewById<ImageView>(R.id.iv_standard)
