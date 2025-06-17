@@ -43,15 +43,15 @@ class ProfileActivity :  AppCompatActivity()  {
         }*/
 
         //Settings Seite
-        navSet.setOnClickListener {
+        /*navSet.setOnClickListener {
             val intent = Intent(this, ProfileSettingsActivity::class.java)
             startActivity(intent)
-        }
+        }*/
 
-//navSet.setOnClickListener {
-//    Toast.makeText(this, "Funktioniert!", Toast.LENGTH_SHORT).show()
-//    val intent = Intent(this, RegisterActivity::class.java)
-//    startActivity(intent)
-//}
-}
+        navSet.setOnClickListener {
+            Toast.makeText(this, "Funktioniert!", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, RegisterActivity::class.java)
+            startActivity(intent)
+        }
+    }
 }
