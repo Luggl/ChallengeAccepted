@@ -12,12 +12,7 @@ import androidx.core.view.WindowCompat
 
 class RegisterActivity : AppCompatActivity() {
 
-    private lateinit var etEmail: EditText
-    private lateinit var etPassword: EditText
-    private lateinit var btnLogin: Button
-
     override fun onCreate(savedInstanceState: Bundle?) {
-
         // Randloses Layout aktivieren
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
@@ -32,8 +27,16 @@ class RegisterActivity : AppCompatActivity() {
         val alreadyAccount = findViewById<TextView>(R.id.text_already_account)
 
         registerButton.setOnClickListener {
-            val intent = Intent(this, DashboardActivity::class.java)
-            startActivity(intent)
+
+            val user = username.text.toString()
+            val mail = email.text.toString()
+            val pw = password.text.toString()
+            val rpw = repeatPassword.text.toString()
+
+            if (user.isNotEmpty() && mail.isNotEmpty() && pw.isNotEmpty() && rpw.isNotEmpty()) {
+                val intent = Intent(this, DashboardActivity::class.java)
+                startActivity(intent)
+            }
         }
 
         alreadyAccount.setOnClickListener {

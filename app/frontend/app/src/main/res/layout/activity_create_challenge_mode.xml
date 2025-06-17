@@ -123,7 +123,7 @@
         android:layout_margin="16dp"
         android:background="@drawable/green_button"
         android:src="@drawable/check_icon"
-        android:contentDescription="@string/desc_check" />
+        android:contentDescription="@string/desc_check_confirm" />
 
     <!-- Bottom Navigation -->
     <LinearLayout

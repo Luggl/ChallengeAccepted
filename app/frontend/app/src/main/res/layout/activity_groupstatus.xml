@@ -15,9 +15,7 @@
         android:layout_centerHorizontal="true"
         android:layout_margin="16dp"
         app:cardCornerRadius="12dp"
-        app:cardElevation="4dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:cardElevation="4dp">
 
         <ImageView
             android:id="@+id/iv_background"
@@ -266,9 +264,6 @@
         android:background="@color/grey_300"
         android:orientation="horizontal"
         android:weightSum="4"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         tools:ignore="ExtraText">
 
         <!-- Community Icon -->
