@@ -17,7 +17,6 @@ from app.repositories.user_repository import (
 
 import uuid
 
-from database.database import engine
 ALLOWED_UPDATE_FIELDS = {"username", "email", "profilbild"}
 
 
