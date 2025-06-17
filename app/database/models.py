@@ -3,7 +3,7 @@ import sqlalchemy
 from sqlalchemy import Column, String, Integer,Boolean, Date, ForeignKey, Table
 from sqlalchemy.dialects.sqlite import BLOB
 from sqlalchemy.orm import relationship
-from database.database import Base
+from .database import Base
 from enum import Enum
 from sqlalchemy import Enum as SQLEnum
 from sqlalchemy import and_
@@ -97,8 +97,6 @@ class Sportart(Base):
     bezeichnung = Column(String, nullable=False)
     unit = Column(SQLEnum(StatusUnit), nullable=False)
 
-    # Nur für alte Many-to-Many-Verknüpfung (wenn noch genutzt)
-    challenges = relationship("Challenge", secondary="challenge_sportart", back_populates="sportarten")
 
     # Neu: separate Beziehungen für beide Challenge-Typen
     standard_links = relationship("StandardChallengeSportart", back_populates="sportart")
@@ -155,13 +153,13 @@ class Challenge(Base):
         "polymorphic_on":typ
     }
 
-    sportarten=relationship("Sportart", secondary=challenge_sportart,back_populates="challenges")
     aufgaben=relationship("Aufgabe", back_populates="challenge")
 
 class StandardChallenge(Challenge):
     __tablename__ = "standard_challenge"
     challenge_id = Column(BLOB, ForeignKey("challenge.challenge_id"),primary_key=True)
     dauer=Column(Integer)
+    enddatum = Column(Date)
 
     __mapper_args_ = {
         "polymorphic_identity":"standard"
