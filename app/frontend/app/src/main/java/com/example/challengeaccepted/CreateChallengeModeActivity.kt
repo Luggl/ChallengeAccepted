@@ -23,7 +23,7 @@ class CreateChallengeModeActivity : AppCompatActivity() {
         //Randloses Layout aktivieren (Edge-to-Edge)
         WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_dashboard)
+        setContentView(R.layout.activity_create_challenge_mode)
 
         //Views aus dem XML holen 
         val backButton=findViewById<ImageButton>(R.id.btn_back)
