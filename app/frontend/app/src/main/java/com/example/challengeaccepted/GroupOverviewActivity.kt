@@ -7,11 +7,6 @@ import androidx.appcompat.app.AppCompatActivity
 
 class GroupOverviewActivity : AppCompatActivity() {
 
-    private lateinit var navGroup: ImageView
-    private lateinit var navHome: ImageView
-    private lateinit var navAdd: ImageView
-    private lateinit var navProfile: ImageView
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_group_overview)

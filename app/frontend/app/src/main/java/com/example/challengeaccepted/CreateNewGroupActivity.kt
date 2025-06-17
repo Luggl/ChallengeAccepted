@@ -7,16 +7,11 @@ import androidx.appcompat.app.AppCompatActivity
 
 class CreateNewGroupActivity : AppCompatActivity() {
 
-    private lateinit var navGroup: ImageView
-    private lateinit var navHome: ImageView
-    private lateinit var navAdd: ImageView
-    private lateinit var navProfile: ImageView
-
 override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_create_new_group)
 
-    // Bottom Navigation Icons initialisieren
+    // Initialisieren
     val navGroup = findViewById<ImageView>(R.id.nav_group)
     val navHome = findViewById<ImageView>(R.id.nav_home)
     val navAdd = findViewById<ImageView>(R.id.nav_add)

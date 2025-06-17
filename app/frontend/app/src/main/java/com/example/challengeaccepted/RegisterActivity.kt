@@ -12,10 +12,6 @@ import androidx.core.view.WindowCompat
 
 class RegisterActivity : AppCompatActivity() {
 
-    private lateinit var etEmail: EditText
-    private lateinit var etPassword: EditText
-    private lateinit var btnLogin: Button
-
     override fun onCreate(savedInstanceState: Bundle?) {
         // Randloses Layout aktivieren
         WindowCompat.setDecorFitsSystemWindows(window, false)
@@ -41,11 +37,11 @@ class RegisterActivity : AppCompatActivity() {
                 val intent = Intent(this, DashboardActivity::class.java)
                 startActivity(intent)
             }
+        }
 
-            alreadyAccount.setOnClickListener {
-                val intent = Intent(this, LoginActivity::class.java)
-                startActivity(intent)
-            }
+        alreadyAccount.setOnClickListener {
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
         }
     }
 }
