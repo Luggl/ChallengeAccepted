@@ -159,6 +159,7 @@ class StandardChallenge(Challenge):
     __tablename__ = "standard_challenge"
     challenge_id = Column(BLOB, ForeignKey("challenge.challenge_id"),primary_key=True)
     dauer=Column(Integer)
+    enddatum = Column(Date)
 
     __mapper_args_ = {
         "polymorphic_identity":"standard"
