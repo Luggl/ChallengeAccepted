@@ -1,5 +1,5 @@
 import pytz
-from datetime import datetime
+from datetime import datetime, date
 
 # Deutsche Zeitzone deklarieren
 BERLIN = pytz.timezone("Europe/Berlin")
@@ -8,3 +8,5 @@ BERLIN = pytz.timezone("Europe/Berlin")
 def now_berlin():
     return datetime.now(BERLIN)
 
+def date_today():
+    return date.today()
