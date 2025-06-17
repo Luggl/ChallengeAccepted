@@ -16,7 +16,7 @@ class ProfileActivity :  AppCompatActivity()  {
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_dashboard)
+        setContentView(R.layout.activity_profile)
 
         // Bottom Navigation Icons initialisieren
         val navGroup = findViewById<ImageView>(R.id.nav_group)
