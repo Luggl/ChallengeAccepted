@@ -16,7 +16,8 @@ def find_group_by_name(gruppenname):
 
 def find_group_by_invite_code(einladungscode):
     """Finde eine Gruppe anhand des Einladungscodes."""
-    return db.session.query(Gruppe).filter_by(einladungscode=einladungscode).first()
+    with SessionLocal() as session:
+        return session.query(Gruppe).filter_by(einladungscode=einladungscode).first()
 
 def create_group(gruppe):
     """Erstelle und speichere eine neue Gruppe."""

@@ -1,6 +1,6 @@
 import uuid
 import sqlalchemy
-from sqlalchemy import Column, String, Integer,Boolean, Date, ForeignKey, Table
+from sqlalchemy import Column, String, Integer, Boolean, Date, ForeignKey, Table, ForeignKeyConstraint
 from sqlalchemy.dialects.mysql import DATETIME
 from sqlalchemy.dialects.sqlite import BLOB
 from sqlalchemy.orm import relationship
@@ -139,14 +139,24 @@ class Challenge(Base):
     gruppe_id=Column(BLOB, ForeignKey("gruppe.gruppe_id"))
     gruppe=relationship("Gruppe", back_populates="challenges")
 
-    ersteller_user_id=Column(BLOB, ForeignKey("membership.user_id"))
-    ersteller_gruppe_id=Column(BLOB, ForeignKey("membership.gruppe_id"))
+    ersteller_user_id = Column(BLOB)
+    ersteller_gruppe_id = Column(BLOB)
+
+    __table_args__ = (
+        ForeignKeyConstraint(
+            ["ersteller_user_id", "ersteller_gruppe_id"],
+            ["membership.user_id", "membership.gruppe_id"],
+            ondelete="CASCADE"
+        ),
+    )
+
     ersteller=relationship(
         "Membership",
         primaryjoin=and_(
             foreign(ersteller_user_id)==Membership.user_id,
             foreign(ersteller_gruppe_id)==Membership.gruppe_id
-        )
+        ),
+        foreign_keys=[Membership.user_id, Membership.gruppe_id],
     )
 
     __mapper_args_={
@@ -222,8 +232,16 @@ class Aufgabenerfuellung (Base):
     aufgabe_id= Column(BLOB, ForeignKey("aufgabe.aufgabe_id"))
     aufgabe=relationship("Aufgabe", back_populates="erfuellungen")
 
-    user_id=Column(BLOB, ForeignKey("membership.user_id"))
-    gruppe_id=Column(BLOB, ForeignKey("membership.gruppe_id"))
+    user_id = Column(BLOB)
+    gruppe_id = Column(BLOB)
+
+    __table_args__ = (
+        ForeignKeyConstraint(
+            ["user_id", "gruppe_id"],
+            ["membership.user_id", "membership.gruppe_id"],
+            ondelete="CASCADE"
+        ),
+    )
 
     mitglied=relationship(
         "Membership",
@@ -241,8 +259,17 @@ class Beitrag (Base):
     beschreibung=Column(String)
     erstellDatum=Column(Date)
 
-    user_id=Column(BLOB, ForeignKey("membership.user_id"))
-    gruppe_id=Column (BLOB, ForeignKey("membership.gruppe_id"))
+    user_id = Column(BLOB)
+    gruppe_id = Column(BLOB)
+
+    __table_args__ = (
+        ForeignKeyConstraint(
+            ["user_id", "gruppe_id"],
+            ["membership.user_id", "membership.gruppe_id"],
+            ondelete="CASCADE"
+        ),
+    )
+
     erfuellung_id=Column(BLOB, ForeignKey("aufgabenerfuellung.erfuellung_id"), unique=True)
 
     mitglied=relationship(

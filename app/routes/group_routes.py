@@ -49,8 +49,9 @@ def invitation_link():
     return jsonify({"message": "Einladungslink erstellt", "link": result}), 200
 
 @group_bp.route('/api/group', methods=['PUT'])
+@jwt_required()
 def join_group_via_link():
-    user_id = request.args.get('user')
+    user_id = get_jwt_identity()
     invitation_link = request.args.get('invitationLink')
 
     result = join_group_via_link_logic(user_id, invitation_link)
