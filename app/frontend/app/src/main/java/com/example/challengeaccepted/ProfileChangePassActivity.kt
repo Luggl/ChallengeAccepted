@@ -18,7 +18,7 @@ class ProfileChangePassActivity :  AppCompatActivity() {
         val navBack = findViewById<ImageView>(R.id.btn_back)
 
         navBack.setOnClickListener {
-            val intent = Intent(this, ProfileActivity::class.java)
+            val intent = Intent(this, ProfileSettingsActivity::class.java)
             startActivity(intent)
         }
 

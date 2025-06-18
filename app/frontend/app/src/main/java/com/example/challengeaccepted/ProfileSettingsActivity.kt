@@ -38,16 +38,16 @@ class ProfileSettingsActivity :  AppCompatActivity() {
         // Navigation Passwort ändern
         val navChangePass = findViewById<Button>(R.id.btn_change_password)
 
-//        navChangePass.setOnClickListener {
-//            val intent = Intent(this, ProfileChangePassActivity::class.java)
-//            startActivity(intent)
-//        }
-
         navChangePass.setOnClickListener {
-        Toast.makeText(this, "Funktioniert!", Toast.LENGTH_SHORT).show()
-        val intent = Intent(this, RegisterActivity::class.java)
-        startActivity(intent)
-    }
+            val intent = Intent(this, ProfileChangePassActivity::class.java)
+            startActivity(intent)
+        }
+
+//        navChangePass.setOnClickListener {
+//        Toast.makeText(this, "Funktioniert!", Toast.LENGTH_SHORT).show()
+//        val intent = Intent(this, RegisterActivity::class.java)
+//        startActivity(intent)
+//    }
 
         // Bottom Navigation Icons initialisieren
         val navGroup = findViewById<ImageView>(R.id.nav_group)

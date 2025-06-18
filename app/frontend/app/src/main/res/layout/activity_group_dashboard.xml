@@ -8,6 +8,7 @@
     tools:context=".DashboardActivity">
 
     <LinearLayout
+        android:id="@+id/ll_groupstatus"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
@@ -44,11 +45,10 @@
 
         </LinearLayout>
     </LinearLayout>
-    <!-- Weekly Calendar -->
 
     <!-- Hier kommen die Tagesanzeigen -->
     <LinearLayout
-        android:id="@+id/calendar"
+        android:id="@+id/ll_challenge_overview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
@@ -178,7 +178,7 @@
         android:id="@+id/ll_user_profiles"
         android:layout_width="450dp"
         android:layout_height="wrap_content"
-        android:layout_below="@id/calendar"
+        android:layout_below="@id/ll_challenge_overview"
         android:layout_marginTop="10dp"
         android:orientation="horizontal">
 
@@ -311,12 +311,12 @@
         android:id="@+id/ll_bottom_navigation"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_alignParentBottom="true"
+        android:layout_marginTop="670dp"
         android:background="@color/grey_300"
         android:orientation="horizontal"
         android:weightSum="4">
 
-        <!-- Community -->
+        <!-- Community Icon -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -325,12 +325,14 @@
             android:orientation="vertical">
 
             <ImageView
+                android:id="@+id/nav_group"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:src="@drawable/group_blue_icon" />
+
         </LinearLayout>
 
-        <!-- Home -->
+        <!-- Home Icon -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -339,12 +341,14 @@
             android:orientation="vertical">
 
             <ImageView
+                android:id="@+id/nav_home"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:src="@drawable/home_white_icon" />
+
         </LinearLayout>
 
-        <!-- Add -->
+        <!-- Add Icon -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -353,12 +357,14 @@
             android:orientation="vertical">
 
             <ImageView
+                android:id="@+id/nav_add"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:src="@drawable/add_white_icon" />
+
         </LinearLayout>
 
-        <!-- Profile -->
+        <!-- Profile Icon -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -367,10 +373,12 @@
             android:orientation="vertical">
 
             <ImageView
+                android:id="@+id/nav_profile"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:src="@drawable/profile_white_icon" />
-        </LinearLayout>
-    </LinearLayout>
 
+        </LinearLayout>
+
+    </LinearLayout>
 </RelativeLayout>
