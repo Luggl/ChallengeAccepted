@@ -76,14 +76,15 @@ def delete_group():
     return jsonify({"message": result}), 204
 
 
-@group_bp.route('/api/groupfeed/<int:gid>', methods=['GET'])
+@group_bp.route('/api/groupfeed', methods=['GET'])
 @jwt_required()
-def get_group_feed(gid):
+def get_group_feed():
     current_user_id = get_jwt_identity()
+    group_id = request.args.get('group_id')
 
-    success, result = get_group_feed_logic(gid, current_user_id)
+    result = get_group_feed_logic(group_id, current_user_id)
 
-    if not success:
+    if not result["success"]:
         return jsonify({"error": result}), 403
 
     return jsonify({"message": result}), 200
@@ -95,9 +96,9 @@ def get_group_overview():
 
     # Achtung, hier muss im result auch eine Information mitgeliefert werden, ob der User eine Aufgabe zu erledigen hat oder nicht
     # Genauso ob die Aufgabe Standard oder Survival Challenge bezogen ist
-    success, result = get_group_overview_logic(current_user_id)
+    result = get_group_overview_logic(current_user_id)
 
-    if not success:
+    if not result["success"]:
         return jsonify({"error": result}), 403
 
     return jsonify({"message": result}), 200
