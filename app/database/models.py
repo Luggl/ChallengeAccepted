@@ -72,7 +72,7 @@ class ResetToken(Base):
 class Membership(Base):
     __tablename__ = "membership"
     user_id=Column(BLOB, ForeignKey("user.user_id"), primary_key=True)
-    gruppe_id=Column(BLOB, ForeignKey("gruppe.gruppe_id"), primary_key=True)
+    gruppe_id=Column(BLOB, ForeignKey("gruppe.gruppe_id", ondelete="CASCADE"), primary_key=True)
     isAdmin=Column(Boolean, default=False)
 
     user=relationship("User", back_populates="membership")
@@ -88,8 +88,8 @@ class Gruppe(Base):
     einladungscode_gueltig_bis=Column(DATETIME)
     erstellungsDatum=Column(Date)
 
-    memberships= relationship("Membership", back_populates="gruppe")
-    challenges=relationship("Challenge", back_populates="gruppe")
+    memberships= relationship("Membership", back_populates="gruppe", cascade="all, delete-orphan", passive_deletes=True)
+    challenges=relationship("Challenge", back_populates="gruppe", cascade="all, delete-orphan", passive_deletes=True)
 
 class Sportart(Base):
     __tablename__ = "sportart"
@@ -256,8 +256,4 @@ class Beitrag (Base):
 
 from sqlalchemy.orm import configure_mappers
 configure_mappers()
-
-
-
-
 
