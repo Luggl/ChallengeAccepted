@@ -33,10 +33,10 @@ class RegisterActivity : AppCompatActivity() {
             val pw = password.text.toString()
             val rpw = repeatPassword.text.toString()
 
-            if (user.isNotEmpty() && mail.isNotEmpty() && pw.isNotEmpty() && rpw.isNotEmpty()) {
+           // if (user.isNotEmpty() && mail.isNotEmpty() && pw.isNotEmpty() && rpw.isNotEmpty()) {
                 val intent = Intent(this, DashboardActivity::class.java)
                 startActivity(intent)
-            }
+            //}
         }
 
         alreadyAccount.setOnClickListener {
