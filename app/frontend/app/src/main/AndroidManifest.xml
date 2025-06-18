@@ -63,7 +63,7 @@
 
         <!-- Video -->
         <activity android:name=".RecordActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
-       <!-- <activity android:name=".PostEditActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>-->
+        <activity android:name=".PostEditActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
 
     </application>
 </manifest>

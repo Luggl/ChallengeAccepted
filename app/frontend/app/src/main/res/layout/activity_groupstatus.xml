@@ -262,7 +262,7 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/button_finish"
+        android:id="@+id/btn_leave_group"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"

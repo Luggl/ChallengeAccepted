@@ -264,82 +264,24 @@
                 android:textSize="16sp" />
         </LinearLayout>
 
-        <!-- Spieler 3 -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:layout_marginBottom="8dp"
-            android:background="@drawable/green_frame"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:padding="8dp">
-
-            <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginEnd="6dp"
-                android:background="@drawable/bright_grey_frame"
-                android:clipToOutline="true"
-                android:scaleType="centerCrop"
-                android:src="@drawable/profile_picture" />
-
-            <TextView
-                android:layout_width="50dp"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="100dp"
-                android:text="Ben"
-                android:textColor="@color/white"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:text="3."
-                android:textColor="@color/white"
-                android:textSize="16sp" />
-        </LinearLayout>
-
-        <!-- Spieler 4 -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:layout_marginBottom="8dp"
-            android:background="@drawable/green_frame"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:padding="8dp">
-
-            <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginEnd="6dp"
-                android:background="@drawable/bright_grey_frame"
-                android:clipToOutline="true"
-                android:scaleType="centerCrop"
-                android:src="@drawable/profile_picture" />
-
-            <TextView
-                android:layout_width="50dp"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="100dp"
-                android:text="Ben"
-                android:textColor="@color/white"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:text="4."
-                android:textColor="@color/white"
-                android:textSize="16sp" />
-        </LinearLayout>
-
     </LinearLayout>
+
+    <!-- Challenge verlassen -->
+    <Button
+        android:id="@+id/btn_leave_challenge"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="600dp"
+        android:layout_marginRight="16dp"
+        android:background="@drawable/red_frame"
+        android:padding="12dp"
+        android:text="Challenge verlassen"
+        android:textColor="@color/button_red"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
 
     <!-- Bottom Navigation -->
     <LinearLayout
