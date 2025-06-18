@@ -5,7 +5,7 @@
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:C:\Users\TS10\PycharmProjects\gruppe-14---challenge-accepted_new\mydatabase.db</jdbc-url>
+      <jdbc-url>jdbc:sqlite:C:\Users\Moritz\PycharmProjects\gruppe-14---challenge-accepted\mydatabase.db</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
   </component>
