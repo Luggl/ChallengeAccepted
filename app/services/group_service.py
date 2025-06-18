@@ -11,28 +11,30 @@ from app.repositories.group_repository import *
 # Gruppe erstellen
 def create_group_logic(name, beschreibung, gruppenbild, created_by):
     invite_link = str(uuid.uuid4())  # einfacher Invite-Code
-    group = Gruppe(
-        gruppenname=name,
-        beschreibung=beschreibung,
-        gruppenbild=gruppenbild,
-        einladungscode=invite_link,
-        einladungscode_gueltig_bis=date_today(),
-        erstellungsDatum=date_today()
-    )
 
+    # Hier der DB-Zugriff direkt in Services, da Gruppe und Membership durch FK-Bedingung in einer Session comitted werden müssen!
     with SessionLocal() as session:
+        group = Gruppe(
+            gruppenname=name,
+            beschreibung=beschreibung,
+            gruppenbild=gruppenbild,
+            einladungscode=invite_link,
+            einladungscode_gueltig_bis=date_today(),
+            erstellungsDatum=date_today()
+        )
+
+
         session.add(group)
         session.flush()
 
-    membership = Membership(
-        user_id=uuid.UUID(created_by).bytes,
-        gruppe_id=group.gruppe_id,
-        isAdmin=True
-    )
-    session.add(membership)
-
-    session.commit()
-    session.refresh(group)
+        membership = Membership(
+            user_id=uuid.UUID(created_by).bytes,
+            gruppe_id=group.gruppe_id,
+            isAdmin=True
+        )
+        session.add(membership)
+        session.commit()
+        session.refresh(group)
 
 
     return response(True, {
@@ -43,10 +45,14 @@ def create_group_logic(name, beschreibung, gruppenbild, created_by):
     })
 
 # Einladung erstellen
-def invitation_link_logic(group_id):
+def invitation_link_logic(group_id, user_id):
     group = find_group_by_id(group_id)
     if not group:
         return response(False, "Gruppe nicht gefunden.")
+
+    membership = find_membership(user_id, group.gruppe_id)
+    if not membership:
+        return response(False, "User nicht Member der Gruppe!")
 
     group.einladungscode = str(uuid.uuid4())
     group.einladungscode_gueltig_bis = now_berlin() + timedelta(hours=4)  # Link ist 4 Std gültig

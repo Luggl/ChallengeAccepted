@@ -31,22 +31,17 @@ def create_group():
 @group_bp.route('/api/invitationlink', methods=['GET'])
 @jwt_required()
 def invitation_link():
-    current_user_id = str(uuid.UUID(get_jwt_identity()))
+    current_user_id = uuid.UUID(get_jwt_identity()).bytes
 
     # Gruppe-ID aus den Query-Parametern holen
-
     gruppe_id_str = request.args.get('gruppe_id')
 
     if not gruppe_id_str:
         return jsonify({"error": "gruppe_id ist erforderlich!"}), 400
 
-    # Check, ob String ein gültiges UUID Obj
-    try:
-        gruppe_id = uuid.UUID(gruppe_id_str)
-    except ValueError:
-        return jsonify({"error": "Ungültige Gruppen-ID!"}), 400
+    gruppe_id = uuid.UUID(gruppe_id_str).bytes
 
-    result = invitation_link_logic(gruppe_id_str)
+    result = invitation_link_logic(gruppe_id, current_user_id)
 
     if not result['success']:
         return jsonify({"error": result["data"]}), 400
