@@ -5,34 +5,37 @@ from services.task_service import *
 # Blueprint für alle Aufgaben-Routen
 task_bp = Blueprint("task", __name__)
 
-@task_bp.route("/api/tasks/<int:id>", methods=["GET"])
+@task_bp.route("/api/task", methods=["GET"])
 @jwt_required()
-def get_task(id):
+def get_task():
     current_user_id = get_jwt_identity()
+    task_id = request.args.get("task_id")
 
-    success, result = get_task_logic(id, current_user_id)
+    result = get_task_logic(task_id, current_user_id)
 
-    if not success:
+    if not result["success"]:
         return jsonify({"error": result}), 404
 
     return jsonify({"task": result}), 200
 
-@task_bp.route("/api/tasks/<int:id>/complete", methods=["POST"])
+@task_bp.route("/api/task", methods=["POST"])
 @jwt_required()
-def complete_task(taskid):
+def complete_task():
     current_user_id = get_jwt_identity()
+    task_id = request.json.get("task_id")
 
-    success, result = complete_task_logic(taskid, current_user_id)
+    result = complete_task_logic(task_id, current_user_id)
 
-    if not success:
+    if not result["success"]:
         return jsonify({"error": result}), 400
 
     return jsonify({"message": result}), 201
 
-@task_bp.route('/api/vote/<int:id>', methods=["POST"])
+@task_bp.route('/api/vote', methods=["POST"])
 @jwt_required()
-def vote(id):
+def vote():
     current_user_id = get_jwt_identity()
+    task_id = request.json.get("task_id")
 
     vote = request.json.get('vote')
 
@@ -40,9 +43,9 @@ def vote(id):
         return jsonify({"error": "Vote cannot be empty"}), 400
 
     #Hier prüfen, ob Vote noch aussteht
-    success, result = vote_logic(current_user_id, id, vote)
+    result = vote_logic(current_user_id, task_id, vote)
 
-    if not success:
+    if not result["success"]:
         return jsonify({"error": result}), 400
 
     return jsonify({"message": result}), 200
