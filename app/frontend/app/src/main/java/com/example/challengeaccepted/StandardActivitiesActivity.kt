@@ -70,7 +70,7 @@ class StandardActivitiesActivity : AppCompatActivity() {
             Toast.makeText(this, "Auswahl bestätigt!", Toast.LENGTH_SHORT).show()
             Log.d("DashboardActivity", "Bestätigt: $selectedExercises")
             // Etappe 5: Auswahl an nächste Aktivität übergeben
-            val intent = Intent(this, StandardIntenstityActivity::class.java)
+            val intent = Intent(this, StandardIntensityActivity::class.java)
             intent.putStringArrayListExtra("selectedExercises", ArrayList(selectedExercises))
             startActivity(intent)
         }
