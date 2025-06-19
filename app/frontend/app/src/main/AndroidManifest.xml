@@ -51,11 +51,11 @@
         <activity android:name=".StandardActivitiesActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
          <!--<activity android:name=".StandardChallengeOverviewActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>-->
          <!--<activity android:name=".StandardCreateChallengeOverviewActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>-->
-         <!--<activity android:name=".StandardIntensityActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>-->
+        <activity android:name=".StandardIntensityActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
          <!--<activity android:name=".StandardJoinChallengeOverviewActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>-->
 
          <!-- Survival -->
-        <!--<activity android:name=".SurvivalActivitiesActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>-->
+        <activity android:name=".SurvivalActivitiesActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <activity android:name=".SurvivalChallengeOverviewActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <!--<activity android:name=".SurvivalCreateChallengeOverviewActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>-->
         <!--<activity android:name=".SurvivalIntensityActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>-->
