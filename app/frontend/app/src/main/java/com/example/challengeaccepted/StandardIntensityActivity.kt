@@ -1,12 +1,16 @@
 package com.example.challengeaccepted
+import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 
-class StandardIntensityActivity : AppCompatActivity(){
+class StandardIntensityActivity : AppCompatActivity() {
 
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -15,22 +19,37 @@ class StandardIntensityActivity : AppCompatActivity(){
 
         //zurück Button
         val btnBack = findViewById<ImageButton>(R.id.btn_back)
+        //wenn der Button geklickt wird, wird die aktuelle Activity beendet
         btnBack.setOnClickListener {
             finish()
         }
         //bestätige Button
         val btnConfirm = findViewById<ImageButton>(R.id.btn_confirm_selection)
+        //beim Click wird die Start und Endintensität ausgelesen und angezeigt
         btnConfirm.setOnClickListener {
-            //Startintensität holen
+            //Startintensität aus dem Textview lesen
             val startTextView = findViewById<TextView>(R.id.tv_start_main)
             val startValue = startTextView.text.toString().toIntOrNull() ?: 0
 
-            //Endintensität holen
+            //Endintensität aus dem Textview lesen
             val endTextView = findViewById<TextView>(R.id.tv_end_main)
             val endValue = endTextView.text.toString().toIntOrNull() ?: 0
 
             //Test Ausgabe
             Toast.makeText(this, "Start: $startValue, Ende: $endValue", Toast.LENGTH_SHORT).show()
+        }
+        val navGroup = findViewById<ImageView>(R.id.nav_group)
+        val navHome = findViewById<ImageView>(R.id.nav_home)
+        val navProfile = findViewById<ImageView>(R.id.nav_profile)
+
+        navGroup.setOnClickListener{
+            startActivity(Intent(this, GroupOverviewActivity::class.java))
+        }
+        navHome.setOnClickListener{
+            startActivity(Intent(this, DashboardActivity::class.java))
+        }
+        navProfile.setOnClickListener{
+            startActivity(Intent(this, ProfileActivity::class.java))
         }
     }
 }
