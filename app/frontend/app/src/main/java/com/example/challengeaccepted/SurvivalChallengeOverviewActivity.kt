@@ -35,7 +35,6 @@ class SurvivalChallengeOverviewActivity : AppCompatActivity() {
 
             dialogBuilder.setPositiveButton("Challenge verlassen") { _, _ ->
                 Toast.makeText(this, "Du hast die Challenge verlassen.", Toast.LENGTH_SHORT).show()
-                // TODO: Logik zum Verlassen der Challenge hier einfügen
             }
 
             // Abbrechen

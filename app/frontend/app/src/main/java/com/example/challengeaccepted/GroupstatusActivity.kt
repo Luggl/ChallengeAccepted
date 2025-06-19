@@ -35,7 +35,6 @@ class GroupstatusActivity : AppCompatActivity() {
 
             dialogBuilder.setPositiveButton("Gruppe verlassen") { _, _ ->
                 Toast.makeText(this, "Du hast die Gruppe verlassen.", Toast.LENGTH_SHORT).show()
-                // TODO: Logik zum Verlassen der Gruppe hier einfügen
             }
 
             // Abbrechen
