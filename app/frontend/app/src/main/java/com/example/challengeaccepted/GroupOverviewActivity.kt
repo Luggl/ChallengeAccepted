@@ -2,7 +2,9 @@ package com.example.challengeaccepted
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.Layout
 import android.widget.ImageView
+import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 
 class GroupOverviewActivity : AppCompatActivity() {
@@ -10,6 +12,14 @@ class GroupOverviewActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_group_overview)
+
+        // Group Dashbord
+        val navToGroup = findViewById<LinearLayout>(R.id.group_list)
+        navToGroup.setOnClickListener {
+            val intent = Intent(this, GroupDashboardActivity::class.java)
+            startActivity(intent)
+        }
+
 
         // Bottom Navigation Icons initialisieren
         val navGroup = findViewById<ImageView>(R.id.nav_group)

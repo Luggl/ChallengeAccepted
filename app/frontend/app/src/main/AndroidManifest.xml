@@ -35,14 +35,14 @@
 
         <!-- Profile -->
         <activity android:name=".ProfileActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
-        <!--<activity android:name=".ProfileChangePassActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>-->
+        <activity android:name=".ProfileChangePassActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <activity android:name=".ProfileSettingsActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
 
         <!-- Group -->
-        <!-- <activity android:name=".GroupDashboardActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>-->
+        <activity android:name=".GroupDashboardActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <activity android:name=".GroupOverviewActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <activity android:name=".CreateNewGroupActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
-        <!--<activity android:name=".GroupstatusActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>-->
+        <activity android:name=".GroupstatusActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
 
         <!-- Challenge -->
         <activity android:name=".CreateChallengeModeActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
@@ -56,13 +56,13 @@
 
          <!-- Survival -->
         <!--<activity android:name=".SurvivalActivitiesActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>-->
-        <!--<activity android:name=".SurvivalChallengeOverviewActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>-->
+        <activity android:name=".SurvivalChallengeOverviewActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <!--<activity android:name=".SurvivalCreateChallengeOverviewActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>-->
         <!--<activity android:name=".SurvivalIntensityActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>-->
         <!--<activity android:name=".SurvivalJoinChallengeOverviewActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>-->
 
         <!-- Video -->
-        <!--<activity android:name=".RecordActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>-->
+        <activity android:name=".RecordActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
        <!-- <activity android:name=".PostEditActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>-->
 
     </application>
