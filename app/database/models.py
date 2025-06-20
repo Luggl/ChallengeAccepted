@@ -1,6 +1,6 @@
 import uuid
 import sqlalchemy
-from sqlalchemy import Column, String, Integer, Boolean, Date, ForeignKey, Table, ForeignKeyConstraint
+from sqlalchemy import Column, String, Integer, Boolean, Date, ForeignKey, Table, ForeignKeyConstraint, DateTime
 from sqlalchemy.dialects.mysql import DATETIME
 from sqlalchemy.dialects.sqlite import BLOB
 from sqlalchemy.orm import relationship
@@ -25,10 +25,10 @@ class AufgabeStatus(Enum):
     abgeschlossen="abgeschlossen"
     nicht_gemacht="nicht gemacht"
 
-class Geschlecht(Enum):
-    maennlich = "m"
-    weiblich = "w"
-
+class AufgabeTyp(Enum):
+    standard = "standard"
+    survival = "survival"
+    bonus = "bonus"
 
 class UserAchievement(Base):
     __tablename__="user_achievement"
@@ -47,7 +47,6 @@ class User(Base):
     user_id=Column(BLOB, primary_key=True, default=lambda: uuid.uuid4().bytes)
     username=Column(String, nullable=False, unique=True)
     email=Column(String, nullable=False, unique=True)
-    geschlecht = Column(SQLEnum(Geschlecht), nullable=False)
     passwordHash=Column(String)
     profilbild=Column(String)
     streak=Column(Integer, default=0)
@@ -139,7 +138,6 @@ class SportartIntervall(Base):
 
     id = Column(Integer, primary_key=True)
     sportart_id = Column(BLOB, ForeignKey("sportart.sportart_id"))
-    geschlecht = Column(SQLEnum(Geschlecht), nullable=False)
     schwierigkeitsgrad = Column(SQLEnum(Schwierigkeit), nullable=False)
     min_wert = Column(Integer, nullable=False)
     max_wert = Column(Integer, nullable=False)
@@ -211,8 +209,10 @@ class Aufgabe(Base):
     beschreibung=Column(String)
     zielwert=Column(Integer)
     dauer=Column(Integer)
+    deadline = Column(DateTime, nullable=True)
+    datum = Column(Date, nullable=True)
     unit=Column(SQLEnum(StatusUnit), nullable=False)
-    typ=Column(String(50))
+    typ = Column(SQLEnum(AufgabeTyp), nullable=False)
 
     challenge_id=Column(BLOB, ForeignKey("challenge.challenge_id"))
     challenge=relationship("Challenge",back_populates="aufgaben")
@@ -236,7 +236,6 @@ class SurvivalAufgabe(Aufgabe):
     __tablename__ = "survival_aufgabe"
     aufgabe_id = Column(BLOB, ForeignKey("aufgabe.aufgabe_id"), primary_key=True)
     startzeit = Column(DATETIME)
-    deadline = Column(DATETIME)
     tag_index = Column(Integer)
 
     __mapper_args__ = {"polymorphic_identity": "survival"}

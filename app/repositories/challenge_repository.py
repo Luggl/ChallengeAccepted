@@ -1,5 +1,6 @@
 
-from app.database.models import Challenge, StandardChallengeSportart, Sportart, SurvivalChallengeSportart
+from app.database.models import Challenge, StandardChallengeSportart, Sportart, SurvivalChallengeSportart, \
+    StandardChallenge
 from app import db
 from app.database.database import SessionLocal
 
@@ -35,6 +36,16 @@ def find_challenge_by_id(challenge_id):
     """Finde eine Challenge anhand der ID."""
     with SessionLocal() as session:
         return session.query(Challenge).filter_by(challenge_id=challenge_id).first()
+
+def find_standard_challenge_by_id(challenge_id):
+    """Finde eine Standard-Challenge anhand der ID."""
+    with SessionLocal() as session:
+        return session.query(StandardChallenge).filter_by(challenge_id=challenge_id).first()
+
+def find_standard_challenge_sportarten_by_challenge_id(challenge_id):
+    """Finde alle Sportarten einer Standard-Challenge anhand der Challenge-ID."""
+    with SessionLocal() as session:
+        return session.query(StandardChallengeSportart).filter_by(challenge_id=challenge_id).all()
 
 def create_challenge(challenge: Challenge):
     """Speichere eine neue Challenge in der Datenbank."""

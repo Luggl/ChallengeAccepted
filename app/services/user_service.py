@@ -55,7 +55,7 @@ def register_user_logic(username, email, password):
     return response(True, data={
         "id": str(uuid.UUID(bytes=saved_user.user_id)),
         "username": saved_user.username,
-        "email": saved_user.email
+        "email": saved_user.email,
     })
 
 # Login eines bestehenden Users

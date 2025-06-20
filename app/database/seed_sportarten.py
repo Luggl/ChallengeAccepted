@@ -2,10 +2,10 @@ import json
 import uuid
 from app import create_app
 from app.database.database import SessionLocal
-from app.database.models import Sportart, SportartIntervall, StatusUnit, Schwierigkeit, Geschlecht
+from app.database.models import Sportart, SportartIntervall, StatusUnit, Schwierigkeit
 
 def seed_sportarten():
-    with open("C:/Users/TS10/PycharmProjects/gruppe-14---challenge-accepted/alle_sportarten_intervall.json", "r", encoding="utf-8") as f:
+    with open("C:/Users/TS10/PycharmProjects/gruppe-14---challenge-accepted/alle_sportarten_intervall_vereinfacht.json", "r", encoding="utf-8") as f:
         daten = json.load(f)
 
     with SessionLocal() as session:
@@ -16,18 +16,16 @@ def seed_sportarten():
                 unit=StatusUnit(eintrag["unit"])
             )
             session.add(sportart)
-            session.flush()  # um sportart_id zu bekommen
+            session.flush()  # sportart_id für Intervall speichern
 
-            for geschl, stufen in eintrag["intervalle"].items():
-                for schwierigkeit, (min_wert, max_wert) in stufen.items():
-                    intervall = SportartIntervall(
-                        sportart_id=sportart.sportart_id,
-                        geschlecht=Geschlecht[geschl],
-                        schwierigkeitsgrad=Schwierigkeit[schwierigkeit],
-                        min_wert=min_wert,
-                        max_wert=max_wert
-                    )
-                    session.add(intervall)
+            for schwierigkeit, (min_wert, max_wert) in eintrag["intervalle"].items():
+                intervall = SportartIntervall(
+                    sportart_id=sportart.sportart_id,
+                    schwierigkeitsgrad=Schwierigkeit[schwierigkeit],
+                    min_wert=min_wert,
+                    max_wert=max_wert
+                )
+                session.add(intervall)
 
         session.commit()
         print("✅ Alle Sportarten + Intervalle erfolgreich gespeichert.")
