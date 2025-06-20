@@ -27,14 +27,6 @@ def get_task_logic(task_id, user_id):
         "gruppe": task.group_id
     })
 
-def create_tasks_daily():
-    active_challenges = get_all_active_challenges()
-
-    if not active_challenges:
-        return response(False, error="Fehler beim Laden aller aktiven Challenges")
-
-    for challenge in active_challenges:
-
 
 # Aufgabe als erledigt markieren
 def complete_task_logic(task_id, user_id):

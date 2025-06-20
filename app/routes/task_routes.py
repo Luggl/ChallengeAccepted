@@ -49,3 +49,10 @@ def vote():
     return jsonify({"message": result}), 200
 
 
+@task_bp.route('/api/survivaltasks', methods=["POST"])
+def create_survivaltasks():
+    result = generate_survival_tasks_for_all_challenges()
+
+    if not result:
+        return jsonify({"message": result}), 400
+    return jsonify({"message": result}), 201
