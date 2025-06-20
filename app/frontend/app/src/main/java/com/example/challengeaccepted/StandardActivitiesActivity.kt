@@ -1,11 +1,13 @@
 package com.example.challengeaccepted
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 
 import android.util.Log
 import android.widget.GridLayout
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -15,6 +17,7 @@ class StandardActivitiesActivity : AppCompatActivity() {
     //Liste zur Speicherung der ausgewählten Übungen
     private val selectedExercises = mutableSetOf<String>()
 
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -50,7 +53,7 @@ class StandardActivitiesActivity : AppCompatActivity() {
                 if (selectedExercises.contains(text)) {
                     //falls bereits ausgewählt: abwählen
                     selectedExercises.remove(text)
-                    child.setBackgroundResource(R.drawable.grey_background)
+                    child.setBackgroundResource(R.drawable.bright_grey_frame)
                     Toast.makeText(this, "$text ausgewhlt", Toast.LENGTH_SHORT).show()
                 }else{
                     //neu auswählen
@@ -70,9 +73,24 @@ class StandardActivitiesActivity : AppCompatActivity() {
             Toast.makeText(this, "Auswahl bestätigt!", Toast.LENGTH_SHORT).show()
             Log.d("DashboardActivity", "Bestätigt: $selectedExercises")
             // Etappe 5: Auswahl an nächste Aktivität übergeben
-            val intent = Intent(this, StandardIntenstityActivity::class.java)
+            val intent = Intent(this, StandardIntensityActivity::class.java)
             intent.putStringArrayListExtra("selectedExercises", ArrayList(selectedExercises))
             startActivity(intent)
+        }
+
+        // Initialisieren
+        val navGroup = findViewById<ImageView>(R.id.nav_group)
+        val navHome = findViewById<ImageView>(R.id.nav_home)
+        val navProfile = findViewById<ImageView>(R.id.nav_profile)
+
+        navGroup.setOnClickListener{
+            startActivity(Intent(this, GroupOverviewActivity::class.java))
+        }
+        navHome.setOnClickListener{
+            startActivity(Intent(this, DashboardActivity::class.java))
+        }
+        navProfile.setOnClickListener{
+            startActivity(Intent(this, ProfileActivity::class.java))
         }
     }
 }

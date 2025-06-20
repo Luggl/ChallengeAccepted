@@ -32,10 +32,6 @@ class CreateChallengeModeActivity : AppCompatActivity() {
             val intent = Intent(this, ProfileActivity::class.java)
             startActivity(intent)
         }
-//        confirmButton.setOnClickListener {
-//            val intent = Intent(this, StandardActivitiesActivity::class.java)
-//            startActivity(intent)
-//        }
 
         //Standard-Modus visuelle hervorheben beim Start
         imageStandard.setBackgroundResource(R.drawable.green_frame)
