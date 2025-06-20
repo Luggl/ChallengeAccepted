@@ -262,6 +262,7 @@
             android:orientation="vertical">
 
             <ImageView
+                android:id="@+id/nav_group"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:src="@drawable/group_white_icon" />
@@ -277,9 +278,10 @@
             android:orientation="vertical">
 
             <ImageView
+                android:id="@+id/nav_home"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/home_blue_icon" />
+                android:src="@drawable/home_white_icon" />
 
         </LinearLayout>
 
@@ -292,9 +294,10 @@
             android:orientation="vertical">
 
             <ImageView
+                android:id="@+id/nav_add"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/add_white_icon" />
+                android:src="@drawable/add_blue_icon" />
 
         </LinearLayout>
 
@@ -307,6 +310,7 @@
             android:orientation="vertical">
 
             <ImageView
+                android:id="@+id/nav_profile"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:src="@drawable/profile_white_icon" />

@@ -25,9 +25,10 @@ class SurvivalActivitiesActivity : AppCompatActivity(){
 
         //klicklistener: schließt die aktuelle Activity
         backButton.setOnClickListener{
-            finish()
+            val intent = Intent(this, CreateChallengeModeActivity::class.java)
+            startActivity(intent)
         }
-        //Gridlayout mir Übungen
+        //Gridlayout mit Übungen
         val gridLayout=findViewById<GridLayout>(R.id.grid_exercises)
 
         //alle Übungen durchgehen

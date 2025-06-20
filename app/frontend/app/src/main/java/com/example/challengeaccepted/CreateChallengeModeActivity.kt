@@ -29,13 +29,14 @@ class CreateChallengeModeActivity : AppCompatActivity() {
 
 
         navBack.setOnClickListener {
-            val intent = Intent(this, ProfileActivity::class.java)
+            val intent = Intent(this, GroupDashboardActivity::class.java)
             startActivity(intent)
         }
 
         //Standard-Modus visuelle hervorheben beim Start
         imageStandard.setBackgroundResource(R.drawable.green_frame)
         imageSurvival.setBackgroundResource(R.drawable.bright_grey_frame)
+        selectedMode= "standard"
 
 
         //Manuelle Auswahl - wenn Nutzer etwas anderes auswählt
@@ -50,18 +51,20 @@ class CreateChallengeModeActivity : AppCompatActivity() {
             selectedMode="survival"
         }
         //auswahl bestätigen
-        confirmButton.setOnClickListener{
-            val intent=when (selectedMode) {
+        confirmButton.setOnClickListener {
+            val intent = when (selectedMode) {
                 "standard" -> Intent(this, StandardActivitiesActivity::class.java)
                 "survival" -> Intent(this, SurvivalActivitiesActivity::class.java)
                 else -> null
             }
-            if (intent!=null){
+
+            if (intent != null) {
                 startActivity(intent)
-            }else{
+            } else {
                 Toast.makeText(this, "Ungültiger Modus", Toast.LENGTH_SHORT).show()
             }
         }
+
         // Initialisieren
         val navGroup = findViewById<ImageView>(R.id.nav_group)
         val navHome = findViewById<ImageView>(R.id.nav_home)

@@ -27,8 +27,8 @@ class StandardActivitiesActivity : AppCompatActivity() {
         //Zurück-Button verknüpfen und mit Funktionalität versehen
         val backButton = findViewById<ImageButton>(R.id.btn_back)
         backButton.setOnClickListener {
-            //bei klick auf zurück-Button die Aktivität schließen
-            finish()
+            val intent = Intent(this, CreateChallengeModeActivity::class.java)
+            startActivity(intent)
         }
         //Gridlayout einrichten und prüfen, ob es geladen wurde
         val gridExercises = findViewById<GridLayout>(R.id.grid_exercises)
@@ -78,17 +78,20 @@ class StandardActivitiesActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        // Initialisieren
+       // Bottom Navigation
         val navGroup = findViewById<ImageView>(R.id.nav_group)
-        val navHome = findViewById<ImageView>(R.id.nav_home)
-        val navProfile = findViewById<ImageView>(R.id.nav_profile)
+        navGroup.setOnClickListener {
+            val intent = Intent(this, GroupOverviewActivity::class.java)
+            startActivity(intent)
+        }
 
-        navGroup.setOnClickListener{
-            startActivity(Intent(this, GroupOverviewActivity::class.java))
+        val navHome = findViewById<ImageView>(R.id.nav_home)
+        navHome.setOnClickListener {
+            val intent = Intent(this, DashboardActivity::class.java)
+            startActivity(intent)
         }
-        navHome.setOnClickListener{
-            startActivity(Intent(this, DashboardActivity::class.java))
-        }
+
+        val navProfile = findViewById<ImageView>(R.id.nav_profile)
         navProfile.setOnClickListener{
             startActivity(Intent(this, ProfileActivity::class.java))
         }

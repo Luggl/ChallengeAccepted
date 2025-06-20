@@ -18,7 +18,7 @@ class ProfileActivity :  AppCompatActivity()  {
         setContentView(R.layout.activity_profile)
 
 
-        // Navigation Click Listener
+        // Bottom Navigation
         val navGroup = findViewById<ImageView>(R.id.nav_group)
         navGroup.setOnClickListener {
             val intent = Intent(this, GroupOverviewActivity::class.java)

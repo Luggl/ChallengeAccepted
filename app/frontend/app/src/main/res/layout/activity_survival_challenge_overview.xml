@@ -305,7 +305,7 @@
                 android:id="@+id/nav_group"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/group_blue_icon" />
+                android:src="@drawable/group_white_icon" />
 
         </LinearLayout>
 
@@ -337,7 +337,7 @@
                 android:id="@+id/nav_add"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/add_white_icon" />
+                android:src="@drawable/add_blue_icon" />
 
         </LinearLayout>
 
