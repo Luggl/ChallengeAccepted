@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
-from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token
+from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token, get_jwt
 from app.services.user_service import *
+from app import blacklisted_tokens
 
 
 # Blueprint ist eine "Mini-App" innerhalb Flask, um Routen besser zu strukturieren.
@@ -153,4 +154,6 @@ def update_password():
 @user_bp.route('/api/logout', methods=['POST'])
 @jwt_required()
 def logout():
-    current_user_id = get_jwt_identity()
+    jti = get_jwt()["jti"]
+    blacklisted_tokens.add(jti)
+    return jsonify({"message": "Logged out"}), 200
