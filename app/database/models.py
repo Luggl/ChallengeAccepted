@@ -223,8 +223,8 @@ class Aufgabe(Base):
     sportart=relationship("Sportart")
 
     erfuellungen=relationship("Aufgabenerfuellung",back_populates="aufgabe")
-    __mapper_args__={
-        "polymorphic_identity":"normal",
+    __mapper_args__ = {
+        "polymorphic_identity": AufgabeTyp.standard,  # statt "normal"
         "polymorphic_on": typ
     }
 
@@ -232,7 +232,7 @@ class StandardAufgabe(Aufgabe):
     __tablename__ = "standard_aufgabe"
     aufgabe_id = Column(BLOB, ForeignKey("aufgabe.aufgabe_id"), primary_key=True)
 
-    __mapper_args__ = {"polymorphic_identity": "standard"}
+    __mapper_args__ = {"polymorphic_identity": AufgabeTyp.standard}
 
 class SurvivalAufgabe(Aufgabe):
     __tablename__ = "survival_aufgabe"
@@ -240,7 +240,7 @@ class SurvivalAufgabe(Aufgabe):
     startzeit = Column(DATETIME)
     tag_index = Column(Integer)
 
-    __mapper_args__ = {"polymorphic_identity": "survival"}
+    __mapper_args__ = {"polymorphic_identity": AufgabeTyp.survival}
 
 class BonusAufgabe(Aufgabe):
     __tablename__ ="bonus_aufgabe"
@@ -249,9 +249,7 @@ class BonusAufgabe(Aufgabe):
     bonus_punkte=Column(Integer, default=0)
     ist_freiwillig=Column(Boolean, default=True)
 
-    __mapper_args__ = {
-        "polymorphic_identity":"bonus"
-    }
+    __mapper_args__ = {"polymorphic_identity": AufgabeTyp.bonus}
 
 class Aufgabenerfuellung (Base):
     __tablename__="aufgabenerfuellung"
