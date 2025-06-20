@@ -150,3 +150,7 @@ def update_password():
 
     return jsonify({"message": result}), 200
 
+@user_bp.route('/api/logout', methods=['POST'])
+@jwt_required()
+def logout():
+    current_user_id = get_jwt_identity()

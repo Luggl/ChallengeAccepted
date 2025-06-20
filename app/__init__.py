@@ -6,6 +6,14 @@ from datetime import timedelta
 db = SQLAlchemy()
 jwt = JWTManager()  # JWTManager global verfügbar machen
 
+
+#Für den Logout werden die erzeugten Tokens zur Auth. in eine Blacklist gespeichert!
+blacklisted_tokens = set()
+@jwt.token_in_blocklist_loader
+def check_if_token_revokes(jwt_header, jwt_payload):
+    jti = jwt_payload['jti'] # JTI = JWT ID (einzigartige Kennung)
+    return jti in blacklisted_tokens
+
 def create_app():
     app = Flask(__name__)
 
@@ -19,6 +27,8 @@ def create_app():
     app.config["JWT_HEADER_NAME"] = "Authorization"
     app.config["JWT_HEADER_TYPE"] = "Bearer"
     app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=4)
+    app.config["JWT_BLACKLIST_ENABLED"] = True
+    app.config["JWT_BLACKLIST_TOKEN_CHECKS"] = ["access", "refresh"]
 
     db.init_app(app)
     jwt.init_app(app)  # JWT mit App verbinden
