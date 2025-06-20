@@ -6,6 +6,8 @@ from app.repositories.task_repository import (
     save_vote,
     has_user_already_voted
 )
+from repositories.challenge_repository import get_all_active_challenges
+
 
 # Einzelne Aufgabe abrufen (nur wenn User dazugehört)
 def get_task_logic(task_id, user_id):
@@ -24,6 +26,15 @@ def get_task_logic(task_id, user_id):
         "status": task.status,
         "gruppe": task.group_id
     })
+
+def create_tasks_daily():
+    active_challenges = get_all_active_challenges()
+
+    if not active_challenges:
+        return response(False, error="Fehler beim Laden aller aktiven Challenges")
+
+    for challenge in active_challenges:
+
 
 # Aufgabe als erledigt markieren
 def complete_task_logic(task_id, user_id):

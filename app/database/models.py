@@ -135,6 +135,7 @@ class Challenge(Base):
     challenge_id=Column(BLOB, primary_key=True, default=lambda: uuid.uuid4().bytes)
     startdatum=Column(Date)
     typ=Column(String(50))
+    active=Column(Boolean, default=True)
 
     gruppe_id=Column(BLOB, ForeignKey("gruppe.gruppe_id"))
     gruppe=relationship("Gruppe", back_populates="challenges")

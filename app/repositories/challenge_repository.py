@@ -63,6 +63,10 @@ def get_all_challenges():
     """Gibt alle Challenges zurück."""
     return db.session.query(Challenge).all()
 
+def get_all_active_challenges():
+    with SessionLocal() as session:
+        return session.query(Challenge).filter_by(active=True).all()
+
 def save_standard_challenge_sportart(sportart_link: StandardChallengeSportart):
     """Speichert einen Eintrag in der standard_challenge_sportart-Tabelle."""
     with SessionLocal() as session:

@@ -8,15 +8,13 @@ task_bp = Blueprint("task", __name__)
 @task_bp.route("/api/task", methods=["GET"])
 @jwt_required()
 def get_task():
-    current_user_id = get_jwt_identity()
-    task_id = request.args.get("task_id")
 
-    result = get_task_logic(task_id, current_user_id)
+    result = create_tasks_daily()
 
     if not result["success"]:
-        return jsonify({"error": result}), 404
+        return jsonify({"message": result}), 400
+    return jsonify({"message": result}), 200
 
-    return jsonify({"task": result}), 200
 
 @task_bp.route("/api/task", methods=["POST"])
 @jwt_required()
