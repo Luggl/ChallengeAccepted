@@ -1,5 +1,7 @@
 from datetime import date
 
+from sqlalchemy.orm import joinedload
+
 from app.database.models import Challenge, StandardChallengeSportart, Sportart, SurvivalChallengeSportart, \
     StandardChallenge, Survivalchallenge
 from app import db
@@ -30,9 +32,10 @@ def find_challenges_by_creator(user_id, gruppe_id):
     ).all()
 
 def find_all_survival_challenges():
-    """Liefert alle Survival-Challenges, deren Startdatum heute oder früher ist."""
     with SessionLocal() as session:
-        return session.query(Survivalchallenge).filter(
+        return session.query(Survivalchallenge).options(
+            joinedload(Survivalchallenge.sportarten_links)
+        ).filter(
             Survivalchallenge.startdatum <= date.today()
         ).all()
 

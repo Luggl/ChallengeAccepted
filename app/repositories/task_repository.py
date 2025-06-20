@@ -29,10 +29,10 @@ def find_task_by_challenge_and_date_and_typ(challenge_id, datum, typ):
         ).first()
 
 def save_aufgabe(aufgabe):
-    """Speichert eine Aufgabe."""
     with SessionLocal() as session:
         session.add(aufgabe)
         session.commit()
+        session.refresh(aufgabe)  # wichtig!
         return aufgabe
 
 def delete_task_by_id(aufgabe_id):

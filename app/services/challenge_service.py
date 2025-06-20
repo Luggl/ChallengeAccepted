@@ -136,6 +136,8 @@ def create_challenge_survival_logic(user_id, data, group_id):
         startdatum=startdatum.date()
     )
 
+    create_challenge(challenge)
+
     # Für jede Sportart: speichern mit Schwierigkeitsgrad
     for i, eintrag in enumerate(data["sportarten"]):
         sportart_id_str = eintrag["sportart_id"]
@@ -172,7 +174,6 @@ def create_challenge_survival_logic(user_id, data, group_id):
         )
         save_survival_challenge_sportart(survival_link)
 
-    create_challenge(challenge)
 
     return {
         "success": True,

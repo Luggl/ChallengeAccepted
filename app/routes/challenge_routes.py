@@ -60,7 +60,7 @@ def create_challenge_survival():
     current_user_id = get_jwt_identity()
 
     # Gruppen-ID aus gid holen
-    group_id_str = request.args.get('group_id')
+    group_id_str = request.args.get('gid')
     if not group_id_str:
         return jsonify({"error": "Gruppen-ID (group_id) erforderlich"}), 400
 

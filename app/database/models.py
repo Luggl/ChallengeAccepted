@@ -198,8 +198,8 @@ class StandardChallenge(Challenge):
 class Survivalchallenge(Challenge):
     __tablename__ = "survival_challenge"
     challenge_id = Column(BLOB, ForeignKey("challenge.challenge_id"), primary_key=True)
-    __mapper_args_ = {
-        "polymorphic_identity":"survival"
+    __mapper_args__ = {
+        "polymorphic_identity": "survival"
     }
 
     sportarten_links = relationship("SurvivalChallengeSportart", back_populates="challenge")

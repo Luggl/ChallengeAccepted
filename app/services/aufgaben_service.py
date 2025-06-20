@@ -122,7 +122,7 @@ def generate_survival_tasks_for_all_challenges():
             erfolge.append({"challenge_id": str(uuid.UUID(bytes=challenge.challenge_id)), "status": "bereits vorhanden"})
             continue
 
-        sportarten_links = challenge.survival_sportarten
+        sportarten_links = challenge.sportarten_links
         if not sportarten_links:
             erfolge.append({"challenge_id": str(uuid.UUID(bytes=challenge.challenge_id)), "status": "keine Sportarten"})
             continue
