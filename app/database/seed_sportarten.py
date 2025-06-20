@@ -1,26 +1,37 @@
-from app import create_app, db
-from app.database.models import Sportart
-from app.repositories.sportart_repository import create_sportart
+import json
 import uuid
+from app import create_app
+from app.database.database import SessionLocal
+from app.database.models import Sportart, SportartIntervall, StatusUnit, Schwierigkeit
 
 def seed_sportarten():
-    sportarten = [
-        ("Liegestütze", "anzahl"),
-        ("Seilspringen", "dauer"),
-        ("Situps", "anzahl"),
-        ("Burpees", "anzahl"),
-    ]
+    with open("C:/Users/TS10/PycharmProjects/gruppe-14---challenge-accepted/alle_sportarten_mit_faktor.json", "r", encoding="utf-8") as f:
+        daten = json.load(f)
 
-    for name, unit in sportarten:
-        s = Sportart(
-            sportart_id=uuid.uuid4().bytes,
-            bezeichnung=name,
-            unit=unit
-        )
-        create_sportart(s)
+    with SessionLocal() as session:
+        for eintrag in daten:
+            sportart = Sportart(
+                sportart_id=uuid.uuid4().bytes,
+                bezeichnung=eintrag["bezeichnung"],
+                unit=StatusUnit(eintrag["unit"]),
+                steigerungsfaktor=eintrag.get("steigerungsfaktor", 1.0)
+            )
+            session.add(sportart)
+            session.flush()  # sportart_id für Intervall speichern
 
-print("Sportarten erfolgreich angelegt.")
+            for schwierigkeit, (min_wert, max_wert) in eintrag["intervalle"].items():
+                intervall = SportartIntervall(
+                    sportart_id=sportart.sportart_id,
+                    schwierigkeitsgrad=Schwierigkeit[schwierigkeit],
+                    min_wert=min_wert,
+                    max_wert=max_wert
+                )
+                session.add(intervall)
+
+        session.commit()
+        print("✅ Alle Sportarten + Intervalle + Steigerungsfaktor erfolgreich gespeichert.")
+
 if __name__ == "__main__":
-    app = create_app()  # falls du eine Factory-Methode verwendest
+    app = create_app()
     with app.app_context():
         seed_sportarten()

@@ -1,6 +1,6 @@
 import uuid
 import sqlalchemy
-from sqlalchemy import Column, String, Integer, Boolean, Date, ForeignKey, Table, ForeignKeyConstraint
+from sqlalchemy import Column, String, Integer, Boolean, Date, ForeignKey, Table, ForeignKeyConstraint, DateTime, Float
 from sqlalchemy.dialects.mysql import DATETIME
 from sqlalchemy.dialects.sqlite import BLOB
 from sqlalchemy.orm import relationship
@@ -25,6 +25,10 @@ class AufgabeStatus(Enum):
     abgeschlossen="abgeschlossen"
     nicht_gemacht="nicht gemacht"
 
+class AufgabeTyp(Enum):
+    standard = "standard"
+    survival = "survival"
+    bonus = "bonus"
 
 class UserAchievement(Base):
     __tablename__="user_achievement"
@@ -97,11 +101,13 @@ class Sportart(Base):
     sportart_id = Column(BLOB, primary_key=True, default=lambda: uuid.uuid4().bytes)
     bezeichnung = Column(String, nullable=False)
     unit = Column(SQLEnum(StatusUnit), nullable=False)
+    steigerungsfaktor = Column(Float, nullable=False, default=1.0)
 
 
     # Neu: separate Beziehungen für beide Challenge-Typen
     standard_links = relationship("StandardChallengeSportart", back_populates="sportart")
     survival_links = relationship("SurvivalChallengeSportart", back_populates="sportart")
+    intervalle = relationship("SportartIntervall", back_populates="sportart", cascade="all, delete-orphan")
 
 class StandardChallengeSportart(Base):
     __tablename__ = "standard_challenge_sportart"
@@ -128,6 +134,16 @@ class SurvivalChallengeSportart(Base):
     challenge = relationship("Survivalchallenge", back_populates="sportarten_links")
     sportart = relationship("Sportart")
 
+class SportartIntervall(Base):
+    __tablename__ = "sportart_intervall"
+
+    id = Column(Integer, primary_key=True)
+    sportart_id = Column(BLOB, ForeignKey("sportart.sportart_id"))
+    schwierigkeitsgrad = Column(SQLEnum(Schwierigkeit), nullable=False)
+    min_wert = Column(Integer, nullable=False)
+    max_wert = Column(Integer, nullable=False)
+
+    sportart = relationship("Sportart", back_populates="intervalle")
 
 class Challenge(Base):
     __tablename__="challenge"
@@ -195,9 +211,10 @@ class Aufgabe(Base):
     beschreibung=Column(String)
     zielwert=Column(Integer)
     dauer=Column(Integer)
-    schwierigkeit=Column(SQLEnum(Schwierigkeit), nullable=False)
+    deadline = Column(DateTime, nullable=True)
+    datum = Column(Date, nullable=True)
     unit=Column(SQLEnum(StatusUnit), nullable=False)
-    typ=Column(String(50))
+    typ = Column(SQLEnum(AufgabeTyp), nullable=False)
 
     challenge_id=Column(BLOB, ForeignKey("challenge.challenge_id"))
     challenge=relationship("Challenge",back_populates="aufgaben")
@@ -210,6 +227,20 @@ class Aufgabe(Base):
         "polymorphic_identity":"normal",
         "polymorphic_on": typ
     }
+
+class StandardAufgabe(Aufgabe):
+    __tablename__ = "standard_aufgabe"
+    aufgabe_id = Column(BLOB, ForeignKey("aufgabe.aufgabe_id"), primary_key=True)
+
+    __mapper_args__ = {"polymorphic_identity": "standard"}
+
+class SurvivalAufgabe(Aufgabe):
+    __tablename__ = "survival_aufgabe"
+    aufgabe_id = Column(BLOB, ForeignKey("aufgabe.aufgabe_id"), primary_key=True)
+    startzeit = Column(DATETIME)
+    tag_index = Column(Integer)
+
+    __mapper_args__ = {"polymorphic_identity": "survival"}
 
 class BonusAufgabe(Aufgabe):
     __tablename__ ="bonus_aufgabe"

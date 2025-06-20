@@ -3,25 +3,22 @@ from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_tok
 from app.services.user_service import *
 from app import blacklisted_tokens
 
-
 # Blueprint ist eine "Mini-App" innerhalb Flask, um Routen besser zu strukturieren.
 user_bp = Blueprint('user', __name__)
 
 @user_bp.route('/api/user', methods=['POST'])
 def register_user():
-    # Lesen der Daten aus dem Body der Schnittstelle
     data = request.get_json()
 
-    # Einzelne Werte zuweisen
     username = data.get('username')
     email = data.get('email')
     password = data.get('password')
 
-    # Prüfung, ob alle Daten vorhanden:
+    # Pflichtfelder prüfen
     if username is None or email is None or password is None:
-        return jsonify({"error": "Username, Password und Email sind erforderlich"}), 400
+        return jsonify({"error": "Username, Password, E-Mail und Geschlecht sind erforderlich"}), 400
 
-    # Hier die Methode einbinden, die prüft ob Werte i. O.!
+    # Benutzer registrieren
     result = register_user_logic(username, email, password)
 
     if not result["success"]:

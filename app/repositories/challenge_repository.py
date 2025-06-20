@@ -1,5 +1,7 @@
+from datetime import date
 
-from app.database.models import Challenge, StandardChallengeSportart, Sportart, SurvivalChallengeSportart
+from app.database.models import Challenge, StandardChallengeSportart, Sportart, SurvivalChallengeSportart, \
+    StandardChallenge, Survivalchallenge
 from app import db
 from app.database.database import SessionLocal
 
@@ -27,6 +29,14 @@ def find_challenges_by_creator(user_id, gruppe_id):
         ersteller_gruppe_id=gruppe_id
     ).all()
 
+def find_all_survival_challenges():
+    """Liefert alle Survival-Challenges, deren Startdatum heute oder früher ist."""
+    with SessionLocal() as session:
+        return session.query(Survivalchallenge).filter(
+            Survivalchallenge.startdatum <= date.today()
+        ).all()
+
+
 def find_challenges_by_type(typ):
     """Finde alle Challenges eines bestimmten Typs (z.B. 'standard' oder 'survival')."""
     return db.session.query(Challenge).filter_by(typ=typ).all()
@@ -35,6 +45,23 @@ def find_challenge_by_id(challenge_id):
     """Finde eine Challenge anhand der ID."""
     with SessionLocal() as session:
         return session.query(Challenge).filter_by(challenge_id=challenge_id).first()
+
+def find_standard_challenge_by_id(challenge_id):
+    """Finde eine Standard-Challenge anhand der ID."""
+    with SessionLocal() as session:
+        return session.query(StandardChallenge).filter_by(challenge_id=challenge_id).first()
+
+
+def find_survival_challenge_by_id(challenge_id):
+    """Finde eine Standard-Challenge anhand der ID."""
+    with SessionLocal() as session:
+        return session.query(Survivalchallenge).filter_by(challenge_id=challenge_id).first()
+
+
+def find_standard_challenge_sportarten_by_challenge_id(challenge_id):
+    """Finde alle Sportarten einer Standard-Challenge anhand der Challenge-ID."""
+    with SessionLocal() as session:
+        return session.query(StandardChallengeSportart).filter_by(challenge_id=challenge_id).all()
 
 def create_challenge(challenge: Challenge):
     """Speichere eine neue Challenge in der Datenbank."""

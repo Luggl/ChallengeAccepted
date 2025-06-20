@@ -89,7 +89,10 @@ def create_challenge_standard_logic(user_id, data, group_id):
     return {
         "success": True,
         "data": {
-            "id": uuid.UUID(bytes=challenge.challenge_id).hex
+            "challenge_id": str(uuid.UUID(bytes=challenge.challenge_id)),
+            "typ": challenge.typ,
+            "startdatum": challenge.startdatum.isoformat(),
+            "enddatum": challenge.enddatum.isoformat()
         }
     }
 
