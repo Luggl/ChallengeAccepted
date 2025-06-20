@@ -30,6 +30,11 @@ class AufgabeTyp(Enum):
     survival = "survival"
     bonus = "bonus"
 
+class Vote(Enum):
+    akzeptiert = "akzeptiert"
+    abgelehnt = "abgelehnt"
+    offen = "offen"
+
 class UserAchievement(Base):
     __tablename__="user_achievement"
     user_id= Column(BLOB,ForeignKey("user.user_id"), primary_key=True)
@@ -315,4 +320,31 @@ class Beitrag (Base):
 
 from sqlalchemy.orm import configure_mappers
 configure_mappers()
+
+class BeitragVotes(Base):
+    __tablename__ = "BeitragVotes"
+    beitragvote_id = Column(BLOB, primary_key=True, default=lambda: uuid.uuid4().bytes)
+    beitrag_id = Column(BLOB, ForeignKey("beitrag.beitrag_id"))
+    user_id = Column(BLOB)
+    gruppe_id = Column(BLOB)
+    __table_args__ = (
+        ForeignKeyConstraint(
+            ["user_id", "gruppe_id"],
+            ["membership.user_id", "membership.gruppe_id"],
+            ondelete="CASCADE"
+        ),
+    )
+    vote = Column(SQLEnum(Vote))
+
+    mitglied = relationship(
+        "Membership",
+        primaryjoin=and_(
+            foreign(user_id) == Membership.user_id,
+            foreign(gruppe_id) == Membership.gruppe_id
+        )
+    )
+    beitrag = relationship(
+        "Beitrag",
+        back_populates="BeitragVotes",
+    )
 

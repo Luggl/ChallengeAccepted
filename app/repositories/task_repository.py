@@ -1,7 +1,9 @@
 from sqlalchemy import func
 
 from app.database.database import SessionLocal
-from app.database.models import Aufgabe
+from app.database.models import Aufgabe, AufgabeStatus
+from database.models import Aufgabenerfuellung
+
 
 def find_task_by_id(aufgabe_id):
     """Finde eine Aufgabe anhand der ID."""
@@ -17,6 +19,12 @@ def find_task_by_challenge_and_date(challenge_id, datum):
     """Finde Aufgabe zu Challenge und Datum (Standard)."""
     with SessionLocal() as session:
         return session.query(Aufgabe).filter_by(challenge_id=challenge_id, datum=datum).first()
+
+def find_tasks_by_user_id(user_id):
+    """Finde Aufgaben anhand der User ID"""
+    with SessionLocal() as session:
+        return session.query(Aufgabenerfuellung).filter_by(user_id=user_id).all()
+
 
 
 def find_task_by_challenge_and_date_and_typ(challenge_id, datum, typ):
@@ -58,5 +66,10 @@ def count_survival_tasks_for_challenge(challenge_id):
             typ="survival"
         ).scalar()
 
-# def mark_task_as_complete(task_id, user_id):
-#     with SessionLocal() as session:
+
+def mark_task_as_complete(aufgabenerfuellung_id):
+    with SessionLocal() as session:
+        aufgabenerfuellung = session.query(Aufgabenerfuellung).filger_by(aufgabenerfuellung_id=aufgabenerfuellung_id).first()
+        aufgabenerfuellung.status=AufgabeStatus.abgeschlossen
+        session.commit()
+        return aufgabenerfuellung
