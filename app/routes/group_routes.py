@@ -102,3 +102,16 @@ def get_group_overview():
         return jsonify({"error": result}), 403
 
     return jsonify({"message": result}), 200
+
+@group_bp.route('/api/leavegroup')
+@jwt_required()
+def leave_group():
+    current_user_id = get_jwt_identity()
+    group_id = request.args.get('group_id')
+
+    result = leave_group_logic(current_user_id, group_id)
+
+    if not result["success"]:
+        return jsonify({"error": result}), 403
+
+    return jsonify({"message": result}), 200

@@ -27,11 +27,12 @@ def create_membership(membership):
 def delete_membership(user_id, gruppe_id):
     """Lösche eine Mitgliedschaft anhand von User- und Gruppen-ID."""
     membership = find_membership(user_id, gruppe_id)
-    if membership:
-        db.session.delete(membership)
-        db.session.commit()
-        return True
-    return False
+    with SessionLocal() as session:
+        if membership:
+            session.delete(membership)
+            session.commit()
+            return True
+        return False
 
 def update_membership(membership):
     """Aktualisiere eine bestehende Mitgliedschaft."""
