@@ -3,6 +3,7 @@ import app.repositories.group_repository
 from datetime import datetime, timedelta
 from app.utils.time import now_berlin, date_today
 from repositories.membership_repository import find_membership, delete_membership
+from utils.auth_utils import get_uuid_formated_id
 from utils.response import response
 from app.database.models import Gruppe, Membership
 from app.repositories.group_repository import *
@@ -115,13 +116,14 @@ def get_group_overview_logic(user_id):
     return response(True, groups)
 
 def leave_group_logic(user_id, group_id):
-    membership = find_membership(user_id, group_id)
+    user_id_str = get_uuid_formated_id(user_id)
+    group_id_str = get_uuid_formated_id(group_id)
 
-    group =find_group_by_id(group_id)
+    group =find_group_by_id(group_id_str)
     if not group:
         return response(False, "Gruppe nicht gefunden.")
 
-    result = delete_membership(user_id, group.gruppe_id)
+    result = delete_membership(user_id_str, group_id_str)
 
     if not result:
         return response(False, "Fehlgeschlagen")

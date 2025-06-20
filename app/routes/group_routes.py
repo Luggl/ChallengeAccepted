@@ -89,7 +89,7 @@ def get_group_feed():
 
     return jsonify({"message": result}), 200
 
-@group_bp.route('/api/groups')
+@group_bp.route('/api/groups', methods=['GET'])
 @jwt_required()
 def get_group_overview():
     current_user_id = get_jwt_identity()
@@ -103,7 +103,7 @@ def get_group_overview():
 
     return jsonify({"message": result}), 200
 
-@group_bp.route('/api/leavegroup')
+@group_bp.route('/api/leavegroup', methods=['PUT'])
 @jwt_required()
 def leave_group():
     current_user_id = get_jwt_identity()
