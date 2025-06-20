@@ -25,6 +25,10 @@ class AufgabeStatus(Enum):
     abgeschlossen="abgeschlossen"
     nicht_gemacht="nicht gemacht"
 
+class Geschlecht(Enum):
+    maennlich = "m"
+    weiblich = "w"
+
 
 class UserAchievement(Base):
     __tablename__="user_achievement"
@@ -43,6 +47,7 @@ class User(Base):
     user_id=Column(BLOB, primary_key=True, default=lambda: uuid.uuid4().bytes)
     username=Column(String, nullable=False, unique=True)
     email=Column(String, nullable=False, unique=True)
+    geschlecht = Column(SQLEnum(Geschlecht), nullable=False)
     passwordHash=Column(String)
     profilbild=Column(String)
     streak=Column(Integer, default=0)
@@ -102,6 +107,7 @@ class Sportart(Base):
     # Neu: separate Beziehungen für beide Challenge-Typen
     standard_links = relationship("StandardChallengeSportart", back_populates="sportart")
     survival_links = relationship("SurvivalChallengeSportart", back_populates="sportart")
+    intervalle = relationship("SportartIntervall", back_populates="sportart", cascade="all, delete-orphan")
 
 class StandardChallengeSportart(Base):
     __tablename__ = "standard_challenge_sportart"
@@ -128,6 +134,17 @@ class SurvivalChallengeSportart(Base):
     challenge = relationship("Survivalchallenge", back_populates="sportarten_links")
     sportart = relationship("Sportart")
 
+class SportartIntervall(Base):
+    __tablename__ = "sportart_intervall"
+
+    id = Column(Integer, primary_key=True)
+    sportart_id = Column(BLOB, ForeignKey("sportart.sportart_id"))
+    geschlecht = Column(SQLEnum(Geschlecht), nullable=False)
+    schwierigkeitsgrad = Column(SQLEnum(Schwierigkeit), nullable=False)
+    min_wert = Column(Integer, nullable=False)
+    max_wert = Column(Integer, nullable=False)
+
+    sportart = relationship("Sportart", back_populates="intervalle")
 
 class Challenge(Base):
     __tablename__="challenge"
@@ -184,7 +201,6 @@ class Aufgabe(Base):
     beschreibung=Column(String)
     zielwert=Column(Integer)
     dauer=Column(Integer)
-    schwierigkeit=Column(SQLEnum(Schwierigkeit), nullable=False)
     unit=Column(SQLEnum(StatusUnit), nullable=False)
     typ=Column(String(50))
 
@@ -199,6 +215,21 @@ class Aufgabe(Base):
         "polymorphic_identity":"normal",
         "polymorphic_on": typ
     }
+
+class StandardAufgabe(Aufgabe):
+    __tablename__ = "standard_aufgabe"
+    aufgabe_id = Column(BLOB, ForeignKey("aufgabe.aufgabe_id"), primary_key=True)
+
+    __mapper_args__ = {"polymorphic_identity": "standard"}
+
+class SurvivalAufgabe(Aufgabe):
+    __tablename__ = "survival_aufgabe"
+    aufgabe_id = Column(BLOB, ForeignKey("aufgabe.aufgabe_id"), primary_key=True)
+    startzeit = Column(DATETIME)
+    deadline = Column(DATETIME)
+    tag_index = Column(Integer)
+
+    __mapper_args__ = {"polymorphic_identity": "survival"}
 
 class BonusAufgabe(Aufgabe):
     __tablename__ ="bonus_aufgabe"
