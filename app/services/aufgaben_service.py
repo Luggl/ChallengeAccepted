@@ -1,16 +1,16 @@
 import uuid
+import random
 from collections import defaultdict
-from datetime import datetime, time
-from datetime import timedelta
+from datetime import datetime, time, timedelta
 from app.database.models import AufgabeTyp, StandardAufgabe
 from utils.time import now_berlin, date_today
 from repositories.challenge_repository import (
     find_standard_challenge_by_id,
-    find_standard_challenge_sportarten_by_challenge_id
+    find_standard_challenge_sportarten_by_challenge_id, find_survival_challenge_by_id, find_all_survival_challenges
 )
-from repositories.sportart_repository import find_sportart_by_id
-from repositories.task_repository import save_aufgabe, find_task_by_challenge_and_date
-
+from repositories.task_repository import save_aufgabe, find_task_by_challenge_and_date, find_task_by_challenge_and_date_and_typ
+from app.repositories.sportart_repository import find_sportart_by_id, find_intervall_by_sportart_and_schwierigkeit
+from app.database.models import SurvivalAufgabe
 
 def generate_standard_tasks_for_challenge_logic(challenge_id: bytes):
     """
@@ -108,3 +108,61 @@ def get_task_by_date(challenge_id: uuid.UUID, datum: str = None):
             }
         }
     return {"success": False, "error": "Keine Aufgabe für dieses Datum gefunden."}
+
+
+def generate_survival_tasks_for_all_challenges():
+    """Generiert täglich Survival-Aufgaben für alle Survival-Challenges, falls noch nicht vorhanden."""
+    today = now_berlin().date()
+    erfolge = []
+
+    challenges = find_all_survival_challenges()
+    for challenge in challenges:
+        existing = find_task_by_challenge_and_date_and_typ(challenge.challenge_id, today, AufgabeTyp.survival.name)
+        if existing:
+            erfolge.append({"challenge_id": str(uuid.UUID(bytes=challenge.challenge_id)), "status": "bereits vorhanden"})
+            continue
+
+        sportarten_links = challenge.survival_sportarten
+        if not sportarten_links:
+            erfolge.append({"challenge_id": str(uuid.UUID(bytes=challenge.challenge_id)), "status": "keine Sportarten"})
+            continue
+
+        zufalls_sportart_link = random.choice(sportarten_links)
+        sportart = find_sportart_by_id(zufalls_sportart_link.sportart_id)
+        schwierigkeitsgrad = zufalls_sportart_link.schwierigkeitsgrad
+
+        tag_index = (today - challenge.startdatum).days
+        steigerungsstufe = tag_index // 7
+        steigerungsfaktor = sportart.steigerungsfaktor or 1.0
+
+        intervall = find_intervall_by_sportart_and_schwierigkeit(sportart.sportart_id, schwierigkeitsgrad)
+        min_val, max_val = intervall.min_wert, intervall.max_wert
+        diff = max_val - min_val
+
+        zielwert = min_val + round((diff / 10) * steigerungsstufe * steigerungsfaktor)
+        zielwert = min(zielwert, max_val)
+
+        jetzt = now_berlin()
+        startzeit = jetzt.replace(hour=random.randint(8, 21), minute=random.randint(0, 59), second=0, microsecond=0)
+        endzeit = startzeit + timedelta(hours=2)
+
+        beschreibung = f"Erfülle in 2h: {zielwert} {sportart.unit.value} {sportart.bezeichnung}."
+
+        aufgabe = SurvivalAufgabe(
+            aufgabe_id=uuid.uuid4().bytes,
+            challenge_id=challenge.challenge_id,
+            sportart_id=sportart.sportart_id,
+            zielwert=zielwert,
+            unit=sportart.unit,
+            typ=AufgabeTyp.survival,
+            startzeit=startzeit,
+            datum=today,
+            deadline=endzeit,
+            tag_index=tag_index,
+            beschreibung=beschreibung
+        )
+
+        save_aufgabe(aufgabe)
+        erfolge.append({"challenge_id": str(uuid.UUID(bytes=challenge.challenge_id)), "status": "erstellt", "task_id": str(uuid.UUID(bytes=aufgabe.aufgabe_id))})
+
+    return {"success": True, "results": erfolge}

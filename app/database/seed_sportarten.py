@@ -5,7 +5,7 @@ from app.database.database import SessionLocal
 from app.database.models import Sportart, SportartIntervall, StatusUnit, Schwierigkeit
 
 def seed_sportarten():
-    with open("C:/Users/TS10/PycharmProjects/gruppe-14---challenge-accepted/alle_sportarten_intervall_vereinfacht.json", "r", encoding="utf-8") as f:
+    with open("C:/Users/TS10/PycharmProjects/gruppe-14---challenge-accepted/alle_sportarten_mit_faktor.json", "r", encoding="utf-8") as f:
         daten = json.load(f)
 
     with SessionLocal() as session:
@@ -13,7 +13,8 @@ def seed_sportarten():
             sportart = Sportart(
                 sportart_id=uuid.uuid4().bytes,
                 bezeichnung=eintrag["bezeichnung"],
-                unit=StatusUnit(eintrag["unit"])
+                unit=StatusUnit(eintrag["unit"]),
+                steigerungsfaktor=eintrag.get("steigerungsfaktor", 1.0)
             )
             session.add(sportart)
             session.flush()  # sportart_id für Intervall speichern
@@ -28,7 +29,7 @@ def seed_sportarten():
                 session.add(intervall)
 
         session.commit()
-        print("✅ Alle Sportarten + Intervalle erfolgreich gespeichert.")
+        print("✅ Alle Sportarten + Intervalle + Steigerungsfaktor erfolgreich gespeichert.")
 
 if __name__ == "__main__":
     app = create_app()

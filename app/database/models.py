@@ -1,6 +1,6 @@
 import uuid
 import sqlalchemy
-from sqlalchemy import Column, String, Integer, Boolean, Date, ForeignKey, Table, ForeignKeyConstraint, DateTime
+from sqlalchemy import Column, String, Integer, Boolean, Date, ForeignKey, Table, ForeignKeyConstraint, DateTime, Float
 from sqlalchemy.dialects.mysql import DATETIME
 from sqlalchemy.dialects.sqlite import BLOB
 from sqlalchemy.orm import relationship
@@ -101,6 +101,7 @@ class Sportart(Base):
     sportart_id = Column(BLOB, primary_key=True, default=lambda: uuid.uuid4().bytes)
     bezeichnung = Column(String, nullable=False)
     unit = Column(SQLEnum(StatusUnit), nullable=False)
+    steigerungsfaktor = Column(Float, nullable=False, default=1.0)
 
 
     # Neu: separate Beziehungen für beide Challenge-Typen

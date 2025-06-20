@@ -1,3 +1,5 @@
+from sqlalchemy import func
+
 from app.database.database import SessionLocal
 from app.database.models import Aufgabe
 
@@ -15,6 +17,16 @@ def find_task_by_challenge_and_date(challenge_id, datum):
     """Finde Aufgabe zu Challenge und Datum (Standard)."""
     with SessionLocal() as session:
         return session.query(Aufgabe).filter_by(challenge_id=challenge_id, datum=datum).first()
+
+
+def find_task_by_challenge_and_date_and_typ(challenge_id, datum, typ):
+    """Finde Aufgabe zu Challenge, Datum und Typ."""
+    with SessionLocal() as session:
+        return session.query(Aufgabe).filter_by(
+            challenge_id=challenge_id,
+            datum=datum,
+            typ=typ
+        ).first()
 
 def save_aufgabe(aufgabe):
     """Speichert eine Aufgabe."""
@@ -37,3 +49,11 @@ def get_all_tasks():
     """Gibt alle Aufgaben zurück."""
     with SessionLocal() as session:
         return session.query(Aufgabe).all()
+
+def count_survival_tasks_for_challenge(challenge_id):
+    """Zählt alle Survival-Aufgaben einer Challenge."""
+    with SessionLocal() as session:
+        return session.query(func.count(Aufgabe.aufgabe_id)).filter_by(
+            challenge_id=challenge_id,
+            typ="survival"
+        ).scalar()
