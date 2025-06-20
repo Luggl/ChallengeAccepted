@@ -57,3 +57,6 @@ def count_survival_tasks_for_challenge(challenge_id):
             challenge_id=challenge_id,
             typ="survival"
         ).scalar()
+
+# def mark_task_as_complete(task_id, user_id):
+#     with SessionLocal() as session:

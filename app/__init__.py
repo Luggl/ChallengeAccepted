@@ -38,13 +38,13 @@ def create_app():
     from app.routes.group_routes import group_bp
     from app.routes.challenge_routes import challenge_bp
     # from app.routes.feed_routes import feed_bp
-    # from app.routes.task_routes import task_bp
+    from app.routes.task_routes import task_bp
     # from app.routes.membership_routes import membership_bp
     app.register_blueprint(user_bp)
     app.register_blueprint(group_bp)
     app.register_blueprint(challenge_bp)
     # app.register_blueprint(feed_bp)
-    # app.register_blueprint(task_bp)
+    app.register_blueprint(task_bp)
     # app.register_blueprint(membership_bp)
 
     return app
