@@ -10,23 +10,23 @@ feed_bp = Blueprint("feed", __name__)
 def get_feed():
     current_user_id = get_jwt_identity()
 
-    success, result = get_feed_logic(current_user_id)
+    result = get_feed_logic(current_user_id)
 
-    if not success:
+    if not result["success"]:
         return jsonify({"error": result}), 400
 
     return jsonify({"feed": result}), 200
 
-@feed_bp.route("/api/posts/<int:id>", methods=["PUT"])
+@feed_bp.route("/api/post", methods=["PUT"])
 @jwt_required()
-def edit_post(id):
+def edit_post():
     current_user_id = get_jwt_identity()
     data = request.get_json()
-    post_id = id
+    post_id = request.args.get("post_id")
 
-    success, result = update_post_logic(data, post_id, current_user_id)
+    result = update_post_logic(data, post_id, current_user_id)
 
-    if not success:
+    if not result["success"]:
         return jsonify({"error": result}), 403
 
     return jsonify({"message": result}), 200

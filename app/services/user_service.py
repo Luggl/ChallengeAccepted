@@ -17,15 +17,24 @@ from app.repositories.user_repository import (
 
 import uuid
 
+from repositories.user_repository import find_user_by_username
+
 ALLOWED_UPDATE_FIELDS = {"username", "email", "profilbild"}
 
 
 # Registrierung eines neuen Users
 def register_user_logic(username, email, password):
     # Wenn E-Mail schon vergeben ist -> abbrechen
-    existing_user = find_user_by_email(email)
-    if existing_user:
+    existing_email = find_user_by_email(email)
+    if existing_email:
         return response(False, error="E-Mail ist bereits registriert.")
+
+    # Username bereits vergeben
+    existing_username = find_user_by_username(username)
+    if existing_username:
+        return response(False, error="Username ist bereits vergeben.")
+
+    # Hier fehlt noch die Logik zum Passwort
 
     # Passwort hashen für sichere Speicherung
     hashed_pw = generate_password_hash(password)
