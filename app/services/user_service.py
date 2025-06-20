@@ -12,7 +12,7 @@ from app.repositories.user_repository import (
     save_user,
     delete_user_by_id,
     find_user_by_id,
-    update_user
+    update_user, find_user_activities
 )
 
 import uuid
@@ -136,17 +136,33 @@ def get_user_logic(user_id_str):
     if not user:
         return response(False, error="Benutzer nicht gefunden")
 
-    # TODO: Kalender-Daten und Streak dynamisch berechnen, wenn nötig
+    kalender = get_user_kalender_logic(user.user_id)
+
     user_data = {
         "id": str(uuid.UUID(bytes=user.user_id)),
         "username": user.username,
         "email": user.email,
         "profilbild": user.profilbild,
-        "streak": user.streak
+        "streak": user.streak,
+        "Kalender": kalender
     }
 
     return response(True, data=user_data)
 
+def get_user_kalender_logic(user_id):
+    user = find_user_by_id(user_id)
+    kalender = {}
+    if not user:
+        return response(False, error="Benutzer nicht gefunden")
+
+    erfuellungen = find_user_activities(user)
+
+    if erfuellungen:
+        for eintrag in erfuellungen:
+            datum_str = eintrag.datum.strftime("%d.%m.%Y")
+            kalender[datum_str] = eintrag.status
+
+    return kalender
 
 def update_user_logic(user_id_str, update_data):
     try:

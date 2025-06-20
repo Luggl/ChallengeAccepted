@@ -1,8 +1,7 @@
 # app/repositories/user_repository.py
 
-from app.database.models import User  # falls User direkt in models/__init__.py steht, sonst: from app.models.user import User
+from app.database.models import User, Aufgabenerfuellung  # falls User direkt in models/__init__.py steht, sonst: from app.models.user import User
 from app import db  # Das ist die SQLAlchemy-Instanz (db.session)
-
 from sqlalchemy import inspect
 
 from app.database.database import engine, SessionLocal
@@ -46,3 +45,8 @@ def update_user(user):
         session.merge(user)
         session.commit()
     return user
+
+def find_user_activities(user):
+    with SessionLocal() as session:
+        return session.query(Aufgabenerfuellung).filter_by(user_id=user.user_id).first()
+
