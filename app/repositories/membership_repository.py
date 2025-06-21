@@ -12,11 +12,13 @@ def find_membership(user_id, gruppe_id):
 
 def find_memberships_by_user(user_id):
     """Finde alle Gruppen-Mitgliedschaften eines Users."""
-    return db.session.query(Membership).filter_by(user_id=user_id).all()
+    with SessionLocal() as session:
+        return session.query(Membership).filter_by(user_id=user_id).all()
 
 def find_memberships_by_group(gruppe_id):
     """Finde alle Mitglieder einer Gruppe."""
-    return db.session.query(Membership).filter_by(gruppe_id=gruppe_id).all()
+    with SessionLocal() as session:
+        return session.query(Membership).filter_by(gruppe_id=gruppe_id).all()
 
 def create_membership(membership):
     """Füge eine Mitgliedschaft hinzu."""

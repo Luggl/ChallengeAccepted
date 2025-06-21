@@ -2,7 +2,7 @@ import uuid
 
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from services.aufgaben_service import generate_standard_tasks_for_challenge_logic
+from services.task_service import generate_standard_tasks_for_challenge_logic
 from services.challenge_service import (
     create_challenge_standard_logic,
     create_challenge_survival_logic,
@@ -60,7 +60,7 @@ def create_challenge_survival():
     current_user_id = get_jwt_identity()
 
     # Gruppen-ID aus gid holen
-    group_id_str = request.args.get('gid')
+    group_id_str = request.args.get('group_id')
     if not group_id_str:
         return jsonify({"error": "Gruppen-ID (group_id) erforderlich"}), 400
 

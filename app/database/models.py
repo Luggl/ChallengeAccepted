@@ -1,14 +1,12 @@
 import uuid
 import sqlalchemy
-from sqlalchemy import Column, String, Integer, Boolean, Date, ForeignKey, Table, ForeignKeyConstraint, DateTime, Float
+from sqlalchemy import Column, String, Integer, Boolean, Date, ForeignKey, Table, ForeignKeyConstraint, DateTime, Float, Enum as SQLEnum, and_
 from sqlalchemy.dialects.mysql import DATETIME
 from sqlalchemy.dialects.sqlite import BLOB
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, foreign, configure_mappers
 from .database import Base
 from enum import Enum
-from sqlalchemy import Enum as SQLEnum
-from sqlalchemy import and_
-from sqlalchemy.orm import foreign
+configure_mappers()
 
 
 class StatusUnit(Enum):
@@ -204,13 +202,14 @@ class Survivalchallenge(Challenge):
     __tablename__ = "survival_challenge"
     challenge_id = Column(BLOB, ForeignKey("challenge.challenge_id"), primary_key=True)
     __mapper_args__ = {
-        "polymorphic_identity": "survival"
+        "polymorphic_identity": AufgabeTyp.survival.value
     }
 
     sportarten_links = relationship("SurvivalChallengeSportart", back_populates="challenge")
 
 class Aufgabe(Base):
     __tablename__="aufgabe"
+
 
     aufgabe_id=Column(BLOB, primary_key=True, default=lambda : uuid.uuid4().bytes)
     beschreibung=Column(String)
@@ -219,7 +218,7 @@ class Aufgabe(Base):
     deadline = Column(DateTime, nullable=True)
     datum = Column(Date, nullable=True)
     unit=Column(SQLEnum(StatusUnit), nullable=False)
-    typ = Column(SQLEnum(AufgabeTyp), nullable=False)
+    typ = Column(SQLEnum(AufgabeTyp, nullable=False))
 
     challenge_id=Column(BLOB, ForeignKey("challenge.challenge_id"))
     challenge=relationship("Challenge",back_populates="aufgaben")
@@ -228,24 +227,29 @@ class Aufgabe(Base):
     sportart=relationship("Sportart")
 
     erfuellungen=relationship("Aufgabenerfuellung",back_populates="aufgabe")
-    __mapper_args__={
-        "polymorphic_identity":"normal",
-        "polymorphic_on": typ
-    }
+
+    __mapper_args__ = {
+            "polymorphic_identity": None,
+            "polymorphic_on": typ,
+            # Für alle Unterklassen - Standard / Survival / Bonus
+            "with_polymorphic": "*"  # erlaubt JOIN Abfragen über alle Unterklassen hinweg
+        }
 
 class StandardAufgabe(Aufgabe):
     __tablename__ = "standard_aufgabe"
-    aufgabe_id = Column(BLOB, ForeignKey("aufgabe.aufgabe_id"), primary_key=True)
+    aufgabe_id=Column(BLOB, ForeignKey("aufgabe.aufgabe_id"), primary_key=True)
+    __mapper_args__ = {"polymorphic_identity": AufgabeTyp.standard.value}
 
-    __mapper_args__ = {"polymorphic_identity": "standard"}
 
 class SurvivalAufgabe(Aufgabe):
     __tablename__ = "survival_aufgabe"
+
+
     aufgabe_id = Column(BLOB, ForeignKey("aufgabe.aufgabe_id"), primary_key=True)
     startzeit = Column(DATETIME)
     tag_index = Column(Integer)
 
-    __mapper_args__ = {"polymorphic_identity": "survival"}
+    __mapper_args__ = {"polymorphic_identity": AufgabeTyp.survival.value}
 
 class BonusAufgabe(Aufgabe):
     __tablename__ ="bonus_aufgabe"
@@ -255,7 +259,7 @@ class BonusAufgabe(Aufgabe):
     ist_freiwillig=Column(Boolean, default=True)
 
     __mapper_args__ = {
-        "polymorphic_identity":"bonus"
+        "polymorphic_identity":AufgabeTyp.bonus.value
     }
 
 class Aufgabenerfuellung (Base):
@@ -288,6 +292,7 @@ class Aufgabenerfuellung (Base):
                           )
                     )
     beitrag=relationship("Beitrag", back_populates="erfuellung", uselist=False)
+
 class Beitrag (Base):
     __tablename__="beitrag"
 
@@ -318,8 +323,12 @@ class Beitrag (Base):
     )
     erfuellung=relationship("Aufgabenerfuellung", back_populates="beitrag")
 
-from sqlalchemy.orm import configure_mappers
-configure_mappers()
+    votes = relationship(
+        "BeitragVotes",
+        back_populates="beitrag",
+        cascade="all, delete-orphan",
+    )
+
 
 class BeitragVotes(Base):
     __tablename__ = "BeitragVotes"
@@ -345,6 +354,6 @@ class BeitragVotes(Base):
     )
     beitrag = relationship(
         "Beitrag",
-        back_populates="BeitragVotes",
+        back_populates="votes",
     )
 

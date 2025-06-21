@@ -1,8 +1,9 @@
 from sqlalchemy import func
 
 from app.database.database import SessionLocal
-from app.database.models import Aufgabe, AufgabeStatus
-from database.models import Aufgabenerfuellung
+from app.database.models import Aufgabe, AufgabeStatus, Aufgabenerfuellung
+from repositories.challenge_repository import find_challenge_by_id
+from repositories.membership_repository import find_memberships_by_group
 
 
 def find_task_by_id(aufgabe_id):
@@ -41,7 +42,23 @@ def save_aufgabe(aufgabe):
         session.add(aufgabe)
         session.commit()
         session.refresh(aufgabe)  # wichtig!
-        return aufgabe
+
+        # Alle User zur Challenge holen
+        memberships = find_memberships_by_group(find_challenge_by_id(aufgabe.challenge_id).gruppe_id)
+
+        # Für jeden User eine Aufgabenerfüllung anlegen
+        for user in memberships:
+            erfuellung = Aufgabenerfuellung(
+                aufgabe_id=aufgabe.aufgabe_id,
+                user_id=user.user_id,
+                gruppe_id=user.gruppe_id,
+                status="offen"
+            )
+            session.add(erfuellung)
+
+        session.commit()
+        session.flush()
+        return aufgabe.aufgabe_id
 
 def delete_task_by_id(aufgabe_id):
     """Lösche eine Aufgabe anhand ihrer ID."""
@@ -73,3 +90,7 @@ def mark_task_as_complete(aufgabenerfuellung_id):
         aufgabenerfuellung.status=AufgabeStatus.abgeschlossen
         session.commit()
         return aufgabenerfuellung
+
+def find_aufgabenerfuellung_by_challenge_and_date(challenge_id, date):
+    with SessionLocal() as session:
+        return session.query(Aufgabenerfuellung).filter_by(challenge_id=challenge_id, datum=date).all()

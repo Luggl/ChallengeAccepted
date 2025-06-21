@@ -11,6 +11,9 @@ def create_group():
     #Sicherstellen wer der User ist
     current_user_id = str(uuid.UUID(get_jwt_identity())) #JWT_Token von String in UUID Format geswitcht und dann wieder in String
     # Daten in JSON Format auslesen
+
+    # Check if token is legit
+
     data = request.get_json()
 
     name = data.get('name')

@@ -7,36 +7,45 @@ from app.repositories.task_repository import (
 )
 from repositories.challenge_repository import (
     find_standard_challenge_by_id,
-    find_standard_challenge_sportarten_by_challenge_id, find_survival_challenge_by_id, find_all_survival_challenges
+    find_standard_challenge_sportarten_by_challenge_id,
+    find_all_survival_challenges,
+    find_active_challenges_by_group
 )
 import uuid
 import random
 from collections import defaultdict
 from datetime import datetime, time, timedelta
 from app.database.models import AufgabeTyp, StandardAufgabe
-from repositories.task_repository import find_tasks_by_user_id
+from repositories.membership_repository import find_memberships_by_user
+from repositories.task_repository import find_tasks_by_user_id, find_aufgabenerfuellung_by_challenge_and_date
+from utils.auth_utils import get_uuid_formated_id
 from utils.time import now_berlin, date_today
 from app.repositories.sportart_repository import find_sportart_by_id, find_intervall_by_sportart_and_schwierigkeit
 from app.database.models import SurvivalAufgabe
 
 
-# Einzelne Aufgabe abrufen (nur wenn User dazugehört)
-def get_task_logic(task_id, user_id):
-    task = find_task_by_id(task_id)
-    if not task:
-        return response(False, error="Aufgabe nicht gefunden.")
+# Alle Tasks für einen User abfragen
+def get_task_logic(user_id):
+    #Alle Memberships des Users holen
+    memberships = find_memberships_by_user(get_uuid_formated_id(user_id))
+    datum = date_today()
+    if not memberships:
+        return response(False, error="User in keiner Gruppe!")
 
-    # Optional: Berechtigungsprüfung – gehört der Task dem User?
-    if task.user_id != user_id:
-        return response(False, error="Zugriff nicht erlaubt.")
+    #Liste an Aufgabenerfüllungen erzeugen
+    aufgabenerfuellungen = []
+    #Für alle Memberships die jeweiligen Tasks laden
+    for membership in memberships:
+        challenges = find_active_challenges_by_group(membership.gruppe_id)
+        for challenge in challenges:
+            aufgabenerfuellung = find_aufgabenerfuellung_by_challenge_and_date(challenge.challenge_id, datum)
 
-    return response(True, data={
-        "id": task.id,
-        "titel": task.title,
-        "beschreibung": task.description,
-        "status": task.status,
-        "gruppe": task.group_id
-    })
+            if aufgabenerfuellung:
+                aufgabenerfuellungen.append(aufgabenerfuellung)
+
+
+
+    return response(True, data=aufgabenerfuellungen)
 
 
 # Aufgabe als erledigt markieren
@@ -170,10 +179,10 @@ def generate_survival_tasks_for_all_challenges():
     """Generiert täglich Survival-Aufgaben für alle Survival-Challenges, falls noch nicht vorhanden."""
     today = now_berlin().date()
     erfolge = []
-
+    typ = "survival"
     challenges = find_all_survival_challenges()
     for challenge in challenges:
-        existing = find_task_by_challenge_and_date_and_typ(challenge.challenge_id, today, AufgabeTyp.survival.name)
+        existing = find_task_by_challenge_and_date_and_typ(challenge.challenge_id, today, typ)
         if existing:
             erfolge.append({"challenge_id": str(uuid.UUID(bytes=challenge.challenge_id)), "status": "bereits vorhanden"})
             continue
@@ -218,7 +227,7 @@ def generate_survival_tasks_for_all_challenges():
             beschreibung=beschreibung
         )
 
-        save_aufgabe(aufgabe)
-        erfolge.append({"challenge_id": str(uuid.UUID(bytes=challenge.challenge_id)), "status": "erstellt", "task_id": str(uuid.UUID(bytes=aufgabe.aufgabe_id))})
+        aufgabe_id = save_aufgabe(aufgabe)
+        erfolge.append({"challenge_id": str(uuid.UUID(bytes=challenge.challenge_id)), "status": "erstellt", "task_id": str(uuid.UUID(bytes=aufgabe_id))})
 
     return {"success": True, "results": erfolge}
