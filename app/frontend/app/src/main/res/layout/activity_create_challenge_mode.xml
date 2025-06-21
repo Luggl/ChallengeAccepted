@@ -55,6 +55,7 @@
 
         <!-- Standard-Modus -->
         <FrameLayout
+            android:id="@+id/fl_standard"
             android:layout_width="match_parent"
             android:layout_height="215dp"
             android:layout_marginBottom="16dp"
@@ -86,6 +87,7 @@
 
         <!-- Survival-Modus -->
         <FrameLayout
+            android:id="@+id/fl_survival"
             android:layout_width="match_parent"
             android:layout_height="215dp">
 
