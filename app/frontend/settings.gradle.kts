@@ -21,4 +21,9 @@ dependencyResolutionManagement {
 
 rootProject.name = "Challenge Accepted"
 include(":app")
+
+
+//include(":manifests", ":kotlin+java", ":res")
+//project(":app").projectDir = file("app")
+
  
