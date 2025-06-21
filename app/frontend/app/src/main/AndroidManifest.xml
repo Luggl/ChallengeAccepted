@@ -35,6 +35,7 @@
         <activity android:name=".ProfileActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <activity android:name=".ProfileChangePassActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <activity android:name=".ProfileSettingsActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+        <activity android:name=".DataPrivacyActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
 
         <!-- Group -->
         <activity android:name=".GroupDashboardActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>

@@ -136,15 +136,15 @@
 
                         <TextView
                             android:text="Push-Ups"
-                            android:textColor="@color/primary" />
+                            android:textColor="@color/blue" />
 
                         <TextView
                             android:text="10 St."
-                            android:textColor="@color/primary" />
+                            android:textColor="@color/blue" />
 
                         <TextView
                             android:text="30 St."
-                            android:textColor="@color/primary" />
+                            android:textColor="@color/blue" />
                     </TableRow>
 
                     <!-- Planks -->
@@ -152,15 +152,15 @@
 
                         <TextView
                             android:text="Planks"
-                            android:textColor="@color/primary" />
+                            android:textColor="@color/blue" />
 
                         <TextView
                             android:text="20 Sek."
-                            android:textColor="@color/primary" />
+                            android:textColor="@color/blue" />
 
                         <TextView
                             android:text="40 Sek."
-                            android:textColor="@color/primary" />
+                            android:textColor="@color/blue" />
                     </TableRow>
 
                     <!-- Weitere Aktivitäten -->
