@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 //import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -16,10 +17,15 @@ class CreateChallengeModeActivity : AppCompatActivity() {
     private var selectedMode: String="standard"
 
     //Views als Properties für späteren Zugriff
+    //private lateinit var imageStandard: ImageView
+    //private lateinit var imageSurvival: ImageView
+
     private lateinit var flStandard: FrameLayout
     private lateinit var flSurvival: FrameLayout
-    private lateinit var imageStandard: ImageView
-    private lateinit var imageSurvival: ImageView
+    private lateinit var tvStandard: TextView
+    private lateinit var tvSurvival: TextView
+
+
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,16 +35,17 @@ class CreateChallengeModeActivity : AppCompatActivity() {
         setContentView(R.layout.activity_create_challenge_mode)
 
         //Views aus dem XML holen
-        flStandard=findViewById(R.id.fl_standard)
-        flSurvival=findViewById(R.id.fl_survival)
-        imageStandard=findViewById(R.id.iv_standard)
-        imageSurvival=findViewById(R.id.iv_survival)
-
-
         val navBack = findViewById<ImageView>(R.id.btn_back)
         val confirmButton=findViewById<ImageButton>(R.id.btn_confirm_selection)
+        flStandard=findViewById(R.id.fl_standard)
+        flSurvival=findViewById(R.id.fl_survival)
+        tvStandard = findViewById(R.id.tv_standard)
+        tvSurvival = findViewById(R.id.tv_survival)
+      //  imageStandard=findViewById(R.id.iv_standard)
+        //imageSurvival=findViewById(R.id.iv_survival)
 
-        //zurück zur vorherigen Seite
+
+        //zutück zur vorherigen Seite
         navBack.setOnClickListener {
             val intent = Intent(this, GroupDashboardActivity::class.java)
             startActivity(intent)
@@ -50,12 +57,11 @@ class CreateChallengeModeActivity : AppCompatActivity() {
         }
 
         //manuelle Auswahl- wenn Nutzer etwas anderes auswählt
-        imageStandard.setOnClickListener{
+        flStandard.setOnClickListener{
             selectedMode="standard"
             updateSelectedModeUI()
-
         }
-        imageSurvival.setOnClickListener{
+        flSurvival.setOnClickListener{
             selectedMode="survival"
             updateSelectedModeUI()
         }
@@ -91,12 +97,23 @@ class CreateChallengeModeActivity : AppCompatActivity() {
     }
     //Funktion zur visuellen Hervorhebung des ausgewählten Modus
     private fun updateSelectedModeUI() {
-        if (selectedMode == "standard") {
-            imageStandard.setBackgroundResource(R.drawable.green_frame)
-            imageSurvival.setBackgroundResource(R.drawable.bright_grey_frame)
-        } else {
-            imageStandard.setBackgroundResource(R.drawable.bright_grey_frame)
-            imageSurvival.setBackgroundResource(R.drawable.green_frame)
-        }
+        val activeFrame= R.drawable.green_frame
+        val inactiveFrame=R.drawable.bright_grey_frame
+        flStandard.setBackgroundResource(
+        if (selectedMode == "standard")
+            activeFrame else inactiveFrame
+        )
+        flSurvival.setBackgroundResource(
+        if (selectedMode=="survival")
+            activeFrame else inactiveFrame
+        )
+        tvStandard.setBackgroundResource(
+            if(selectedMode=="standard")
+                activeFrame else inactiveFrame
+        )
+        tvSurvival.setBackgroundResource(
+            if (selectedMode=="survival")
+            activeFrame else inactiveFrame
+        )
     }
 }
