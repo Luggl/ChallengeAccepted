@@ -79,8 +79,16 @@ class SurvivalIntensityActivity : AppCompatActivity() {
             updateSelectionUI()
         }
         btnBack.setOnClickListener {
-            val intent=Intent(this, SurvivalActivitiesActivity::class.java)
-            startActivity(intent)
+            if (currentIndex == 0) {
+                val intent = Intent(this, SurvivalActivitiesActivity::class.java)
+                startActivity(intent)
+                finish()
+            } else {
+                currentIndex--
+                selectedLevel = intensityMap[exercises[currentIndex]] ?: "easy"
+                showExercise()
+                updateSelectionUI()
+            }
         }
         // Bestätigungs-Button: Auswahl verwenden
         btnConfirm.setOnClickListener {
