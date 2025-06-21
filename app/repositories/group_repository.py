@@ -3,6 +3,10 @@
 from app.database.models import Gruppe
 from app import db
 from app.database.database import SessionLocal
+from database.models import Beitrag
+from utils.auth_utils import get_uuid_formated_id
+from utils.serialize_beitrag import serialize_beitrag
+
 
 def find_group_by_id(gruppe_id):
     """Finde eine Gruppe anhand der ID."""
@@ -49,9 +53,18 @@ def delete_group_by_id(gruppe_id):
 
 def update_group(gruppe):
     """Aktualisiere eine bestehende Gruppe."""
-    db.session.commit()
-    return gruppe
+    with SessionLocal() as session:
+        session.merge(gruppe)
+        session.commit()
+        return gruppe
+
 
 def get_all_groups():
     """Gibt alle Gruppen zurück."""
     return db.session.query(Gruppe).all()
+
+def get_group_feed_by_group_id(group_id):
+    with SessionLocal() as session:
+        beitraege = session.query(Beitrag).filter_by(gruppe_id=group_id).order_by(Beitrag.erstellDatum.desc()).all()
+        result = [serialize_beitrag(b) for b in beitraege]
+        return result

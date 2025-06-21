@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token, get_jwt
 from app.services.user_service import *
 from app import blacklisted_tokens
+from utils.auth_utils import get_uuid_formated_id
 
 # Blueprint ist eine "Mini-App" innerhalb Flask, um Routen besser zu strukturieren.
 user_bp = Blueprint('user', __name__)
@@ -82,19 +83,14 @@ def reset_password():
 
     return jsonify({"message": result["data"]}), 200
 
-@user_bp.route('/api/user/<uuid:id>', methods=['DELETE'])
+@user_bp.route('/api/deleteuser', methods=['DELETE'])
 @jwt_required() # Sicherstellen, dass User eingeloggt ist
-def delete_user(id):
+def delete_user():
     # Prüfen, wer der aktuell eingeloggte User ist
-    current_user_id = get_jwt_identity()
-
-    # Sicherstellen, dass kein anderer User gelöscht wird außer sich selbst.
-    uuid_obj = uuid.UUID(current_user_id)
-    if uuid_obj != id:
-        return jsonify({"error": "Du darfst nur deinen eigenen Account löschen!"}), 404
+    current_user_id = get_uuid_formated_id(get_jwt_identity())
 
     # Logik in Services:
-    message = delete_user_logic(id)
+    message = delete_user_logic(current_user_id)
 
     if not message["success"]:
         return jsonify({"error": message}), 404

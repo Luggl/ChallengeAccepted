@@ -29,7 +29,7 @@ def create_group_logic(name, beschreibung, gruppenbild, created_by):
         session.flush()
 
         membership = Membership(
-            user_id=uuid.UUID(created_by).bytes,
+            user_id=get_uuid_formated_id(created_by),
             gruppe_id=group.gruppe_id,
             isAdmin=True
         )
@@ -74,8 +74,15 @@ def join_group_via_link_logic(user_id, invitation_link):
     if group.einladungscode_gueltig_bis.date() < now_berlin().date():
         return response(False, "Einladungslink ist abgelaufen.")
 
+    user_id_uuid = get_uuid_formated_id(user_id)
+
+    # Failcheck, falls User bereits Gruppenmitglied!
+    membershipcheck = find_membership(user_id_uuid, group.gruppe_id)
+    if membershipcheck:
+        return response(False, "User bereits Mitglied der Gruppe")
+
     membership = Membership(
-        user_id=uuid.UUID(user_id).bytes,
+        user_id=user_id_uuid,
         gruppe_id=group.gruppe_id,
         isAdmin=False)
 
@@ -87,11 +94,14 @@ def join_group_via_link_logic(user_id, invitation_link):
 
 # Gruppe löschen
 def delete_group_logic(group_id, user_id):
-    # Optional: prüfen, ob user der Admin ist → kommt später
-    user_id_bytes = uuid.UUID(user_id).bytes
-    group_id_bytes = uuid.UUID(group_id).bytes
+
+    user_id_bytes = get_uuid_formated_id(user_id)
+    group_id_bytes = get_uuid_formated_id(group_id)
 
     membership = find_membership(user_id_bytes, group_id_bytes)
+
+    if not membership:
+        return response(False, "Membership existiert nicht - Entweder Gruppe falsch oder User nicht berechtigt")
 
     if not membership.isAdmin:
         return response(False, "User darf die Gruppe nicht löschen")
@@ -103,7 +113,15 @@ def delete_group_logic(group_id, user_id):
 
 # Gruppenfeed abrufen
 def get_group_feed_logic(group_id, user_id):
-    feed = get_group_feed_data(group_id, user_id)
+    group_id_uuid = get_uuid_formated_id(group_id)
+    user_id_uuid = get_uuid_formated_id(user_id)
+
+    membership = find_membership(user_id_uuid, group_id_uuid)
+
+    if not membership:
+        return response(False, "User ist kein Gruppenmitglied!")
+
+    feed = get_group_feed_by_group_id(group_id_uuid)
     if not feed:
         return response(False, "Zugriff verweigert oder keine Daten.")
     return response(True, feed)

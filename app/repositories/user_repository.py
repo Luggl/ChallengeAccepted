@@ -31,7 +31,7 @@ def save_user(user):
 
 def delete_user_by_id(user_id):
     """Lösche einen User anhand seiner user_id."""
-    user = find_user_by_id(user_id.bytes)
+    user = find_user_by_id(user_id)
     if user:
         with SessionLocal() as session:
             session.delete(user)

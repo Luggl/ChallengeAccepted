@@ -54,9 +54,20 @@ class User(Base):
     profilbild=Column(String)
     streak=Column(Integer, default=0)
 
-    achievement_links=relationship("UserAchievement", back_populates="user")
-    token=relationship("ResetToken",back_populates="user", uselist=False)
-    membership=relationship("Membership", back_populates="user")
+    achievement_links=relationship(
+        "UserAchievement",
+        back_populates="user",
+        cascade="all, delete-orphan"
+    )
+    token=relationship(
+        "ResetToken",
+        back_populates="user",
+        uselist=False,
+        cascade="all, delete-orphan")
+    membership=relationship(
+        "Membership",
+        back_populates="user",
+        cascade="all, delete-orphan")
 
 class Achievement (Base):
     __tablename__="achievement"
@@ -229,7 +240,6 @@ class Aufgabe(Base):
     erfuellungen=relationship("Aufgabenerfuellung",back_populates="aufgabe")
 
     __mapper_args__ = {
-            "polymorphic_identity": None,
             "polymorphic_on": typ,
             # Für alle Unterklassen - Standard / Survival / Bonus
             "with_polymorphic": "*"  # erlaubt JOIN Abfragen über alle Unterklassen hinweg
@@ -238,7 +248,7 @@ class Aufgabe(Base):
 class StandardAufgabe(Aufgabe):
     __tablename__ = "standard_aufgabe"
     aufgabe_id=Column(BLOB, ForeignKey("aufgabe.aufgabe_id"), primary_key=True)
-    __mapper_args__ = {"polymorphic_identity": AufgabeTyp.standard.value}
+    __mapper_args__ = {"polymorphic_identity": AufgabeTyp.standard}
 
 
 class SurvivalAufgabe(Aufgabe):
@@ -249,7 +259,7 @@ class SurvivalAufgabe(Aufgabe):
     startzeit = Column(DATETIME)
     tag_index = Column(Integer)
 
-    __mapper_args__ = {"polymorphic_identity": AufgabeTyp.survival.value}
+    __mapper_args__ = {"polymorphic_identity": AufgabeTyp.survival}
 
 class BonusAufgabe(Aufgabe):
     __tablename__ ="bonus_aufgabe"
@@ -259,7 +269,7 @@ class BonusAufgabe(Aufgabe):
     ist_freiwillig=Column(Boolean, default=True)
 
     __mapper_args__ = {
-        "polymorphic_identity":AufgabeTyp.bonus.value
+        "polymorphic_identity":AufgabeTyp.bonus
     }
 
 class Aufgabenerfuellung (Base):

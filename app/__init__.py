@@ -2,6 +2,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager
 from datetime import timedelta
+from app.database.models import Aufgabe, SurvivalAufgabe, StandardAufgabe
 
 db = SQLAlchemy()
 jwt = JWTManager()  # JWTManager global verfügbar machen

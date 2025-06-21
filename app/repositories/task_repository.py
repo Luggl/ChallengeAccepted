@@ -1,7 +1,7 @@
 from sqlalchemy import func
 
 from app.database.database import SessionLocal
-from app.database.models import Aufgabe, AufgabeStatus, Aufgabenerfuellung
+from app.database.models import Aufgabe, AufgabeStatus, Aufgabenerfuellung, StandardAufgabe, SurvivalAufgabe
 from repositories.challenge_repository import find_challenge_by_id
 from repositories.membership_repository import find_memberships_by_group
 

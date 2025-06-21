@@ -21,7 +21,7 @@ def create_challenge_standard():
     data = request.get_json()
     current_user_id = get_jwt_identity()
 
-    group_id_str = request.args.get('gid')
+    group_id_str = request.args.get('group_id')
     if not group_id_str:
         return jsonify({"error": "Gruppen-ID (group_id) erforderlich"}), 400
 
@@ -59,7 +59,7 @@ def create_challenge_survival():
     data = request.get_json()
     current_user_id = get_jwt_identity()
 
-    # Gruppen-ID aus gid holen
+    # Gruppen-ID aus group_id holen
     group_id_str = request.args.get('group_id')
     if not group_id_str:
         return jsonify({"error": "Gruppen-ID (group_id) erforderlich"}), 400

@@ -8,12 +8,10 @@ group_bp = Blueprint('group', __name__)
 @group_bp.route('/api/group', methods=['POST'])
 @jwt_required()
 def create_group():
-    #Sicherstellen wer der User ist
-    current_user_id = str(uuid.UUID(get_jwt_identity())) #JWT_Token von String in UUID Format geswitcht und dann wieder in String
+    #Sicherstellen, wer der User ist
+    current_user_id = get_jwt_identity() #JWT_Token von String in UUID Format geswitcht und dann wieder in String
+
     # Daten in JSON Format auslesen
-
-    # Check if token is legit
-
     data = request.get_json()
 
     name = data.get('name')
@@ -47,7 +45,7 @@ def invitation_link():
     result = invitation_link_logic(gruppe_id, current_user_id)
 
     if not result['success']:
-        return jsonify({"error": result["data"]}), 400
+        return jsonify({"error": result['data']}), 400
 
     return jsonify({"message": "Einladungslink erstellt", "link": result}), 200
 
@@ -74,9 +72,9 @@ def delete_group():
     result = delete_group_logic(group_id, current_user_id)
 
     if not result["success"]:
-        return jsonify({"error": result}), 403 # Keine Berechtigung oder Fehler
+        return jsonify({"error": result['data']}), 403 # Keine Berechtigung oder Fehler
 
-    return jsonify({"message": result}), 204
+    return jsonify({"message": result['data']}), 200
 
 
 @group_bp.route('/api/groupfeed', methods=['GET'])
