@@ -4,8 +4,9 @@ from app.database.models import Gruppe
 from app import db
 from app.database.database import SessionLocal
 from database.models import Beitrag
+from repositories.membership_repository import find_memberships_by_user
 from utils.auth_utils import get_uuid_formated_id
-from utils.serialize_beitrag import serialize_beitrag
+from utils.serialize import serialize_beitrag
 
 
 def find_group_by_id(gruppe_id):
@@ -68,3 +69,8 @@ def get_group_feed_by_group_id(group_id):
         beitraege = session.query(Beitrag).filter_by(gruppe_id=group_id).order_by(Beitrag.erstellDatum.desc()).all()
         result = [serialize_beitrag(b) for b in beitraege]
         return result
+
+def get_groups_by_user_id(user_id):
+    with SessionLocal() as session:
+        memberships = find_memberships_by_user(user_id)
+        return session.query(Gruppe).filter_by(user_id=user_id).all()

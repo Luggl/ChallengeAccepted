@@ -90,19 +90,6 @@ def get_group_feed():
 
     return jsonify({"message": result}), 200
 
-@group_bp.route('/api/groups', methods=['GET'])
-@jwt_required()
-def get_group_overview():
-    current_user_id = get_jwt_identity()
-
-    # Achtung, hier muss im result auch eine Information mitgeliefert werden, ob der User eine Aufgabe zu erledigen hat oder nicht
-    # Genauso ob die Aufgabe Standard oder Survival Challenge bezogen ist
-    result = get_group_overview_logic(current_user_id)
-
-    if not result["success"]:
-        return jsonify({"error": result}), 403
-
-    return jsonify({"message": result}), 200
 
 @group_bp.route('/api/leavegroup', methods=['PUT'])
 @jwt_required()

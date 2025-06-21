@@ -44,3 +44,10 @@ def update_membership(membership):
 def get_all_memberships():
     """Gibt alle Mitgliedschaften zurück."""
     return db.session.query(Membership).all()
+
+def is_user_admin(group_id, user_id):
+    with SessionLocal() as session:
+        membership = find_membership(group_id, user_id)
+        if membership.isAdmin:
+            return True
+        return False

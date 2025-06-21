@@ -126,12 +126,6 @@ def get_group_feed_logic(group_id, user_id):
         return response(False, "Zugriff verweigert oder keine Daten.")
     return response(True, feed)
 
-# Gruppenübersicht für User abrufen
-def get_group_overview_logic(user_id):
-    groups = get_groups_for_user(user_id)
-    if not groups:
-        return response(False, "Keine Gruppen gefunden.")
-    return response(True, groups)
 
 def leave_group_logic(user_id, group_id):
     user_id_str = get_uuid_formated_id(user_id)
