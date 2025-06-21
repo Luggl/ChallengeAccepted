@@ -134,7 +134,7 @@
             <ImageView
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:src="@drawable/burpees_icon"
+                android:src="@drawable/lunges_icon"
                 android:tint="@android:color/white"
                 tools:ignore="UseAppTint" />
 
@@ -215,7 +215,7 @@
             <ImageView
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:src="@drawable/lunges_icon"
+                android:src="@drawable/burpees_icon"
                 android:tint="@android:color/white"
                 tools:ignore="UseAppTint" />
 
