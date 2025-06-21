@@ -1,4 +1,5 @@
 from sqlalchemy import func
+from sqlalchemy.orm import joinedload
 
 from app.database.database import SessionLocal
 from app.database.models import Aufgabe, AufgabeStatus, Aufgabenerfuellung, StandardAufgabe, SurvivalAufgabe
@@ -93,4 +94,7 @@ def mark_task_as_complete(aufgabenerfuellung_id):
 
 def find_aufgabenerfuellung_by_challenge_and_date(challenge_id, date):
     with SessionLocal() as session:
-        return session.query(Aufgabenerfuellung).filter_by(challenge_id=challenge_id, datum=date).all()
+        return session.query(Aufgabenerfuellung).options(joinedload(Aufgabenerfuellung.aufgabe)).join(Aufgabe, Aufgabenerfuellung.aufgabe_id == Aufgabe.aufgabe_id).filter(
+            Aufgabe.challenge_id == challenge_id,
+            Aufgabe.datum == date
+        ).first()

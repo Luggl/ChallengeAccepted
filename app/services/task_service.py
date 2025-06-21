@@ -19,6 +19,7 @@ from app.database.models import AufgabeTyp, StandardAufgabe
 from repositories.membership_repository import find_memberships_by_user
 from repositories.task_repository import find_tasks_by_user_id, find_aufgabenerfuellung_by_challenge_and_date
 from utils.auth_utils import get_uuid_formated_id
+from utils.serialize import serialize_aufgabenerfuellung
 from utils.time import now_berlin, date_today
 from app.repositories.sportart_repository import find_sportart_by_id, find_intervall_by_sportart_and_schwierigkeit
 from app.database.models import SurvivalAufgabe
@@ -38,7 +39,7 @@ def get_task_logic(user_id):
     for membership in memberships:
         challenges = find_active_challenges_by_group(membership.gruppe_id)
         for challenge in challenges:
-            aufgabenerfuellung = find_aufgabenerfuellung_by_challenge_and_date(challenge.challenge_id, datum)
+            aufgabenerfuellung = serialize_aufgabenerfuellung(find_aufgabenerfuellung_by_challenge_and_date(challenge.challenge_id, datum))
 
             if aufgabenerfuellung:
                 aufgabenerfuellungen.append(aufgabenerfuellung)

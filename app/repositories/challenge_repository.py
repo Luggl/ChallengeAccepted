@@ -23,8 +23,8 @@ def find_sportart_by_id(sportart_id):
 def find_active_challenges_by_group(gruppe_id):
     """Finde alle Challenges einer Gruppe."""
     with SessionLocal() as session:
-        return session.query(Challenge).filter(gruppe_id=gruppe_id,
-                                               active=True).all()
+        return session.query(Challenge).filter(Challenge.gruppe_id==gruppe_id,
+                                               Challenge.active==True).all()
 
 def find_challenges_by_creator(user_id, gruppe_id):
     """Finde alle Challenges, die von einem bestimmten Mitglied einer bestimmten Gruppe erstellt wurden."""

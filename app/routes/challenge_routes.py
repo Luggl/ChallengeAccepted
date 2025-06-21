@@ -2,6 +2,8 @@ import uuid
 
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
+
+from repositories.challenge_repository import find_active_challenges_by_group
 from services.task_service import generate_standard_tasks_for_challenge_logic
 from services.challenge_service import (
     create_challenge_standard_logic,
@@ -28,6 +30,11 @@ def create_challenge_standard():
     group_id = get_uuid_formated_id(group_id_str)
     if not group_id:
         return jsonify({"error": "Ungültige Gruppen-ID"}), 400
+
+    # Nicht mehrere Challenges gleichzeitig erlaubt
+    active_challenge_check = find_active_challenges_by_group(group_id_str)
+    if active_challenge_check:
+        return jsonify({"error": "Nur eine aktive Challenge möglich!"})
 
     result = create_challenge_standard_logic(current_user_id, data, group_id)
 
@@ -67,6 +74,11 @@ def create_challenge_survival():
     group_id = get_uuid_formated_id(group_id_str)
     if not group_id:
         return jsonify({"error": "Ungültige Gruppen-ID"}), 400
+
+    # Nicht mehrere Challenges gleichzeitig erlaubt
+    active_challenge_check = find_active_challenges_by_group(group_id_str)
+    if active_challenge_check:
+        return jsonify({"error": "Nur eine aktive Challenge möglich!"})
 
     result = create_challenge_survival_logic(current_user_id, data, group_id)
 
