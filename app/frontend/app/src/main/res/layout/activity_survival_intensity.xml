@@ -106,6 +106,7 @@
 
                 <!-- Auswahl-Buttons -->
                 <TextView
+                    android:id="@+id/tv_easy"
                     android:layout_width="250dp"
                     android:layout_height="60dp"
                     android:layout_marginVertical="8dp"
@@ -117,6 +118,7 @@
                     android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/tv_medium"
                     android:layout_width="250dp"
                     android:layout_height="60dp"
                     android:layout_marginVertical="8dp"
@@ -128,6 +130,7 @@
                     android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/tv_hard"
                     android:layout_width="250dp"
                     android:layout_height="60dp"
                     android:layout_marginVertical="8dp"
