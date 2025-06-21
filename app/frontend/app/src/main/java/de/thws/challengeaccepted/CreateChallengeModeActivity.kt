@@ -3,8 +3,10 @@ import android.annotation.SuppressLint
 import android.content.Intent
 //import android.content.Intent
 import android.os.Bundle
+import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 //import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -14,6 +16,17 @@ class CreateChallengeModeActivity : AppCompatActivity() {
     //Modusauswahl (Standard voreingestellt)
     private var selectedMode: String="standard"
 
+    //Views als Properties für späteren Zugriff
+    //private lateinit var imageStandard: ImageView
+    //private lateinit var imageSurvival: ImageView
+
+    private lateinit var flStandard: FrameLayout
+    private lateinit var flSurvival: FrameLayout
+    private lateinit var tvStandard: TextView
+    private lateinit var tvSurvival: TextView
+
+
+
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         //Randloses Layout aktivieren (Edge-to-Edge)
@@ -21,34 +34,36 @@ class CreateChallengeModeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_challenge_mode)
 
-        //Views aus dem XML holen 
+        //Views aus dem XML holen
         val navBack = findViewById<ImageView>(R.id.btn_back)
         val confirmButton=findViewById<ImageButton>(R.id.btn_confirm_selection)
-        val imageStandard=findViewById<ImageView>(R.id.iv_standard)
-        val imageSurvival=findViewById<ImageView>(R.id.iv_survival)
+        flStandard=findViewById(R.id.fl_standard)
+        flSurvival=findViewById(R.id.fl_survival)
+        tvStandard = findViewById(R.id.tv_standard)
+        tvSurvival = findViewById(R.id.tv_survival)
+      //  imageStandard=findViewById(R.id.iv_standard)
+        //imageSurvival=findViewById(R.id.iv_survival)
 
 
+        //zutück zur vorherigen Seite
         navBack.setOnClickListener {
             val intent = Intent(this, GroupDashboardActivity::class.java)
             startActivity(intent)
         }
 
-        //Standard-Modus visuelle hervorheben beim Start
-        imageStandard.setBackgroundResource(R.drawable.green_frame)
-        imageSurvival.setBackgroundResource(R.drawable.bright_grey_frame)
-        selectedMode= "standard"
-
-
-        //Manuelle Auswahl - wenn Nutzer etwas anderes auswählt
-        imageStandard.setOnClickListener{
-            imageStandard.setBackgroundResource(R.drawable.green_frame)
-            imageSurvival.setBackgroundResource(R.drawable.bright_grey_frame)
-            selectedMode= "standard"
+        //Start-Markierung für Standard-Modus setzen, wenn Layout fertig ist
+        flStandard.post{
+            updateSelectedModeUI()
         }
-        imageSurvival.setOnClickListener{
-            imageSurvival.setBackgroundResource(R.drawable.green_frame)
-            imageStandard.setBackgroundResource(R.drawable.bright_grey_frame)
+
+        //manuelle Auswahl- wenn Nutzer etwas anderes auswählt
+        flStandard.setOnClickListener{
+            selectedMode="standard"
+            updateSelectedModeUI()
+        }
+        flSurvival.setOnClickListener{
             selectedMode="survival"
+            updateSelectedModeUI()
         }
         //auswahl bestätigen
         confirmButton.setOnClickListener {
@@ -79,5 +94,26 @@ class CreateChallengeModeActivity : AppCompatActivity() {
         navProfile.setOnClickListener{
             startActivity(Intent(this, ProfileActivity::class.java))
         }
+    }
+    //Funktion zur visuellen Hervorhebung des ausgewählten Modus
+    private fun updateSelectedModeUI() {
+        val activeFrame= R.drawable.green_frame
+        val inactiveFrame=R.drawable.bright_grey_frame
+        flStandard.setBackgroundResource(
+        if (selectedMode == "standard")
+            activeFrame else inactiveFrame
+        )
+        flSurvival.setBackgroundResource(
+        if (selectedMode=="survival")
+            activeFrame else inactiveFrame
+        )
+        tvStandard.setBackgroundResource(
+            if(selectedMode=="standard")
+                activeFrame else inactiveFrame
+        )
+        tvSurvival.setBackgroundResource(
+            if (selectedMode=="survival")
+            activeFrame else inactiveFrame
+        )
     }
 }

@@ -29,11 +29,11 @@ class SurvivalActivitiesActivity : AppCompatActivity(){
             startActivity(intent)
         }
         //Gridlayout mit Übungen
-        val gridLayout=findViewById<GridLayout>(R.id.grid_exercises)
+        val gridExercises=findViewById<GridLayout>(R.id.grid_exercises)
 
         //alle Übungen durchgehen
-        for (i in 0 until gridLayout.childCount) {
-            val child = gridLayout.getChildAt(i) as? LinearLayout ?: continue
+        for (i in 0 until gridExercises.childCount) {
+            val child = gridExercises.getChildAt(i) as? LinearLayout ?: continue
 
             //Textview im Kind-Layout finden (der Übungsname)
             val label = child.getChildAt(1) as TextView
@@ -46,6 +46,11 @@ class SurvivalActivitiesActivity : AppCompatActivity(){
                     selectedExercises.remove(text)
                     child.setBackgroundResource(R.drawable.bright_grey_frame)
                     Toast.makeText(this, "$text ausgewählt", Toast.LENGTH_SHORT).show()
+                }else{
+                    //neuAuswählen
+                    selectedExercises.add(text)
+                    child.setBackgroundResource(R.drawable.green_frame)
+                    Toast.makeText(this, "$text ausgewählt", Toast.LENGTH_SHORT).show()
                 }
                 Log.d("DashboardActivity", "Geklickt: $text")
             }
@@ -57,21 +62,24 @@ class SurvivalActivitiesActivity : AppCompatActivity(){
             Toast.makeText(this, "Auswahl bestätigt!", Toast.LENGTH_SHORT).show()
             Log.d("DashboardActivity", "Bestätigt: $selectedExercises")
             // Etappe 5: Auswahl an nächste Aktivität übergeben
-            val intent = Intent(this, StandardIntensityActivity::class.java)
+            val intent = Intent(this, SurvivalIntensityActivity::class.java)
             intent.putStringArrayListExtra("selectedExercises", ArrayList(selectedExercises))
             startActivity(intent)
         }
-        // Initialisieren
+        // Bottom Navigation
         val navGroup = findViewById<ImageView>(R.id.nav_group)
-        val navHome = findViewById<ImageView>(R.id.nav_home)
-        val navProfile = findViewById<ImageView>(R.id.nav_profile)
+        navGroup.setOnClickListener {
+            val intent = Intent(this, GroupOverviewActivity::class.java)
+            startActivity(intent)
+        }
 
-        navGroup.setOnClickListener{
-            startActivity(Intent(this, GroupOverviewActivity::class.java))
+        val navHome = findViewById<ImageView>(R.id.nav_home)
+        navHome.setOnClickListener {
+            val intent = Intent(this, DashboardActivity::class.java)
+            startActivity(intent)
         }
-        navHome.setOnClickListener{
-            startActivity(Intent(this, DashboardActivity::class.java))
-        }
+
+        val navProfile = findViewById<ImageView>(R.id.nav_profile)
         navProfile.setOnClickListener{
             startActivity(Intent(this, ProfileActivity::class.java))
         }
