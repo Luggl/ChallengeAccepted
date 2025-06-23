@@ -26,12 +26,6 @@ def find_active_challenges_by_group(gruppe_id):
         return session.query(Challenge).filter(Challenge.gruppe_id==gruppe_id,
                                                Challenge.active==True).all()
 
-def find_challenges_by_creator(user_id, gruppe_id):
-    """Finde alle Challenges, die von einem bestimmten Mitglied einer bestimmten Gruppe erstellt wurden."""
-    return db.session.query(Challenge).filter_by(
-        ersteller_user_id=user_id,
-        ersteller_gruppe_id=gruppe_id
-    ).all()
 
 def find_all_survival_challenges():
     with SessionLocal() as session:
@@ -41,10 +35,6 @@ def find_all_survival_challenges():
             Survivalchallenge.startdatum <= date.today()
         ).all()
 
-
-def find_challenges_by_type(typ):
-    """Finde alle Challenges eines bestimmten Typs (z.B. 'standard' oder 'survival')."""
-    return db.session.query(Challenge).filter_by(typ=typ).all()
 
 def find_challenge_by_id(challenge_id):
     """Finde eine Challenge anhand der ID."""
@@ -85,15 +75,6 @@ def delete_challenge_by_id(challenge_id):
             session.commit()
             return True
         return False
-
-def update_challenge(challenge):
-    """Aktualisiere eine bestehende Challenge."""
-    db.session.commit()
-    return challenge
-
-def get_all_challenges():
-    """Gibt alle Challenges zurück."""
-    return db.session.query(Challenge).all()
 
 
 def save_standard_challenge_sportart(sportart_link: StandardChallengeSportart):

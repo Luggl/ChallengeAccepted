@@ -21,9 +21,11 @@ def find_memberships_by_group(gruppe_id):
         return session.query(Membership).filter_by(gruppe_id=gruppe_id).all()
 
 def create_membership(membership):
-    """Füge eine Mitgliedschaft hinzu."""
-    db.session.add(membership)
-    db.session.commit()
+    """Erstelle und speichere eine neue Membership."""
+    with SessionLocal() as session:
+        session.add(membership)
+        session.flush()
+        session.commit()
     return membership
 
 def delete_membership(user_id, gruppe_id):
@@ -36,14 +38,6 @@ def delete_membership(user_id, gruppe_id):
             return True
         return False
 
-def update_membership(membership):
-    """Aktualisiere eine bestehende Mitgliedschaft."""
-    db.session.commit()
-    return membership
-
-def get_all_memberships():
-    """Gibt alle Mitgliedschaften zurück."""
-    return db.session.query(Membership).all()
 
 def is_user_admin(group_id, user_id):
     with SessionLocal() as session:
