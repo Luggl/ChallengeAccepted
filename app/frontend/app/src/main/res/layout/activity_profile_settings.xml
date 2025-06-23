@@ -80,7 +80,7 @@
 
         <!-- Benutzername -->
         <TextView
-            android:id="@+id/et_name"
+            android:id="@+id/etUserName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="100dp"
@@ -89,7 +89,9 @@
             android:text="Mara"
             android:textColor="@color/white"
             android:textSize="18sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:focusable="false"
+            android:clickable="false" />
 
         <!-- Indikatoren -->
         <LinearLayout
@@ -107,7 +109,7 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:id="@+id/change"
+                    android:id="@+id/ivEditName"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:src="@drawable/change_icon" />
