@@ -87,7 +87,7 @@ def count_survival_tasks_for_challenge(challenge_id):
 
 def mark_task_as_complete(aufgabenerfuellung_id):
     with SessionLocal() as session:
-        aufgabenerfuellung = session.query(Aufgabenerfuellung).filger_by(aufgabenerfuellung_id=aufgabenerfuellung_id).first()
+        aufgabenerfuellung = session.query(Aufgabenerfuellung).filter_by(aufgabenerfuellung_id=aufgabenerfuellung_id).first()
         aufgabenerfuellung.status=AufgabeStatus.abgeschlossen
         session.commit()
         return aufgabenerfuellung

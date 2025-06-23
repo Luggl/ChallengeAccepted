@@ -6,10 +6,13 @@ def find_beitrag_by_id(beitrag_id):
     with SessionLocal() as session:
         return session.query(Beitrag).filter(beitrag_id=beitrag_id).first()
 
-def update_beitrag(beitrag_id, user_id, beschreibung):
+def update_beitrag(beitrag_id, beschreibung):
     with SessionLocal() as session:
         beitrag = find_beitrag_by_id(beitrag_id)
         beitrag.beschreibung = beschreibung
         session.merge(beitrag)
         session.commit()
         return beitrag
+
+def save_beitrag_video(erfuellung_id, video_file):
+    with SessionLocal() as session:

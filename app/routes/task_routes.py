@@ -29,8 +29,10 @@ def get_tasks():
 def complete_task():
     current_user_id_str = get_uuid_formated_id(get_jwt_identity())
     erfuellung_id_str = get_uuid_formated_id(request.json.get("erfuellung_id"))
+    video_file = request.files.get("verification")
+    description = request.get_json().get("description")
 
-    result = complete_task_logic(erfuellung_id_str, current_user_id_str)
+    result = complete_task_logic(erfuellung_id_str, current_user_id_str, description, video_file)
 
     if not result["success"]:
         return jsonify({"error": result}), 400

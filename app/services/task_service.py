@@ -1,3 +1,7 @@
+import os
+
+from werkzeug.utils import secure_filename
+
 from app.utils.response import response
 from app.repositories.task_repository import (
     find_task_by_id,
@@ -25,6 +29,8 @@ from app.repositories.sportart_repository import find_sportart_by_id, find_inter
 from app.database.models import SurvivalAufgabe
 
 
+UPLOAD_ROOT = "media/aufgabenerfuellung"
+
 # Alle Tasks für einen User abfragen
 def get_task_logic(user_id):
     #Alle Memberships des Users holen
@@ -50,7 +56,7 @@ def get_task_logic(user_id):
 
 
 # Aufgabe als erledigt markieren
-def complete_task_logic(task_id, user_id):
+def complete_task_logic(task_id, user_id, video_file, description):
 
     #Prüfen, ob User diese Task überhaupt hat
     usercheck = find_tasks_by_user_id(user_id)
@@ -58,11 +64,28 @@ def complete_task_logic(task_id, user_id):
     if not any(e.erfuellung_id == task_id for e in usercheck):
         return response(False, error="User hält diese Aufgabe nicht!")
 
+    if not video_file:
+        return response(False, error="Video ist erforderlich!")
+
+    #Video speichern
+    safe_video_logic(task_id, video_file)
+
+
     success = mark_task_as_complete(task_id)
     if not success:
         return response(False, error="Aufgabe konnte nicht abgeschlossen werden.")
 
     return response(True, data="Aufgabe als erledigt markiert.")
+
+def safe_video_logic(task_id, video_file):
+    filename = secure_filename("video.mp4")
+    upload_path = os.path.join(UPLOAD_ROOT, task_id)
+    os.makedirs(upload_path, exist_ok=True)
+
+    full_path = os.path.join(upload_path, filename)
+    video_file.save(full_path)
+
+
 
 # Vote abgeben für ein Task-Ergebnis
 def vote_logic(user_id, task_id, vote):

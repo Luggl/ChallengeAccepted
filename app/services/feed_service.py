@@ -22,7 +22,6 @@ def get_feed_logic(user_id):
 def update_post_logic(data, beitrag_id, user_id):
     new_beschreibung = data.get("beschreibung")
     beitrag_id_uuid = get_uuid_formated_id(beitrag_id)
-    user_id_uuid = get_uuid_formated_id(user_id)
 
     if not new_beschreibung:
         return response(False, error="Keine Änderungen übermittelt.")
@@ -32,7 +31,7 @@ def update_post_logic(data, beitrag_id, user_id):
     if ersteller is not user_id:
         return response(False, error="User nicht berechtigt!")
 
-    success = update_beitrag(beitrag_id_uuid, user_id_uuid, new_beschreibung)
+    success = update_beitrag(beitrag_id_uuid, new_beschreibung)
     if not success:
         return response(False, error="Bearbeitung fehlgeschlagen.")
 
