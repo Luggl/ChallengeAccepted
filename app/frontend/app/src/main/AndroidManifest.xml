@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="de.thws.challengeaccepted">
+    package="de.thws.challengeaccepted"
+    tools:targetApi="31">
 
     <application
         android:allowBackup="true"
@@ -35,6 +36,7 @@
         <activity android:name=".ProfileActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <activity android:name=".ProfileChangePassActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <activity android:name=".ProfileSettingsActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+        <activity android:name=".DataPrivacyActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
 
         <!-- Group -->
         <activity android:name=".GroupDashboardActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>

@@ -124,14 +124,14 @@
                     </TableRow>
                     <!-- Push-Ups -->
                     <TableRow>
-                        <TextView android:text="Push-Ups" android:textColor="@color/primary"/>
-                        <TextView android:text="Medium" android:textColor="@color/primary"/>
+                        <TextView android:text="Push-Ups" android:textColor="@color/blue"/>
+                        <TextView android:text="Medium" android:textColor="@color/blue"/>
                     </TableRow>
 
                     <!-- Planks -->
                     <TableRow>
-                        <TextView android:text="Planks" android:textColor="@color/primary"/>
-                        <TextView android:text="Easy" android:textColor="@color/primary"/>
+                        <TextView android:text="Planks" android:textColor="@color/blue"/>
+                        <TextView android:text="Easy" android:textColor="@color/blue"/>
                     </TableRow>
 
                     <!-- Weitere Aktivitäten -->

@@ -151,7 +151,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Persönliche Daten"
-                    android:textColor="@color/primary"
+                    android:textColor="@color/blue"
                     android:textSize="16sp"
                     android:textStyle="bold" />
             </LinearLayout>
@@ -210,7 +210,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Datenschutz"
-                    android:textColor="@color/primary"
+                    android:textColor="@color/blue"
                     android:textSize="16sp"
                     android:textStyle="bold" />
             </LinearLayout>
@@ -239,7 +239,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 android:background="@drawable/grey_background"
-                android:text="Ausloggen"
+                android:text="Abmelden"
                 android:textColor="@color/white" />
 
             <Button
@@ -247,7 +247,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/red_frame"
-                android:text="Profil deaktivieren / löschen"
+                android:text="Profil löschen"
                 android:textColor="@color/white"
                 android:textStyle="bold" />
         </LinearLayout>

@@ -70,7 +70,7 @@
                 android:background="@drawable/green_frame"
                 android:padding="6dp"
                 android:src="@drawable/pushups_icon"
-                android:tint="@color/primary"
+                android:tint="@color/blue"
                 tools:ignore="UseAppTint" />
 
             <TextView
