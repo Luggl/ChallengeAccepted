@@ -28,21 +28,26 @@
                 android:id="@+id/btn_back"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:layout_margintop="16dp"
-                android:layout_marginLeft="16dp"
                 android:background="@drawable/grey_background"
                 android:contentDescription="@string/back_button_desc"
-                android:src="@drawable/back_icon"
-                app:tint="@android:color/white" />
+                android:src="@drawable/x_icon" />
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="8dp">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingStart="8dp"
-                android:text="Datenschutzerklärung"
+                android:text="Datenschutz"
                 android:textColor="@color/white"
                 android:textSize="25sp"
                 android:textStyle="bold" />
+        </LinearLayout>
         </LinearLayout>
 
         <!-- Datenschutzerklärung -->
