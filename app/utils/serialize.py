@@ -30,5 +30,14 @@ def serialize_aufgabenerfuellung(aufgabenerfuellung):
         "dauer": aufgabenerfuellung.aufgabe.dauer,
         "deadline": aufgabenerfuellung.aufgabe.deadline,
         "datum": aufgabenerfuellung.aufgabe.datum,
+    }
 
+def serialize_achievements(achievement):
+    return{
+        "achievement_id": achievement.achievement_id.hex(),
+        "kategorie": achievement.kategorie.name,
+        "stufe": achievement.stufe.name,
+        "beschreibung": achievement.beschreibung,
+        "condition_type": achievement.condition_type,
+        "condition_value": achievement.condition_value,
     }

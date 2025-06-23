@@ -13,6 +13,22 @@ class StatusUnit(Enum):
     anzahl="anzahl"
     dauer="dauer"
 
+class AchievementKategorie(Enum):
+    bonusaufgaben="Bonusaufgaben"
+    community="Community"
+    gruppenaktivitaet="Gruppenaktivität"
+    spezial="Spezial"
+    sportarten="Sportarten"
+    standard="Standard-Aufgaben"
+    streaks="Streaks"
+    survival="Survival-Aufgaben"
+    survivalChallenges="Survival Challenges"
+
+class AchievementStufe(Enum):
+    bronze="Bronze"
+    silber="Silber"
+    gold="Gold"
+
 class Schwierigkeit(Enum):
     easy="easy"
     medium="medium"
@@ -72,8 +88,13 @@ class User(Base):
 class Achievement (Base):
     __tablename__="achievement"
     achievement_id=Column(BLOB, primary_key=True, default=lambda: uuid.uuid4().bytes)
+    kategorie=Column(SQLEnum(AchievementKategorie), nullable=False)
+    stufe=Column(SQLEnum(AchievementStufe), nullable=False)
     titel=Column(String, nullable=False)
     beschreibung= Column(String)
+
+    condition_type=Column(String, nullable=False) # Kondition z.B. standard_tasks_completed, streak_days, etc.
+    condition_value=Column(String, nullable=False) # Konditionswert z.B. 5, 10, 20
 
     user_links=relationship("UserAchievement", back_populates="achievement")
 
@@ -133,7 +154,7 @@ class StandardChallengeSportart(Base):
     zielintensitaet = Column(Integer, nullable=False)
 
     challenge = relationship("StandardChallenge", back_populates="sportarten_links")
-    sportart = relationship("Sportart")
+    sportart = relationship("Sportart", back_populates="standard_challenge_sportart")
 
 class SurvivalChallengeSportart(Base):
     __tablename__ = "survival_challenge_sportart"
@@ -146,7 +167,7 @@ class SurvivalChallengeSportart(Base):
     )
 
     challenge = relationship("Survivalchallenge", back_populates="sportarten_links")
-    sportart = relationship("Sportart")
+    sportart = relationship("Sportart", back_populates="survival_challenge_sportart")
 
 class SportartIntervall(Base):
     __tablename__ = "sportart_intervall"
@@ -235,7 +256,7 @@ class Aufgabe(Base):
     challenge=relationship("Challenge",back_populates="aufgaben")
 
     sportart_id=Column(BLOB, ForeignKey("sportart.sportart_id"))
-    sportart=relationship("Sportart")
+    sportart=relationship("Sportart", back_populates="aufgaben")
 
     erfuellungen=relationship("Aufgabenerfuellung",back_populates="aufgabe")
 
@@ -334,14 +355,14 @@ class Beitrag (Base):
     erfuellung=relationship("Aufgabenerfuellung", back_populates="beitrag")
 
     votes = relationship(
-        "BeitragVotes",
+        "beitrag_votes",
         back_populates="beitrag",
         cascade="all, delete-orphan",
     )
 
 
 class BeitragVotes(Base):
-    __tablename__ = "BeitragVotes"
+    __tablename__ = "beitrag_votes"
     beitragvote_id = Column(BLOB, primary_key=True, default=lambda: uuid.uuid4().bytes)
     beitrag_id = Column(BLOB, ForeignKey("beitrag.beitrag_id"))
     user_id = Column(BLOB)
