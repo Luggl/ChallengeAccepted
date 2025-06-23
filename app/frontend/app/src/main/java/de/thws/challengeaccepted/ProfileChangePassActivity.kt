@@ -26,6 +26,8 @@ class ProfileChangePassActivity :  AppCompatActivity() {
         // Change Pass
         val changePass = findViewById<Button>(R.id.change_pass)
         changePass.setOnClickListener {
+            val intent = Intent(this, ProfileSettingsActivity::class.java)
+            startActivity(intent)
             Toast.makeText(this, "Passwort wurde geändert", Toast.LENGTH_SHORT).show()
         }
 

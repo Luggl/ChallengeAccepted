@@ -42,7 +42,7 @@
             android:id="@+id/btn_confirm_selection"
             android:layout_width="80dp"
             android:layout_height="50dp"
-            android:layout_marginLeft="80dp"
+            android:layout_marginLeft="50dp"
             android:layout_marginTop="16dp"
             android:background="@drawable/green_button"
             android:contentDescription="@string/desc_check_confirm"

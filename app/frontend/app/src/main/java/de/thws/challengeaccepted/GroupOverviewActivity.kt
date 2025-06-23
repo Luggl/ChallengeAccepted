@@ -21,28 +21,20 @@ class GroupOverviewActivity : AppCompatActivity() {
         }
 
 
-        // Bottom Navigation Icons initialisieren
-        val navGroup = findViewById<ImageView>(R.id.nav_group)
+        // Bottom Navigation
         val navHome = findViewById<ImageView>(R.id.nav_home)
-        val navAdd = findViewById<ImageView>(R.id.nav_add)
-        val navProfile = findViewById<ImageView>(R.id.nav_profile)
-
-        // Navigation Click Listener
-        /*navGroup.setOnClickListener {
-            val intent = Intent(this, GroupOverviewActivity::class.java)
-            startActivity(intent)
-        }*/
-
         navHome.setOnClickListener {
             val intent = Intent(this, DashboardActivity::class.java)
             startActivity(intent)
         }
 
+        val navAdd = findViewById<ImageView>(R.id.nav_add)
         navAdd.setOnClickListener {
             val intent = Intent(this, CreateNewGroupActivity::class.java)
             startActivity(intent)
         }
 
+        val navProfile = findViewById<ImageView>(R.id.nav_profile)
         navProfile.setOnClickListener {
             val intent = Intent(this, ProfileActivity::class.java)
             startActivity(intent)
