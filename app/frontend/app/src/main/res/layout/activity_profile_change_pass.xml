@@ -121,14 +121,14 @@
                     android:layout_height="40dp"
                     android:layout_marginEnd="8dp"
                     android:src="@drawable/profile_blue_icon"
-                    app:tint="@color/primary"
+                    app:tint="@color/blue"
                     tools:ignore="UseAppTint" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Passwort ändern"
-                    android:textColor="@color/primary"
+                    android:text="Passwort"
+                    android:textColor="@color/blue"
                     android:textSize="25sp"
                     android:textStyle="bold" />
             </LinearLayout>
@@ -142,14 +142,17 @@
                 android:orientation="horizontal">
 
             <EditText
+                android:id="@+id/oldPasswordEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:hint="Altes Passwort"
+                android:inputType="textPassword"
                 android:background="@drawable/grey_background"
-                android:text="Altes Passwort"
                 android:textSize="20dp"
                 android:padding="15dp"
+                android:textColorHint="@color/white"
                 android:textColor="@color/white"
-                android:gravity="center_horizontal"/>
+                android:gravity="center_horizontal" />
             </LinearLayout>
 
             <!-- Neues Passwort -->
@@ -161,14 +164,17 @@
                 android:orientation="horizontal">
 
                 <EditText
+                    android:id="@+id/newPasswordEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:hint="Neues Passwort"
+                    android:inputType="textPassword"
                     android:background="@drawable/grey_background"
-                    android:text="Neues Passwort"
                     android:textSize="20dp"
                     android:padding="15dp"
+                    android:textColorHint="@color/white"
                     android:textColor="@color/white"
-                    android:gravity="center_horizontal"/>
+                    android:gravity="center_horizontal" />
 
             </LinearLayout>
 
@@ -181,14 +187,17 @@
                 android:orientation="horizontal">
 
                 <EditText
+                    android:id="@+id/repeatPasswordEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:hint="Neues Passwort"
+                    android:inputType="textPassword"
                     android:background="@drawable/grey_background"
-                    android:text="Passwort wiederholen"
                     android:textSize="20dp"
                     android:padding="15dp"
+                    android:textColorHint="@color/white"
                     android:textColor="@color/white"
-                    android:gravity="center_horizontal"/>
+                    android:gravity="center_horizontal" />
 
             </LinearLayout>
         </LinearLayout>

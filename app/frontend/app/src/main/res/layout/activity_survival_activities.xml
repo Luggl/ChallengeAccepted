@@ -73,7 +73,7 @@
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
             android:layout_margin="8dp"
-            android:background="@drawable/green_frame"
+            android:background="@drawable/bright_grey_frame"
             android:gravity="center"
             android:orientation="vertical">
 
@@ -100,7 +100,7 @@
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
             android:layout_margin="8dp"
-            android:background="@drawable/grey_background"
+            android:background="@drawable/bright_grey_frame"
             android:gravity="center"
             android:orientation="vertical">
 
@@ -127,21 +127,21 @@
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
             android:layout_margin="8dp"
-            android:background="@drawable/grey_background"
+            android:background="@drawable/bright_grey_frame"
             android:gravity="center"
             android:orientation="vertical">
 
             <ImageView
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:src="@drawable/burpees_icon"
+                android:src="@drawable/lunges_icon"
                 android:tint="@color/white"
                 tools:ignore="UseAppTint" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Burpees"
+                android:text="Lunges"
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -154,7 +154,7 @@
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
             android:layout_margin="8dp"
-            android:background="@drawable/green_frame"
+            android:background="@drawable/bright_grey_frame"
             android:gravity="center"
             android:orientation="vertical">
 
@@ -181,7 +181,7 @@
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
             android:layout_margin="8dp"
-            android:background="@drawable/grey_background"
+            android:background="@drawable/bright_grey_frame"
             android:gravity="center"
             android:orientation="vertical">
 
@@ -208,21 +208,21 @@
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
             android:layout_margin="8dp"
-            android:background="@drawable/grey_background"
+            android:background="@drawable/bright_grey_frame"
             android:gravity="center"
             android:orientation="vertical">
 
             <ImageView
                 android:layout_width="70dp"
                 android:layout_height="70dp"
-                android:src="@drawable/lunges_icon"
+                android:src="@drawable/burpees_icon"
                 android:tint="@color/white"
                 tools:ignore="UseAppTint" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Lunges"
+                android:text="Burpees"
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 android:textStyle="bold" />

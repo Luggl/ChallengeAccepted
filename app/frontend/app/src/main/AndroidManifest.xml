@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    package="de.thws.challengeaccepted"
     tools:targetApi="31">
 
     <application
         android:allowBackup="true"
-        android:dataExtractionRules="@xml/data_extraction_rules"
-        android:fullBackupContent="@xml/backup_rules"
         android:icon="@drawable/logo"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
@@ -37,6 +36,7 @@
         <activity android:name=".ProfileActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <activity android:name=".ProfileChangePassActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <activity android:name=".ProfileSettingsActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+        <activity android:name=".DataPrivacyActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
 
         <!-- Group -->
         <activity android:name=".GroupDashboardActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
@@ -58,7 +58,7 @@
         <activity android:name=".SurvivalActivitiesActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <activity android:name=".SurvivalChallengeOverviewActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <!--<activity android:name=".SurvivalCreateChallengeOverviewActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>-->
-        <!--<activity android:name=".SurvivalIntensityActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>-->
+        <activity android:name=".SurvivalIntensityActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <!--<activity android:name=".SurvivalJoinChallengeOverviewActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>-->
 
         <!-- Video -->

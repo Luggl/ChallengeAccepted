@@ -47,15 +47,22 @@ class ProfileSettingsActivity :  AppCompatActivity() {
             startActivity(intent)
         }
 
+        // Navigation Change Passwort
+        val navDataPriv = findViewById<Button>(R.id.btn_datenschutz)
+        navDataPriv.setOnClickListener {
+            val intent = Intent(this, DataPrivacyActivity::class.java)
+            startActivity(intent)
+        }
+
         // Logout
         val logoutBtn = findViewById<Button>(R.id.btn_logout)
         logoutBtn.setOnClickListener {
             val dialogBuilder = AlertDialog.Builder(this)
-            dialogBuilder.setTitle("Wirklich ausloggen?")
-            dialogBuilder.setMessage("Möchten Sie sich wirklich abmelden?")
+            dialogBuilder.setTitle("Wirklich abmelden?")
+            dialogBuilder.setMessage("Wirklich abmelden?")
 
             dialogBuilder.setPositiveButton("Ausloggen") { _, _ ->
-                Toast.makeText(this, "Sie haben sich ausgeloggt!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Sie haben sich abgemeldet!", Toast.LENGTH_SHORT).show()
                 // Hier deine Logik zum Ausloggen einfügen
             }
 
@@ -89,15 +96,10 @@ class ProfileSettingsActivity :  AppCompatActivity() {
         val deleteBtn = findViewById<Button>(R.id.btn_deactivate_delete)
         deleteBtn.setOnClickListener {
             val dialogBuilder = AlertDialog.Builder(this)
-            dialogBuilder.setTitle("Profil wirklich deaktivieren/löschen?")
-            dialogBuilder.setMessage("Möchten Sie Ihr Profil wirklich deaktivieren/löschen?")
+            dialogBuilder.setTitle("Profil wirklich löschen?")
+            dialogBuilder.setMessage("Profil wirklich löschen?")
 
-            dialogBuilder.setPositiveButton("Profil deaktivieren!") { _, _ ->
-                Toast.makeText(this, "Profil wurde deaktiviert", Toast.LENGTH_SHORT).show()
-                // Hier deine Logik zur Deaktivierung einfügen
-            }
-
-            dialogBuilder.setNegativeButton("Profil löschen") { _, _ ->
+            dialogBuilder.setPositiveButton("Profil löschen") { _, _ ->
                 Toast.makeText(this, "Profil wurde gelöscht", Toast.LENGTH_SHORT).show()
                 // Hier deine Logik zur Löschung einfügen
             }
@@ -110,23 +112,15 @@ class ProfileSettingsActivity :  AppCompatActivity() {
 
             // Text- & Buttonfarben setzen, nachdem Dialog angezeigt wurde
             alertDialog.setOnShowListener {
-//                try {
                     val titleId = resources.getIdentifier("alertTitle", "id", "android")
                     val titleView = alertDialog.findViewById<TextView>(titleId)
                     titleView?.setTextColor(Color.WHITE)
 
                     val messageView = alertDialog.findViewById<TextView>(android.R.id.message)
                     messageView?.setTextColor(Color.WHITE)
-//                } catch (e: Exception) {
-//                    // nichts tun
-//                }
 
-                // Nur die farbigen Buttons farbig lassen
-                alertDialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(getColor(R.color.button_green))
-                alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(getColor(R.color.button_red))
-                alertDialog.getButton(AlertDialog.BUTTON_NEUTRAL)?.setTextColor(Color.LTGRAY)
+                alertDialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(getColor(R.color.button_red))
             }
-
             alertDialog.show()
         }
 
