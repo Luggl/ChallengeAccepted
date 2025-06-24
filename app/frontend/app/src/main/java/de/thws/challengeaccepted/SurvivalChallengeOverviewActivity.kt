@@ -7,6 +7,7 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -18,6 +19,13 @@ class SurvivalChallengeOverviewActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_survival_challenge_overview)
+
+        // Navigation Groupstatus
+        val navGroupstatus = findViewById<LinearLayout>(R.id.ll_groupstatus)
+        navGroupstatus.setOnClickListener {
+            val intent = Intent(this, GroupstatusActivity::class.java)
+            startActivity(intent)
+        }
 
         // Navigation Record Activity
         val navRecordAc = findViewById<TextView>(R.id.tv_remaining_time)
@@ -89,10 +97,7 @@ class SurvivalChallengeOverviewActivity : AppCompatActivity() {
                 startActivity(intent)
             }
 
-            dialogBuilder.setNeutralButton("Abbrechen") { dialog, _ ->
-                dialog.dismiss()
-            }
-
+            // Abbrechen
             val alertDialog = dialogBuilder.create()
 
             // Schwarzer Hintergrund
@@ -107,7 +112,6 @@ class SurvivalChallengeOverviewActivity : AppCompatActivity() {
                 // Buttonfarben
                 alertDialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(getColor(R.color.button_green))
                 alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(getColor(R.color.button_green))
-                alertDialog.getButton(AlertDialog.BUTTON_NEUTRAL)?.setTextColor(Color.LTGRAY)
             }
 
             alertDialog.show()

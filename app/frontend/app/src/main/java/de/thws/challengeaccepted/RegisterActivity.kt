@@ -23,9 +23,8 @@ class RegisterActivity : AppCompatActivity() {
         val email = findViewById<EditText>(R.id.edit_email)
         val password = findViewById<EditText>(R.id.edit_password1)
         val repeatPassword = findViewById<EditText>(R.id.edit_password2)
-        val registerButton = findViewById<Button>(R.id.button_start_regist)
-        val alreadyAccount = findViewById<TextView>(R.id.text_already_account)
 
+        val registerButton = findViewById<Button>(R.id.button_start_regist)
         registerButton.setOnClickListener {
 
             val user = username.text.toString()
@@ -33,12 +32,13 @@ class RegisterActivity : AppCompatActivity() {
             val pw = password.text.toString()
             val rpw = repeatPassword.text.toString()
 
-           // if (user.isNotEmpty() && mail.isNotEmpty() && pw.isNotEmpty() && rpw.isNotEmpty()) {
+            //if (user.isNotEmpty() && mail.isNotEmpty() && pw.isNotEmpty() && rpw.isNotEmpty()) {
                 val intent = Intent(this, DashboardActivity::class.java)
                 startActivity(intent)
             //}
         }
 
+        val alreadyAccount = findViewById<TextView>(R.id.text_already_account)
         alreadyAccount.setOnClickListener {
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
