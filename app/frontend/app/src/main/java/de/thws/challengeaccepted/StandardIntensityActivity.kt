@@ -63,14 +63,16 @@ class StandardIntensityActivity : AppCompatActivity() {
             return
         }
 
+        //end-SeekbarEnde deaktivieren
+        seekbarEnde.isEnabled=false
 
         //Startintensität Listener
         seekbarStart.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                val endValue = seekbarEnde.progress
-                val valid = if (progress > endValue) endValue else progress
-                seekbarStart.progress = valid
-                tvStartValue.text = valid.toString()
+                updateTextView(tvStartValue, progress)
+
+                //end seekbar aktivieren, wenn Start>0
+                seekbarEnde.isEnabled= progress>0
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
@@ -83,7 +85,7 @@ class StandardIntensityActivity : AppCompatActivity() {
                 val startValue = seekbarStart.progress
                 val valid = if (progress < startValue) startValue else progress
                 seekbarEnde.progress = valid
-                tvEndValue.text = valid.toString()
+                updateTextView(tvEndValue, valid)
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
