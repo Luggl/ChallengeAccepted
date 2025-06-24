@@ -94,7 +94,7 @@
                         android:stretchColumns="0,1">
                         <TableRow>
                             <TextView
-                                android:text="Aktivitäten"
+                                android:text="Aktivität"
                                 android:textColor="@color/white"
                                 android:textStyle="bold"/>
                             <TextView

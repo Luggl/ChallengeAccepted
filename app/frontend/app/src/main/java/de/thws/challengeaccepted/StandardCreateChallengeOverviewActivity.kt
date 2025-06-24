@@ -23,16 +23,18 @@ class StandardCreateChallengeOverviewActivity: AppCompatActivity() {
         fillTable(intensityMap)
     }
     private fun fillTable(data: Map<String, Pair<Int, Int>>) {
-        val allExercises = listOf("Push-Ups", "Planks", "Sit-Ups", "Burpees", "Squats", "Lunges")
+        for ((exercise, pair) in data) {
+            val (start, end) = pair
 
-        for (exercise in allExercises) {
-            val row = TableRow(this)
+            // Nur anzeigen, wenn echte Werte vorhanden sind
+            if (start == 0 && end == 0) continue
 
-            val (start, end) = data[exercise] ?: (0 to 0)
-            val color = if (start > 0 || end > 0) android.graphics.Color.CYAN else android.graphics.Color.WHITE
+            val color = android.graphics.Color.CYAN // Für gewählte Übungen
 
             val startText = if (exercise == "Planks") formatSeconds(start) else "$start St."
             val endText = if (exercise == "Planks") formatSeconds(end) else "$end St."
+
+            val row = TableRow(this)
 
             val exerciseView = TextView(this).apply {
                 text = exercise
@@ -59,6 +61,7 @@ class StandardCreateChallengeOverviewActivity: AppCompatActivity() {
             tableLayout.addView(row)
         }
     }
+
     private fun formatSeconds(seconds: Int): String {
         val minutes = seconds / 60
         val secs = seconds % 60
