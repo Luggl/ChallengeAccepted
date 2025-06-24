@@ -101,8 +101,9 @@
 
                 <!-- Tabelle Sportaktivitäten -->
                 <TableLayout
+                    android:id="@+id/table_layout"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:background="@color/grey_100"
                     android:padding="8dp"
                     android:stretchColumns="0,1,2">
@@ -124,104 +125,6 @@
                             android:text="Ende"
                             android:textColor="@color/white"
                             android:textStyle="bold" />
-                    </TableRow>
-
-                    <TextView android:text="" />
-
-                    <TableRow>
-
-                    </TableRow>
-                    <!-- Push-Ups -->
-                    <TableRow>
-
-                        <TextView
-                            android:text="Push-Ups"
-                            android:textColor="@color/blue" />
-
-                        <TextView
-                            android:text="10 St."
-                            android:textColor="@color/blue" />
-
-                        <TextView
-                            android:text="30 St."
-                            android:textColor="@color/blue" />
-                    </TableRow>
-
-                    <!-- Planks -->
-                    <TableRow>
-
-                        <TextView
-                            android:text="Planks"
-                            android:textColor="@color/blue" />
-
-                        <TextView
-                            android:text="20 Sek."
-                            android:textColor="@color/blue" />
-
-                        <TextView
-                            android:text="40 Sek."
-                            android:textColor="@color/blue" />
-                    </TableRow>
-
-                    <!-- Weitere Aktivitäten -->
-                    <TableRow>
-
-                        <TextView
-                            android:text="Sit-Ups"
-                            android:textColor="@color/white" />
-
-                        <TextView
-                            android:text="0"
-                            android:textColor="@color/white" />
-
-                        <TextView
-                            android:text="0"
-                            android:textColor="@color/white" />
-                    </TableRow>
-
-                    <TableRow>
-
-                        <TextView
-                            android:text="Burpees"
-                            android:textColor="@color/white" />
-
-                        <TextView
-                            android:text="0"
-                            android:textColor="@color/white" />
-
-                        <TextView
-                            android:text="0"
-                            android:textColor="@color/white" />
-                    </TableRow>
-
-                    <TableRow>
-
-                        <TextView
-                            android:text="Squats"
-                            android:textColor="@color/white" />
-
-                        <TextView
-                            android:text="0"
-                            android:textColor="@color/white" />
-
-                        <TextView
-                            android:text="0"
-                            android:textColor="@color/white" />
-                    </TableRow>
-
-                    <TableRow>
-
-                        <TextView
-                            android:text="Lunges"
-                            android:textColor="@color/white" />
-
-                        <TextView
-                            android:text="0"
-                            android:textColor="@color/white" />
-
-                        <TextView
-                            android:text="0"
-                            android:textColor="@color/white" />
                     </TableRow>
                 </TableLayout>
             </LinearLayout>

@@ -116,7 +116,7 @@ class StandardIntensityActivity : AppCompatActivity() {
                 showExercise()
             } else {
                 Toast.makeText(this, "Fertig! $intensityMap", Toast.LENGTH_SHORT).show()
-                val intent = Intent(this, StandardChallengeOverviewActivity::class.java)
+                val intent = Intent(this, StandardCreateChallengeOverviewActivity::class.java)
                 intent.putExtra("intensities", HashMap(intensityMap))
                 startActivity(intent)
                 finish()

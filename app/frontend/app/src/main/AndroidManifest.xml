@@ -50,7 +50,7 @@
         <!-- Standard -->
         <activity android:name=".StandardActivitiesActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
          <activity android:name=".StandardChallengeOverviewActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
-         <!--<activity android:name=".StandardCreateChallengeOverviewActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>-->
+         <activity android:name=".StandardCreateChallengeOverviewActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <activity android:name=".StandardIntensityActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
          <!--<activity android:name=".StandardJoinChallengeOverviewActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>-->
 
