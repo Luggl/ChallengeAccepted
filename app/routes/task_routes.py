@@ -28,7 +28,7 @@ def get_tasks():
 @jwt_required()
 def complete_task():
     user_id = get_jwt_identity()
-    erfuellung_id = request.form.get("erfuellung_id")
+    erfuellung_id = request.args.get("erfuellung_id")
     description = request.form.get("description")
     video_file = request.files.get("verification")
 

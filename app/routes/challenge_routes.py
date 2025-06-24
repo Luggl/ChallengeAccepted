@@ -48,7 +48,7 @@ def create_challenge_standard():
     return jsonify({
         "message": "Challenge und Aufgaben erfolgreich erstellt",
         "challenge": result["data"],
-        "aufgaben_generiert": aufgaben_result["message"]
+        "aufgaben_generiert": aufgaben_result["data"]
     }), 201
 
 @challenge_bp.route('/api/challengesurvival', methods=['POST'])

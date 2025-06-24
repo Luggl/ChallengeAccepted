@@ -147,26 +147,26 @@ class Sportart(Base):
 class StandardChallengeSportart(Base):
     __tablename__ = "standard_challenge_sportart"
 
-    challenge_id = Column(BLOB, ForeignKey("standard_challenge.challenge_id"), primary_key=True)
+    challenge_id = Column(BLOB, ForeignKey("standard_challenge.challenge_id", ondelete="CASCADE"), primary_key=True)
     sportart_id = Column(BLOB, ForeignKey("sportart.sportart_id"), primary_key=True)
 
     startintensitaet = Column(Integer, nullable=False)
     zielintensitaet = Column(Integer, nullable=False)
 
-    challenge = relationship("StandardChallenge", back_populates="sportarten_links")
+    challenge = relationship("StandardChallenge", back_populates="sportarten_links", passive_deletes=True)
     sportart = relationship("Sportart", back_populates="standard_links")
 
 class SurvivalChallengeSportart(Base):
     __tablename__ = "survival_challenge_sportart"
 
-    challenge_id = Column(BLOB, ForeignKey("survival_challenge.challenge_id"), primary_key=True)
+    challenge_id = Column(BLOB, ForeignKey("survival_challenge.challenge_id", ondelete="CASCADE"), primary_key=True)
     sportart_id = Column(BLOB, ForeignKey("sportart.sportart_id"), primary_key=True)
 
     schwierigkeitsgrad = Column(
         sqlalchemy.Enum(Schwierigkeit), nullable=False
     )
 
-    challenge = relationship("Survivalchallenge", back_populates="sportarten_links")
+    challenge = relationship("Survivalchallenge", back_populates="sportarten_links", passive_deletes=True)
     sportart = relationship("Sportart", back_populates="survival_links")
 
 class SportartIntervall(Base):
@@ -216,11 +216,15 @@ class Challenge(Base):
         "polymorphic_on":typ
     }
 
-    aufgaben=relationship("Aufgabe", back_populates="challenge")
+    aufgaben=relationship("Aufgabe",
+                          back_populates="challenge",
+                          cascade="all, delete-orphan",
+                          single_parent=True,
+                          )
 
 class StandardChallenge(Challenge):
     __tablename__ = "standard_challenge"
-    challenge_id = Column(BLOB, ForeignKey("challenge.challenge_id"),primary_key=True)
+    challenge_id = Column(BLOB, ForeignKey("challenge.challenge_id", ondelete="CASCADE"),primary_key=True)
     dauer=Column(Integer)
     enddatum = Column(Date)
 
@@ -228,16 +232,16 @@ class StandardChallenge(Challenge):
         "polymorphic_identity":"standard"
     }
 
-    sportarten_links = relationship("StandardChallengeSportart", back_populates="challenge")
+    sportarten_links = relationship("StandardChallengeSportart", back_populates="challenge", cascade="all, delete-orphan")
 
 class Survivalchallenge(Challenge):
     __tablename__ = "survival_challenge"
-    challenge_id = Column(BLOB, ForeignKey("challenge.challenge_id"), primary_key=True)
+    challenge_id = Column(BLOB, ForeignKey("challenge.challenge_id", ondelete="CASCADE"), primary_key=True)
     __mapper_args__ = {
         "polymorphic_identity": AufgabeTyp.survival.value
     }
 
-    sportarten_links = relationship("SurvivalChallengeSportart", back_populates="challenge")
+    sportarten_links = relationship("SurvivalChallengeSportart", back_populates="challenge", cascade="all, delete-orphan")
 
 class Aufgabe(Base):
     __tablename__="aufgabe"
