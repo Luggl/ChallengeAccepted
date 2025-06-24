@@ -298,9 +298,9 @@ class Aufgabenerfuellung (Base):
 
     erfuellung_id=Column(BLOB, primary_key=True, default=lambda: uuid.uuid4().bytes)
     status=Column(SQLEnum(AufgabeStatus), nullable=False)
-    bild=Column(String)
+    video_url=Column(String)
     datum=Column(Date)
-
+    beschreibung=Column(String)
     aufgabe_id= Column(BLOB, ForeignKey("aufgabe.aufgabe_id"))
     aufgabe=relationship("Aufgabe", back_populates="erfuellungen")
 
@@ -328,30 +328,9 @@ class Beitrag (Base):
     __tablename__="beitrag"
 
     beitrag_id=Column(BLOB, primary_key=True, default=lambda: uuid.uuid4().bytes)
-    video=Column(String, nullable=False)
-    beschreibung=Column(String)
     erstellDatum=Column(Date)
-
-    user_id = Column(BLOB)
-    gruppe_id = Column(BLOB)
-
-    __table_args__ = (
-        ForeignKeyConstraint(
-            ["user_id", "gruppe_id"],
-            ["membership.user_id", "membership.gruppe_id"],
-            ondelete="CASCADE"
-        ),
-    )
-
     erfuellung_id=Column(BLOB, ForeignKey("aufgabenerfuellung.erfuellung_id"), unique=True)
 
-    mitglied=relationship(
-        "Membership",
-        primaryjoin=and_(
-            foreign(user_id)==Membership.user_id,
-            foreign(gruppe_id)==Membership.gruppe_id
-        )
-    )
     erfuellung=relationship("Aufgabenerfuellung", back_populates="beitrag")
 
     votes = relationship(
