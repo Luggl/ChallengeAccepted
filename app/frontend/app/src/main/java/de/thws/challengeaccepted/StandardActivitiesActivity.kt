@@ -33,13 +33,6 @@ class StandardActivitiesActivity : AppCompatActivity() {
         //Gridlayout einrichten und prüfen, ob es geladen wurde
         val gridExercises = findViewById<GridLayout>(R.id.grid_exercises)
 
-        //Testweise Toast anzeigen bei Klick auf das gesamte Grid
-        gridExercises.setOnClickListener{
-            Toast.makeText(this, "Grid wurde angeklickt", Toast.LENGTH_SHORT).show()
-        }
-        //zur Kontrolle Log
-        Log.d("DashboardActivity", "Gridlayout geladen: $(gridExercise.childCount} Kinder")
-
         //einzelene Grid-Elemente klickbar machen
         for (i in 0 until gridExercises.childCount){
             val child=gridExercises.getChildAt(i) as? LinearLayout ?:continue
@@ -67,12 +60,13 @@ class StandardActivitiesActivity : AppCompatActivity() {
             }
         }
         //Check-Button einbauen
-        val checkButton=findViewById<ImageButton>(R.id.btn_confirm_selection)
-        checkButton.setOnClickListener{
-            //Ruckmeldung mit Toast+ aktuelle Auswahl ausgeben
-            Toast.makeText(this, "Auswahl bestätigt!", Toast.LENGTH_SHORT).show()
-            Log.d("DashboardActivity", "Bestätigt: $selectedExercises")
-            // Etappe 5: Auswahl an nächste Aktivität übergeben
+        val checkButton = findViewById<ImageButton>(R.id.btn_confirm_selection)
+        checkButton.setOnClickListener {
+            if (selectedExercises.isEmpty()) {
+                Toast.makeText(this, "Bitte wähle mindestens eine Übung aus!", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
             val intent = Intent(this, StandardIntensityActivity::class.java)
             intent.putStringArrayListExtra("selectedExercises", ArrayList(selectedExercises))
             startActivity(intent)

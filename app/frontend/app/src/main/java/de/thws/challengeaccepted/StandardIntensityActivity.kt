@@ -8,50 +8,69 @@ import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.challengeaccepted.R
+import androidx.core.view.WindowCompat
 
-data class ExerciseIntensity(
-    val name:String,
-    val iconResId: Int,
-    var start: Int=0,
-    var end: Int=0
-)
 
 class StandardIntensityActivity : AppCompatActivity() {
-    // Zentrale Icon-Zuweisung
-    private val exerciseIcons = mutableListOf(
-        ExerciseIntensity("Push-Ups", R.drawable.pushups_icon),
-        ExerciseIntensity("Sit-Ups", R.drawable.situps_icon),
-        ExerciseIntensity("Lunges", R.drawable.lunges_icon),
-        ExerciseIntensity("Planks", R.drawable.plank_icon),
-        ExerciseIntensity("Squats", R.drawable.squat_icon),
-        ExerciseIntensity("Burpees", R.drawable.burpees_icon),
+    //Views
+    private lateinit var tvExerciseName: TextView
+    private lateinit var ivExerciseIcon: ImageView
+    private lateinit var seekbarStart: SeekBar
+    private lateinit var seekbarEnde: SeekBar
+    private lateinit var tvStartValue: TextView
+    private lateinit var tvEndValue: TextView
+    private lateinit var btnBack: ImageView
+    private lateinit var btnConfirm: ImageButton
+
+    // Aktueller Zustand
+    private var currentIndex = 0
+    private lateinit var exercises: List<String>
+    private val intensityMap = mutableMapOf<String, Pair<Int, Int>>()
+
+    // Icon-Zuweisung
+    private val exerciseIcons = mapOf(
+        "Push-Ups" to R.drawable.pushups_icon,
+        "Sit-Ups" to R.drawable.situps_icon,
+        "Lunges" to R.drawable.lunges_icon,
+        "Planks" to R.drawable.plank_icon,
+        "Squats" to R.drawable.squat_icon,
+        "Burpees" to R.drawable.burpees_icon
     )
-    private var currentIndex=0
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
-
         //verknüpft diese Activity mit dem XML Layout
         setContentView(R.layout.activity_standard_intensity)
 
-        //Views
-        val btnBack=findViewById<ImageButton>(R.id.btn_back)
-        val btnConfirm=findViewById<ImageButton>(R.id.btn_confirm_selection)
-        val tvStart=findViewById<TextView>(R.id.tv_start_main)
-        val tvEnd=findViewById<TextView>(R.id.tv_end_main)
-        //seekbars
-        val seekbarStart=findViewById<SeekBar>(R.id.seekbar_start)
-        val seekbarEnd= findViewById<SeekBar>(R.id.seekbar_end)
+        //referenzieren
+        tvExerciseName = findViewById(R.id.tv_standard)
+        ivExerciseIcon = findViewById(R.id.iv_exercise_icon)
+        seekbarStart = findViewById(R.id.seekbar_start)
+        seekbarEnde = findViewById(R.id.seekbar_end)
+        tvStartValue = findViewById(R.id.tv_start_main)
+        tvEndValue = findViewById(R.id.tv_end_main)
+        btnBack = findViewById(R.id.btn_back)
+        btnConfirm = findViewById(R.id.btn_confirm_selection)
+
+
+        //Übungen laden
+        exercises = intent.getStringArrayListExtra("selectedExercises") ?: listOf()
+        if (exercises.isEmpty()) {
+            Toast.makeText(this, "Keine Übungen übergeben", Toast.LENGTH_SHORT).show()
+            finish()
+            return
+        }
+
 
         //Startintensität Listener
         seekbarStart.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                val endValue = seekbarEnd.progress
-                val valid=if (progress>endValue)endValue else progress
-                seekbarStart.progress=valid
-                tvStart.text=valid.toString()
+                val endValue = seekbarEnde.progress
+                val valid = if (progress > endValue) endValue else progress
+                seekbarStart.progress = valid
+                tvStartValue.text = valid.toString()
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
@@ -59,30 +78,46 @@ class StandardIntensityActivity : AppCompatActivity() {
         })
 
 // SeekBar-Listener END
-        seekbarEnd.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+        seekbarEnde.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 val startValue = seekbarStart.progress
                 val valid = if (progress < startValue) startValue else progress
-                seekbarEnd.progress = valid
-                tvEnd.text = valid.toString()
+                seekbarEnde.progress = valid
+                tvEndValue.text = valid.toString()
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
         })
+        //Erste Übung anzeigen
+        showExercise()
 
-        //Button bestätigt Werte & lädt nächste Übung
-        btnConfirm.setOnClickListener{
-            val current=exerciseIcons[currentIndex]
-            current.start=seekbarStart.progress
-            current.end=seekbarEnd.progress
+        //Zurück Button
+        btnBack.setOnClickListener {
+            if (currentIndex == 0) {
+                finish() //zurück zur Auswahlleiste
+            } else {
+                currentIndex--
+                showExercise()
+            }
+        }
 
-            if (currentIndex<exerciseIcons.size-1){
+        //weiter Button
+        btnConfirm.setOnClickListener {
+            val current = exercises[currentIndex]
+            val start = seekbarStart.progress
+            val end = seekbarEnde.progress
+            intensityMap[current] = start to end
+
+            if (currentIndex < exercises.size - 1) {
                 currentIndex++
-                loadExercise(exerciseIcons[currentIndex])
-            }else{
-                //alle Übungen abgeschlossen
-                Toast.makeText(this, "Fertig! ${exerciseIcons.size} Übungen gespeichert.", Toast.LENGTH_LONG).show()
+                showExercise()
+            } else {
+                Toast.makeText(this, "Fertig! $intensityMap", Toast.LENGTH_SHORT).show()
+                val intent = Intent(this, StandardChallengeOverviewActivity::class.java)
+                intent.putExtra("intensities", HashMap(intensityMap))
+                startActivity(intent)
+                finish()
             }
         }
         // Bottom Navigation
@@ -99,23 +134,20 @@ class StandardIntensityActivity : AppCompatActivity() {
         }
 
         val navProfile = findViewById<ImageView>(R.id.nav_profile)
-        navProfile.setOnClickListener{
+        navProfile.setOnClickListener {
             startActivity(Intent(this, ProfileActivity::class.java))
         }
     }
-    private fun loadExercise(exercise: ExerciseIntensity) {
-        val title = findViewById<TextView>(R.id.tv_standard)
-        val icon = findViewById<ImageView>(R.id.iv_exercise_icon)
-        val tvStart = findViewById<TextView>(R.id.tv_start_main)
-        val tvEnd = findViewById<TextView>(R.id.tv_end_main)
-        val seekbarStart = findViewById<SeekBar>(R.id.seekbar_start)
-        val seekbarEnd = findViewById<SeekBar>(R.id.seekbar_end)
 
-        title.text = exercise.name
-        icon.setImageResource(exercise.iconResId)
-        seekbarStart.progress = exercise.start
-        seekbarEnd.progress = exercise.end
-        tvStart.text = exercise.start.toString()
-        tvEnd.text = exercise.end.toString()
+    // Zeigt aktuelle Übung
+    private fun showExercise() {
+        val name = exercises[currentIndex]
+        tvExerciseName.text = name
+        ivExerciseIcon.setImageResource(exerciseIcons[name] ?: R.drawable.default_icon)
+        val values = intensityMap[name] ?: (0 to 0)
+        seekbarStart.progress = values.first
+        seekbarEnde.progress = values.second
+        tvStartValue.text = values.first.toString()
+        tvEndValue.text = values.second.toString()
     }
 }

@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 
+
 class SurvivalIntensityActivity : AppCompatActivity() {
 
     //Views
@@ -33,7 +34,6 @@ class SurvivalIntensityActivity : AppCompatActivity() {
         "Planks" to R.drawable.plank_icon,
         "Squats" to R.drawable.squat_icon,
         "Burpees" to R.drawable.burpees_icon
-
     )
 
 
