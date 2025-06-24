@@ -45,7 +45,7 @@ class StandardIntensityActivity : AppCompatActivity() {
         setContentView(R.layout.activity_standard_intensity)
 
         //referenzieren
-        tvExerciseName = findViewById(R.id.tv_standard)
+        tvExerciseName = findViewById(R.id.tv_title)
         ivExerciseIcon = findViewById(R.id.iv_exercise_icon)
         seekbarStart = findViewById(R.id.seekbar_start)
         seekbarEnde = findViewById(R.id.seekbar_end)
@@ -139,15 +139,38 @@ class StandardIntensityActivity : AppCompatActivity() {
         }
     }
 
-    // Zeigt aktuelle Übung
+    // Anzeige aktualisieren
     private fun showExercise() {
         val name = exercises[currentIndex]
         tvExerciseName.text = name
         ivExerciseIcon.setImageResource(exerciseIcons[name] ?: R.drawable.default_icon)
+
+        // Max-Werte setzen je nach Übung
+        if (name == "Planks") {
+            seekbarStart.max = 300 // 5 Minuten
+            seekbarEnde.max = 600 // 10 Minuten
+        } else {
+            seekbarStart.max = 50
+            seekbarEnde.max = 100
+        }
+
         val values = intensityMap[name] ?: (0 to 0)
         seekbarStart.progress = values.first
         seekbarEnde.progress = values.second
-        tvStartValue.text = values.first.toString()
-        tvEndValue.text = values.second.toString()
+
+        updateTextView(tvStartValue, values.first)
+        updateTextView(tvEndValue, values.second)
+    }
+
+    // Anzeige für Planks als MM:SS, sonst normal
+    private fun updateTextView(textView: TextView, value: Int) {
+        val isPlank = exercises[currentIndex] == "Planks"
+        textView.text = if (isPlank) formatSeconds(value) else value.toString()
+    }
+
+    private fun formatSeconds(seconds: Int): String {
+        val minutes = seconds / 60
+        val secs = seconds % 60
+        return String.format("%d:%02d", minutes, secs)
     }
 }
