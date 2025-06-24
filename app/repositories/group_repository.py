@@ -1,6 +1,6 @@
 # app/repositories/group_repository.py
 
-from app.database.models import Gruppe, Beitrag
+from app.database.models import Gruppe, Beitrag, Aufgabenerfuellung
 from app import db
 from app.database.database import SessionLocal
 from repositories.membership_repository import find_memberships_by_user
@@ -49,7 +49,11 @@ def update_group(gruppe):
 
 def get_group_feed_by_group_id(group_id):
     with SessionLocal() as session:
-        beitraege = session.query(Beitrag).filter_by(gruppe_id=group_id).order_by(Beitrag.erstellDatum.desc()).all()
+        beitraege = session.query(Beitrag
+                                  ).join(Beitrag.erfuellung
+                                         ).filter(Aufgabenerfuellung.gruppe_id == group_id
+                                                  ).order_by(Beitrag.erstellDatum.desc()
+                                                             ).all()
         result = [serialize_beitrag(b) for b in beitraege]
         return result
 

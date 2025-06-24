@@ -144,15 +144,15 @@ def generate_standard_tasks_for_challenge_logic(challenge_id: bytes):
 
     challenge = find_standard_challenge_by_id(challenge_id)
     if not challenge:
-        return {"success": False, "error": "Challenge nicht gefunden."}
+        return response(False, error="Challenge nicht gefunden")
 
     sportarten_links = find_standard_challenge_sportarten_by_challenge_id(challenge_id)
     if not sportarten_links:
-        return {"success": False, "error": "Keine Sportarten zugeordnet."}
+        return response(False, error="Keine Sportarten zugeordnet!")
 
     duration = (challenge.enddatum - challenge.startdatum).days + 1
     if duration <= 0:
-        return {"success": False, "error": "Ungültige Challenge-Dauer."}
+        return response(False, error="Ungültige Challenge-Dauer")
 
     # 1. Zähle, wie oft jede Sportart vorkommt
     sportart_id_list = [link.sportart_id for link in sportarten_links]
@@ -206,8 +206,7 @@ def generate_standard_tasks_for_challenge_logic(challenge_id: bytes):
 
         save_aufgabe(aufgabe)
 
-    return {"success": True, "message": f"{duration} Aufgaben erstellt."}
-
+    return response(True, data=f"{duration} Aufgaben erstellt")
 
 def get_task_by_date(challenge_id: uuid.UUID, datum: str = None):
     """
@@ -230,7 +229,7 @@ def get_task_by_date(challenge_id: uuid.UUID, datum: str = None):
                 "typ": aufgabe.typ
             }
         }
-    return {"success": False, "error": "Keine Aufgabe für dieses Datum gefunden."}
+    return response(False, error="Keine Aufgabe für dieses Datum gefunden.")
 
 
 def generate_survival_tasks_for_all_challenges():
@@ -288,4 +287,4 @@ def generate_survival_tasks_for_all_challenges():
         aufgabe_id = save_aufgabe(aufgabe)
         erfolge.append({"challenge_id": str(uuid.UUID(bytes=challenge.challenge_id)), "status": "erstellt", "task_id": str(uuid.UUID(bytes=aufgabe_id))})
 
-    return {"success": True, "results": erfolge}
+    return response(True, data=erfolge)

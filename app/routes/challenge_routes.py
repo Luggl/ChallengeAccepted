@@ -27,16 +27,7 @@ def create_challenge_standard():
     if not group_id_str:
         return jsonify({"error": "Gruppen-ID (group_id) erforderlich"}), 400
 
-    group_id = get_uuid_formated_id(group_id_str)
-    if not group_id:
-        return jsonify({"error": "Ungültige Gruppen-ID"}), 400
-
-    # Nicht mehrere Challenges gleichzeitig erlaubt
-    active_challenge_check = find_active_challenges_by_group(group_id_str)
-    if active_challenge_check:
-        return jsonify({"error": "Nur eine aktive Challenge möglich!"})
-
-    result = create_challenge_standard_logic(current_user_id, data, group_id)
+    result = create_challenge_standard_logic(current_user_id, data, group_id_str)
 
     if not result["success"]:
         return jsonify({"error": result["error"]}), 400
@@ -71,16 +62,7 @@ def create_challenge_survival():
     if not group_id_str:
         return jsonify({"error": "Gruppen-ID (group_id) erforderlich"}), 400
 
-    group_id = get_uuid_formated_id(group_id_str)
-    if not group_id:
-        return jsonify({"error": "Ungültige Gruppen-ID"}), 400
-
-    # Nicht mehrere Challenges gleichzeitig erlaubt
-    active_challenge_check = find_active_challenges_by_group(group_id_str)
-    if active_challenge_check:
-        return jsonify({"error": "Nur eine aktive Challenge möglich!"})
-
-    result = create_challenge_survival_logic(current_user_id, data, group_id)
+    result = create_challenge_survival_logic(current_user_id, data, group_id_str)
 
     if not result["success"]:
         return jsonify({"error": result["error"]}), 400
