@@ -3,6 +3,7 @@ from sqlalchemy.orm import joinedload
 
 from app.database.database import SessionLocal
 from app.database.models import Aufgabe, AufgabeStatus, Aufgabenerfuellung, StandardAufgabe, SurvivalAufgabe
+from repositories.beitrag_repository import find_beitrag_vote_by_user_beitrag
 from repositories.challenge_repository import find_challenge_by_id
 from repositories.membership_repository import find_memberships_by_group
 
@@ -90,6 +91,8 @@ def mark_task_as_complete(aufgabenerfuellung_id):
         aufgabenerfuellung = session.query(Aufgabenerfuellung).filter_by(aufgabenerfuellung_id=aufgabenerfuellung_id).first()
         aufgabenerfuellung.status=AufgabeStatus.abgeschlossen
         session.commit()
+        if not aufgabenerfuellung:
+            return None
         return aufgabenerfuellung
 
 def find_aufgabenerfuellung_by_challenge_and_date(challenge_id, date):
@@ -98,3 +101,15 @@ def find_aufgabenerfuellung_by_challenge_and_date(challenge_id, date):
             Aufgabe.challenge_id == challenge_id,
             Aufgabe.datum == date
         ).first()
+
+def has_user_already_voted(user_id, beitrag_id):
+    beitrag_vote =  find_beitrag_vote_by_user_beitrag(user_id, beitrag_id)
+    if beitrag_vote:
+        return True
+    return False
+
+def create_user_vote(beitrag_votes):
+    with SessionLocal() as session:
+        session.add(beitrag_votes)
+        session.flush()
+        session.commit()

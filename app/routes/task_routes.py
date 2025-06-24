@@ -27,12 +27,12 @@ def get_tasks():
 @task_bp.route("/api/task", methods=["POST"])
 @jwt_required()
 def complete_task():
-    current_user_id_str = get_uuid_formated_id(get_jwt_identity())
-    erfuellung_id_str = get_uuid_formated_id(request.json.get("erfuellung_id"))
+    user_id = get_jwt_identity()
+    erfuellung_id = request.form.get("erfuellung_id")
+    description = request.form.get("description")
     video_file = request.files.get("verification")
-    description = request.get_json().get("description")
 
-    result = complete_task_logic(erfuellung_id_str, current_user_id_str, description, video_file)
+    result = complete_task_logic(erfuellung_id, user_id, description, video_file)
 
     if not result["success"]:
         return jsonify({"error": result}), 400
@@ -43,7 +43,7 @@ def complete_task():
 @jwt_required()
 def vote():
     current_user_id = get_jwt_identity()
-    task_id = request.json.get("task_id")
+    beitrag_id = request.json.get("beitrag_id")
 
     vote = request.json.get('vote')
 
@@ -51,7 +51,7 @@ def vote():
         return jsonify({"error": "Vote cannot be empty"}), 400
 
     #Hier prüfen, ob Vote noch aussteht
-    result = vote_logic(current_user_id, task_id, vote)
+    result = vote_logic(current_user_id, beitrag_id, vote)
 
     if not result["success"]:
         return jsonify({"error": result}), 400

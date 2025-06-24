@@ -2,7 +2,7 @@ import uuid
 import app.repositories.group_repository
 from datetime import datetime, timedelta
 from app.utils.time import now_berlin, date_today
-from repositories.membership_repository import find_membership, delete_membership
+from repositories.membership_repository import find_membership, delete_membership, create_membership
 from utils.auth_utils import get_uuid_formated_id
 from utils.response import response
 from app.database.models import Gruppe, Membership

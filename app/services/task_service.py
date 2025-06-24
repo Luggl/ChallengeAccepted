@@ -7,8 +7,11 @@ from app.repositories.task_repository import (
     find_task_by_id,
     save_aufgabe,
     find_task_by_challenge_and_date,
-    find_task_by_challenge_and_date_and_typ, mark_task_as_complete
+    find_task_by_challenge_and_date_and_typ, mark_task_as_complete, has_user_already_voted, create_user_vote
 )
+from database.models import BeitragVotes, Beitrag
+from repositories.beitrag_repository import find_beitrag_by_id, find_gruppe_by_beitrag, create_beitrag, \
+    find_beitrag_by_erfuellung_id
 from repositories.challenge_repository import (
     find_standard_challenge_by_id,
     find_standard_challenge_sportarten_by_challenge_id,
@@ -56,44 +59,75 @@ def get_task_logic(user_id):
 
 
 # Aufgabe als erledigt markieren
-def complete_task_logic(task_id, user_id, video_file, description):
-
+def complete_task_logic(erfuellung_id, user_id, video_file, description):
+    user_id_uuid = get_uuid_formated_id(user_id)
+    erfuellung_id_uuid = get_uuid_formated_id(erfuellung_id)
     #Prüfen, ob User diese Task überhaupt hat
-    usercheck = find_tasks_by_user_id(user_id)
+    usercheck = find_tasks_by_user_id(user_id_uuid)
 
-    if not any(e.erfuellung_id == task_id for e in usercheck):
+    if not any(e.erfuellung_id == erfuellung_id_uuid for e in usercheck):
         return response(False, error="User hält diese Aufgabe nicht!")
 
     if not video_file:
         return response(False, error="Video ist erforderlich!")
 
     #Video speichern
-    safe_video_logic(task_id, video_file)
+    success = safe_video_logic(erfuellung_id_uuid, video_file)
+    if not success["success"]:
+        return success
 
-
-    success = mark_task_as_complete(task_id)
+    #Aufgabenerfüllung Status updaten
+    success = mark_task_as_complete(erfuellung_id_uuid)
     if not success:
-        return response(False, error="Aufgabe konnte nicht abgeschlossen werden.")
+        return response(False, error="Aufgabe nicht gefunden oder konnte nicht abgeschlossen werden.")
 
-    return response(True, data="Aufgabe als erledigt markiert.")
+    # Check ob Beitrag bereits vorhanden!
+    beitrag_check = find_beitrag_by_erfuellung_id(erfuellung_id_uuid)
+    if beitrag_check:
+        return response(False, error="Beitrag bereits vorhanden!")
+    #Beitrag erstellen
+    beitrag = Beitrag(
+        erstellDatum=date_today(),
+        erfuellung_id=erfuellung_id_uuid
+    )
+
+    success = create_beitrag(beitrag)
+    if not success:
+        return response(False, error="Beitrag konnte nicht erstellt werden")
+
+    return response(True, data="Aufgabe als erledigt markiert und Beitrag erstellt.")
 
 def safe_video_logic(task_id, video_file):
-    filename = secure_filename("video.mp4")
+    filename = secure_filename(f"{uuid.uuid4()}.mp4")
     upload_path = os.path.join(UPLOAD_ROOT, task_id)
     os.makedirs(upload_path, exist_ok=True)
 
     full_path = os.path.join(upload_path, filename)
-    video_file.save(full_path)
-
+    try:
+        video_file.save(full_path)
+        return response(True, filename)
+    except Exception as e:
+        return response(False, "Fehler beim Speichern des Videos!")
 
 
 # Vote abgeben für ein Task-Ergebnis
-def vote_logic(user_id, task_id, vote):
+def vote_logic(user_id, beitrag_id, vote):
     # Optional: prüfen, ob User schon abgestimmt hat
-    if has_user_already_voted(user_id, task_id):
+    beitrag_id_uuid = get_uuid_formated_id(beitrag_id)
+    user_id_uuid = get_uuid_formated_id(user_id)
+    if has_user_already_voted(user_id_uuid, beitrag_id_uuid):
         return response(False, error="Du hast bereits abgestimmt.")
 
-    result = save_vote(user_id, task_id, vote)
+    gruppe_id = find_gruppe_by_beitrag(find_beitrag_by_id(beitrag_id))
+
+    vote = BeitragVotes(
+        beitrag_id=beitrag_id,
+        user_id=user_id,
+        vote=vote,
+        gruppe_id=gruppe_id,
+    )
+
+    result = create_user_vote(vote)
     if not result:
         return response(False, error="Stimme konnte nicht gespeichert werden.")
 
