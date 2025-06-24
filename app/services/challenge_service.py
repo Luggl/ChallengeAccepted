@@ -22,6 +22,10 @@ def create_challenge_standard_logic(user_id, data, group_id):
     if not group_id_uuid:
         return response(False, error="Ungültige Gruppen-ID")
 
+    user_id_uuid = get_uuid_formated_id(user_id)
+    if not user_id_uuid:
+        return response(False, error="Ungültige User-ID")
+
     # Nicht mehrere Challenges gleichzeitig erlaubt
     active_challenge_check = find_active_challenges_by_group(group_id_uuid)
     if active_challenge_check:
@@ -50,8 +54,8 @@ def create_challenge_standard_logic(user_id, data, group_id):
 
     challenge = StandardChallenge(
         challenge_id=uuid.uuid4().bytes,
-        gruppe_id=group_id,
-        ersteller_user_id=uuid.UUID(user_id).bytes,
+        gruppe_id=group_id_uuid,
+        ersteller_user_id=user_id_uuid,
         startdatum=startdatum.date(),
         enddatum=enddatum.date(),
         dauer=dauer
@@ -68,7 +72,7 @@ def create_challenge_standard_logic(user_id, data, group_id):
             return response(False, error="sportart_id, startintensität und zielintensität erforderlich")
 
         try:
-            sportart_id_bytes = uuid.UUID(sportart_id_str).bytes
+            sportart_id_bytes = get_uuid_formated_id(sportart_id_str)
             start_int = int(start_int)
             ziel_int = int(ziel_int)
         except ValueError:
