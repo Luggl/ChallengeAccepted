@@ -1,12 +1,18 @@
 # um Videoformat per JSON über Flask zurückzugeben
+from repositories.task_repository import find_aufgabenerfuellung_by_id
+
+
 def serialize_beitrag(beitrag):
+    #Da die Aufgabenerfüllung alle relevanten Informationen hält, muss diese hier erstmal geladen werden
+    erfuellung = find_aufgabenerfuellung_by_id(beitrag.erfuellung.id)
+
     return{
         "beitrag_id": beitrag.beitrag_id.hex(),
-        "beschreibung": beitrag.beschreibung,
-        "erstellt_am": beitrag.erstellDatum.isoformat(),
-        "user_id": beitrag.user_id.hex(),
-        "gruppe_id": beitrag.gruppe_id.hex(),
-        "video_url": f"/media/{beitrag.video_path}" if beitrag.video_path else None
+        "beschreibung": beitrag.erfuellung.beschreibung if beitrag.erfuellung.beschreibung else None,
+        "erstellt_am": beitrag.erfuellung.datum.isoformat(),
+        "user_id": beitrag.erfuellung.user_id.hex(),
+        "gruppe_id": beitrag.erfuellung.gruppe_id.hex(),
+        "video_url": f"/media/{beitrag.erfuellung.video_path}" if beitrag.video_path else None
     }
 
 def serialize_gruppe(gruppe):

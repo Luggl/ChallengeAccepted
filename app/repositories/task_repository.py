@@ -113,3 +113,7 @@ def create_user_vote(beitrag_votes):
         session.add(beitrag_votes)
         session.flush()
         session.commit()
+
+def find_aufgabenerfuellung_by_id(erfuellung_id):
+    with SessionLocal() as session:
+        return session.query(Aufgabenerfuellung).filter(erfuellung_id=erfuellung_id).first()
