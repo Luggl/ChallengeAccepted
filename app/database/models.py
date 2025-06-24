@@ -154,7 +154,7 @@ class StandardChallengeSportart(Base):
     zielintensitaet = Column(Integer, nullable=False)
 
     challenge = relationship("StandardChallenge", back_populates="sportarten_links")
-    sportart = relationship("Sportart", back_populates="standard_challenge_sportart")
+    sportart = relationship("Sportart", back_populates="standard_links")
 
 class SurvivalChallengeSportart(Base):
     __tablename__ = "survival_challenge_sportart"
@@ -167,7 +167,7 @@ class SurvivalChallengeSportart(Base):
     )
 
     challenge = relationship("Survivalchallenge", back_populates="sportarten_links")
-    sportart = relationship("Sportart", back_populates="survival_challenge_sportart")
+    sportart = relationship("Sportart", back_populates="survival_links")
 
 class SportartIntervall(Base):
     __tablename__ = "sportart_intervall"
@@ -256,7 +256,7 @@ class Aufgabe(Base):
     challenge=relationship("Challenge",back_populates="aufgaben")
 
     sportart_id=Column(BLOB, ForeignKey("sportart.sportart_id"))
-    sportart=relationship("Sportart", back_populates="aufgaben")
+    sportart=relationship("Sportart")
 
     erfuellungen=relationship("Aufgabenerfuellung",back_populates="aufgabe")
 
@@ -334,7 +334,7 @@ class Beitrag (Base):
     erfuellung=relationship("Aufgabenerfuellung", back_populates="beitrag")
 
     votes = relationship(
-        "beitrag_votes",
+        "BeitragVotes",
         back_populates="beitrag",
         cascade="all, delete-orphan",
     )
