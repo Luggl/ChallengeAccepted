@@ -103,8 +103,8 @@ class SurvivalIntensityActivity : AppCompatActivity() {
             }else{
                 //alle Übungen abgeschlossen -> weitergeben
                 Toast.makeText(this, "Fertig! Ausgewählt: $intensityMap", Toast.LENGTH_SHORT).show()
-                val intent=Intent(this, SurvivalChallengeOverviewActivity::class.java)
-                intent.putExtra("intesities", HashMap(intensityMap))
+                val intent=Intent(this, SurvivalCreateChallengeOverviewActivity::class.java)
+                intent.putExtra("intensities", HashMap(intensityMap))
                 startActivity(intent)
                 finish()
             }

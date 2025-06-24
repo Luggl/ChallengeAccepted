@@ -57,7 +57,7 @@
          <!-- Survival -->
         <activity android:name=".SurvivalActivitiesActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <activity android:name=".SurvivalChallengeOverviewActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
-        <!--<activity android:name=".SurvivalCreateChallengeOverviewActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>-->
+        <activity android:name=".SurvivalCreateChallengeOverviewActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <activity android:name=".SurvivalIntensityActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <!--<activity android:name=".SurvivalJoinChallengeOverviewActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>-->
 

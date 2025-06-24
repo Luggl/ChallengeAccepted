@@ -21,38 +21,25 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingStart="8dp"
             android:text="Kämpfernatur\nSurvival Challenge"
             android:textColor="@color/white"
             android:textSize="25sp"
             android:textStyle="bold" />
     </LinearLayout>
 
-    <!-- Zurück-Button -->
-    <ImageButton
-        android:id="@+id/btn_back"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_margin="28dp"
-        android:background="@drawable/grey_background"
-        android:src="@drawable/back_icon"
-        android:tint="@android:color/white"
-        tools:ignore="UseAppTint"
-        android:contentDescription="@string/back_button_desc" />
 
     <!-- Hauptinhalt -->
     <LinearLayout
         android:id="@+id/main_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/btn_back"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:orientation="vertical">
 
         <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:background="@color/black"
             android:padding="16dp">
 
@@ -79,122 +66,42 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/green_frame"
                     android:columnCount="7"
-                    android:padding="8dp"
-                    android:rowCount="5">
-
-                    <!-- Beispiel für ein markiertes Datum -->
-                    <TextView
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_margin="4dp"
-                        android:background="@drawable/round_background"
-                        android:gravity="center"
-                        android:text="8"
-                        android:textColor="@color/white" />
-
-                    <!-- Weitere Tage kannst du dynamisch hinzufügen -->
+                    android:rowCount="5"
+                    android:padding="8dp">
+                <TextView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_margin="6dp"
+                    android:background="@drawable/round_background"
+                    android:gravity="center"
+                    android:text="8"
+                    android:textSize="18sp"
+                    android:textColor="@color/white"
+                    />
                 </GridLayout>
 
-                <!-- Abstand -->
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="24dp" />
 
-                <!-- Tabelle Sportaktivitäten -->
-                <TableLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@color/grey_100"
-                    android:padding="8dp"
-                    android:stretchColumns="0,1">
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="24dp"/>
 
-                    <!-- Kopfzeile -->
-                    <TableRow>
-
-                        <TextView
-                            android:text="Aktivitäten"
-                            android:textColor="@color/white"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:text="Intensität"
-                            android:textColor="@color/white"
-                            android:textStyle="bold" />
-                    </TableRow>
-
-                    <TextView android:text="" />
-
-                    <TableRow>
-
-                    </TableRow>
-                    <!-- Push-Ups -->
-                    <TableRow>
-
-                        <TextView
-                            android:text="Push-Ups"
-                            android:textColor="@color/blue" />
-
-                        <TextView
-                            android:text="Medium"
-                            android:textColor="@color/blue" />
-                    </TableRow>
-
-                    <!-- Planks -->
-                    <TableRow>
-
-                        <TextView
-                            android:text="Planks"
-                            android:textColor="@color/blue" />
-
-                        <TextView
-                            android:text="Easy"
-                            android:textColor="@color/blue" />
-                    </TableRow>
-
-                    <!-- Weitere Aktivitäten -->
-                    <TableRow>
-
-                        <TextView
-                            android:text="Sit-Ups"
-                            android:textColor="@color/white" />
-
-                        <TextView
-                            android:text="0"
-                            android:textColor="@color/white" />
-                    </TableRow>
-
-                    <TableRow>
-
-                        <TextView
-                            android:text="Burpees"
-                            android:textColor="@color/white" />
-
-                        <TextView
-                            android:text="0"
-                            android:textColor="@color/white" />
-                    </TableRow>
-
-                    <TableRow>
-
-                        <TextView
-                            android:text="Squats"
-                            android:textColor="@color/white" />
-
-                        <TextView
-                            android:text="0"
-                            android:textColor="@color/white" />
-                    </TableRow>
-
-                    <TableRow>
-
-                        <TextView
-                            android:text="Lunges"
-                            android:textColor="@color/white" />
-
-                        <TextView
-                            android:text="0"
-                            android:textColor="@color/white" />
-                    </TableRow>
+                    <TableLayout
+                        android:id="@+id/table_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/grey_100"
+                        android:padding="8dp"
+                        android:stretchColumns="0,1">
+                        <TableRow>
+                            <TextView
+                                android:text="Aktivitäten"
+                                android:textColor="@color/white"
+                                android:textStyle="bold"/>
+                            <TextView
+                                android:text="Intensität"
+                                android:textColor="@color/white"
+                                android:textStyle="bold"/>
+                        </TableRow>
                 </TableLayout>
             </LinearLayout>
         </ScrollView>
