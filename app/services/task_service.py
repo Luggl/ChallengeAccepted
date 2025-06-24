@@ -9,7 +9,7 @@ from app.repositories.task_repository import (
     find_task_by_challenge_and_date,
     find_task_by_challenge_and_date_and_typ, mark_task_as_complete, has_user_already_voted, create_user_vote
 )
-from database.models import BeitragVotes, Beitrag
+from app.database.models import BeitragVotes, Beitrag
 from repositories.beitrag_repository import find_beitrag_by_id, find_gruppe_by_beitrag, create_beitrag, \
     find_beitrag_by_erfuellung_id
 from repositories.challenge_repository import (
