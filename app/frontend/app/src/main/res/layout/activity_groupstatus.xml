@@ -24,6 +24,7 @@
             android:scaleType="centerCrop"
             android:src="@drawable/group_profile_picture" />
 
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -31,7 +32,7 @@
             android:layout_margin="16dp"
             android:background="@drawable/grey_background"
             android:gravity="center_horizontal"
-            android:orientation="vertical"
+            android:orientation="horizontal"
             android:padding="8dp">
 
             <TextView
@@ -41,9 +42,20 @@
                 android:text="The Hustlers"
                 android:textColor="@color/white"
                 android:textSize="25sp"
-                android:textStyle="bold" />
-        </LinearLayout>
+                android:textStyle="bold"/>
 
+        </LinearLayout>
+        <!-- Zurück-Button -->
+        <ImageButton
+            android:id="@+id/btn_back"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_margin="16dp"
+            android:background="@drawable/grey_background"
+            android:src="@drawable/back_icon"
+            android:tint="@android:color/white"
+            tools:ignore="UseAppTint"
+            android:contentDescription="@string/back_button_desc" />
 
         <!-- Button -->
         <Button

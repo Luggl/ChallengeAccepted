@@ -7,6 +7,7 @@
     tools:context=".DashboardActivity">
 
     <LinearLayout
+        android:id="@+id/ll_groupstatus"
         android:layout_width="400dp"
         android:layout_height="80dp"
         android:layout_centerHorizontal="true"
@@ -305,7 +306,7 @@
                 android:id="@+id/nav_group"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/group_white_icon" />
+                android:src="@drawable/group_blue_icon" />
 
         </LinearLayout>
 
@@ -337,7 +338,7 @@
                 android:id="@+id/nav_add"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/add_blue_icon" />
+                android:src="@drawable/add_white_icon" />
 
         </LinearLayout>
 
