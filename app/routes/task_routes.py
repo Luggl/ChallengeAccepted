@@ -1,38 +1,49 @@
+import uuid
+
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
+
+from services.task_service import generate_standard_tasks_for_challenge_logic, get_task_by_date, generate_survival_tasks_for_all_challenges
 from services.task_service import *
+from repositories.task_repository import find_task_by_id
+from utils.auth_utils import get_uuid_formated_id
 
 # Blueprint für alle Aufgaben-Routen
 task_bp = Blueprint("task", __name__)
 
-@task_bp.route("/api/tasks/<int:id>", methods=["GET"])
+
+
+@task_bp.route("/api/task", methods=["GET"])
 @jwt_required()
-def get_task(id):
-    current_user_id = get_jwt_identity()
+def get_tasks():
 
-    success, result = get_task_logic(id, current_user_id)
+    result = get_task_logic(get_jwt_identity())
 
-    if not success:
-        return jsonify({"error": result}), 404
+    if not result["success"]:
+        return jsonify({"message": result}), 400
+    return jsonify({"message": result}), 200
 
-    return jsonify({"task": result}), 200
 
-@task_bp.route("/api/tasks/<int:id>/complete", methods=["POST"])
+@task_bp.route("/api/task", methods=["POST"])
 @jwt_required()
-def complete_task(taskid):
-    current_user_id = get_jwt_identity()
+def complete_task():
+    user_id = get_jwt_identity()
+    erfuellung_id = request.args.get("erfuellung_id")
+    description = request.form.get("description")
+    video_file = request.files.get("verification")
 
-    success, result = complete_task_logic(taskid, current_user_id)
+    result = complete_task_logic(erfuellung_id, user_id, description, video_file)
 
-    if not success:
+    if not result["success"]:
         return jsonify({"error": result}), 400
 
     return jsonify({"message": result}), 201
 
-@task_bp.route('/api/vote/<int:id>', methods=["POST"])
+@task_bp.route('/api/vote', methods=["POST"])
 @jwt_required()
-def vote(id):
+def vote():
     current_user_id = get_jwt_identity()
+    beitrag_id = request.json.get("beitrag_id")
 
     vote = request.json.get('vote')
 
@@ -40,11 +51,18 @@ def vote(id):
         return jsonify({"error": "Vote cannot be empty"}), 400
 
     #Hier prüfen, ob Vote noch aussteht
-    success, result = vote_logic(current_user_id, id, vote)
+    result = vote_logic(current_user_id, beitrag_id, vote)
 
-    if not success:
+    if not result["success"]:
         return jsonify({"error": result}), 400
 
     return jsonify({"message": result}), 200
 
 
+@task_bp.route('/api/survivaltasks', methods=["GET"])
+def create_survivaltasks():
+    result = generate_survival_tasks_for_all_challenges()
+
+    if not result:
+        return jsonify({"message": result}), 400
+    return jsonify({"message": result}), 201

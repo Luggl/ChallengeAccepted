@@ -12,10 +12,12 @@ from app.repositories.user_repository import (
     save_user,
     delete_user_by_id,
     find_user_by_id,
-    update_user
+    update_user, find_user_activities
 )
 
 import uuid
+
+from repositories.user_repository import find_user_by_username
 
 ALLOWED_UPDATE_FIELDS = {"username", "email", "profilbild"}
 
@@ -23,9 +25,16 @@ ALLOWED_UPDATE_FIELDS = {"username", "email", "profilbild"}
 # Registrierung eines neuen Users
 def register_user_logic(username, email, password):
     # Wenn E-Mail schon vergeben ist -> abbrechen
-    existing_user = find_user_by_email(email)
-    if existing_user:
+    existing_email = find_user_by_email(email)
+    if existing_email:
         return response(False, error="E-Mail ist bereits registriert.")
+
+    # Username bereits vergeben
+    existing_username = find_user_by_username(username)
+    if existing_username:
+        return response(False, error="Username ist bereits vergeben.")
+
+    # Hier fehlt noch die Logik zum Passwort
 
     # Passwort hashen für sichere Speicherung
     hashed_pw = generate_password_hash(password)
@@ -46,7 +55,7 @@ def register_user_logic(username, email, password):
     return response(True, data={
         "id": str(uuid.UUID(bytes=saved_user.user_id)),
         "username": saved_user.username,
-        "email": saved_user.email
+        "email": saved_user.email,
     })
 
 # Login eines bestehenden Users
@@ -127,17 +136,33 @@ def get_user_logic(user_id_str):
     if not user:
         return response(False, error="Benutzer nicht gefunden")
 
-    # TODO: Kalender-Daten und Streak dynamisch berechnen, wenn nötig
+    kalender = get_user_kalender_logic(user.user_id)
+
     user_data = {
         "id": str(uuid.UUID(bytes=user.user_id)),
         "username": user.username,
         "email": user.email,
         "profilbild": user.profilbild,
-        "streak": user.streak
+        "streak": user.streak,
+        "Kalender": kalender
     }
 
     return response(True, data=user_data)
 
+def get_user_kalender_logic(user_id):
+    user = find_user_by_id(user_id)
+    kalender = {}
+    if not user:
+        return response(False, error="Benutzer nicht gefunden")
+
+    erfuellungen = find_user_activities(user)
+
+    if erfuellungen:
+        for eintrag in erfuellungen:
+            datum_str = eintrag.datum.strftime("%d.%m.%Y")
+            kalender[datum_str] = eintrag.status
+
+    return kalender
 
 def update_user_logic(user_id_str, update_data):
     try:

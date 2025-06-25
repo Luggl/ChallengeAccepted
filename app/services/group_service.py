@@ -2,7 +2,8 @@ import uuid
 import app.repositories.group_repository
 from datetime import datetime, timedelta
 from app.utils.time import now_berlin, date_today
-from repositories.membership_repository import find_membership
+from repositories.membership_repository import find_membership, delete_membership, create_membership
+from utils.auth_utils import get_uuid_formated_id
 from utils.response import response
 from app.database.models import Gruppe, Membership
 from app.repositories.group_repository import *
@@ -11,37 +12,48 @@ from app.repositories.group_repository import *
 # Gruppe erstellen
 def create_group_logic(name, beschreibung, gruppenbild, created_by):
     invite_link = str(uuid.uuid4())  # einfacher Invite-Code
-    group = Gruppe(
-        gruppenname=name,
-        beschreibung=beschreibung,
-        gruppenbild=gruppenbild,
-        einladungscode=invite_link,
-        einladungscode_gueltig_bis=date_today(),
-        erstellungsDatum=date_today()
-    )
-    created_group = create_group(group)
 
-    membership = Membership(
-        user_id=uuid.UUID(created_by).bytes,
-        gruppe_id=created_group.gruppe_id,
-        isAdmin=True
-    )
+    # Hier der DB-Zugriff direkt in Services, da Gruppe und Membership durch FK-Bedingung in einer Session comitted werden müssen!
+    with SessionLocal() as session:
+        group = Gruppe(
+            gruppenname=name,
+            beschreibung=beschreibung,
+            gruppenbild=gruppenbild,
+            einladungscode=invite_link,
+            einladungscode_gueltig_bis=date_today(),
+            erstellungsDatum=date_today()
+        )
 
 
-    create_membership(membership)
+        session.add(group)
+        session.flush()
+
+        membership = Membership(
+            user_id=get_uuid_formated_id(created_by),
+            gruppe_id=group.gruppe_id,
+            isAdmin=True
+        )
+        session.add(membership)
+        session.commit()
+        session.refresh(group)
+
 
     return response(True, {
-        "id": str(uuid.UUID(bytes=created_group.gruppe_id)),
-        "name": created_group.gruppenname,
-        "beschreibung": created_group.beschreibung,
-        "invite_link": created_group.einladungscode
+        "id": str(uuid.UUID(bytes=group.gruppe_id)),
+        "name": group.gruppenname,
+        "beschreibung": group.beschreibung,
+        "invite_link": group.einladungscode
     })
 
 # Einladung erstellen
-def invitation_link_logic(group_id):
+def invitation_link_logic(group_id, user_id):
     group = find_group_by_id(group_id)
     if not group:
         return response(False, "Gruppe nicht gefunden.")
+
+    membership = find_membership(user_id, group.gruppe_id)
+    if not membership:
+        return response(False, "User nicht Member der Gruppe!")
 
     group.einladungscode = str(uuid.uuid4())
     group.einladungscode_gueltig_bis = now_berlin() + timedelta(hours=4)  # Link ist 4 Std gültig
@@ -62,8 +74,15 @@ def join_group_via_link_logic(user_id, invitation_link):
     if group.einladungscode_gueltig_bis.date() < now_berlin().date():
         return response(False, "Einladungslink ist abgelaufen.")
 
+    user_id_uuid = get_uuid_formated_id(user_id)
+
+    # Failcheck, falls User bereits Gruppenmitglied!
+    membershipcheck = find_membership(user_id_uuid, group.gruppe_id)
+    if membershipcheck:
+        return response(False, "User bereits Mitglied der Gruppe")
+
     membership = Membership(
-        user_id=uuid.UUID(user_id).bytes,
+        user_id=user_id_uuid,
         gruppe_id=group.gruppe_id,
         isAdmin=False)
 
@@ -75,29 +94,49 @@ def join_group_via_link_logic(user_id, invitation_link):
 
 # Gruppe löschen
 def delete_group_logic(group_id, user_id):
-    # Optional: prüfen, ob user der Admin ist → kommt später
-    user_id_bytes = uuid.UUID(user_id).bytes
-    group_id_bytes = uuid.UUID(group_id).bytes
+
+    user_id_bytes = get_uuid_formated_id(user_id)
+    group_id_bytes = get_uuid_formated_id(group_id)
+
     membership = find_membership(user_id_bytes, group_id_bytes)
+
+    if not membership:
+        return response(False, "Membership existiert nicht - Entweder Gruppe falsch oder User nicht berechtigt")
 
     if not membership.isAdmin:
         return response(False, "User darf die Gruppe nicht löschen")
 
-    result = delete_group_by_id(group_id)
+    result = delete_group_by_id(group_id_bytes)
     if not result:
         return response(False, "Löschen nicht erlaubt oder fehlgeschlagen.")
     return response(True, "Gruppe erfolgreich gelöscht.")
 
 # Gruppenfeed abrufen
 def get_group_feed_logic(group_id, user_id):
-    feed = get_group_feed_data(group_id, user_id)
+    group_id_uuid = get_uuid_formated_id(group_id)
+    user_id_uuid = get_uuid_formated_id(user_id)
+
+    membership = find_membership(user_id_uuid, group_id_uuid)
+
+    if not membership:
+        return response(False, "User ist kein Gruppenmitglied!")
+
+    feed = get_group_feed_by_group_id(group_id_uuid)
     if not feed:
         return response(False, "Zugriff verweigert oder keine Daten.")
     return response(True, feed)
 
-# Gruppenübersicht für User abrufen
-def get_group_overview_logic(user_id):
-    groups = get_groups_for_user(user_id)
-    if not groups:
-        return response(False, "Keine Gruppen gefunden.")
-    return response(True, groups)
+
+def leave_group_logic(user_id, group_id):
+    user_id_str = get_uuid_formated_id(user_id)
+    group_id_str = get_uuid_formated_id(group_id)
+
+    group =find_group_by_id(group_id_str)
+    if not group:
+        return response(False, "Gruppe nicht gefunden.")
+
+    result = delete_membership(user_id_str, group_id_str)
+
+    if not result:
+        return response(False, "Fehlgeschlagen")
+    return response(True, "User entfernt")

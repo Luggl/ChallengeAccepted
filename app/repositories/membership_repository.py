@@ -12,32 +12,36 @@ def find_membership(user_id, gruppe_id):
 
 def find_memberships_by_user(user_id):
     """Finde alle Gruppen-Mitgliedschaften eines Users."""
-    return db.session.query(Membership).filter_by(user_id=user_id).all()
+    with SessionLocal() as session:
+        return session.query(Membership).filter_by(user_id=user_id).all()
 
 def find_memberships_by_group(gruppe_id):
     """Finde alle Mitglieder einer Gruppe."""
-    return db.session.query(Membership).filter_by(gruppe_id=gruppe_id).all()
+    with SessionLocal() as session:
+        return session.query(Membership).filter_by(gruppe_id=gruppe_id).all()
 
 def create_membership(membership):
-    """Füge eine Mitgliedschaft hinzu."""
-    db.session.add(membership)
-    db.session.commit()
+    """Erstelle und speichere eine neue Membership."""
+    with SessionLocal() as session:
+        session.add(membership)
+        session.flush()
+        session.commit()
     return membership
 
 def delete_membership(user_id, gruppe_id):
     """Lösche eine Mitgliedschaft anhand von User- und Gruppen-ID."""
     membership = find_membership(user_id, gruppe_id)
-    if membership:
-        db.session.delete(membership)
-        db.session.commit()
-        return True
-    return False
+    with SessionLocal() as session:
+        if membership:
+            session.delete(membership)
+            session.commit()
+            return True
+        return False
 
-def update_membership(membership):
-    """Aktualisiere eine bestehende Mitgliedschaft."""
-    db.session.commit()
-    return membership
 
-def get_all_memberships():
-    """Gibt alle Mitgliedschaften zurück."""
-    return db.session.query(Membership).all()
+def is_user_admin(group_id, user_id):
+    with SessionLocal() as session:
+        membership = find_membership(group_id, user_id)
+        if membership.isAdmin:
+            return True
+        return False

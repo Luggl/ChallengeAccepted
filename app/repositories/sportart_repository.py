@@ -1,6 +1,6 @@
 # app/repositories/sportart_repository.py
 
-from app.database.models import Sportart
+from app.database.models import Sportart, SportartIntervall
 from app import db
 from app.database.database import SessionLocal
 
@@ -16,6 +16,15 @@ def find_sportart_by_bezeichnung(bezeichnung):
     """Finde eine Sportart anhand ihrer Bezeichnung (Name)."""
     with SessionLocal() as session:
         return session.query(Sportart).filter_by(bezeichnung=bezeichnung).first()
+
+
+def find_intervall_by_sportart_and_schwierigkeit(sportart_id, schwierigkeitsgrad):
+    """Findet das Intervall zu einer Sportart und Schwierigkeitsgrad."""
+    with SessionLocal() as session:
+        return session.query(SportartIntervall).filter_by(
+            sportart_id=sportart_id,
+            schwierigkeitsgrad=schwierigkeitsgrad
+        ).first()
 
 def create_sportart(sportart):
     """Erstelle und speichere eine neue Sportart."""

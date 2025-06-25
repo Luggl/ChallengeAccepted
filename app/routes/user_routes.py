@@ -1,26 +1,25 @@
 from flask import Blueprint, request, jsonify
-from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token
+from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token, get_jwt
 from app.services.user_service import *
-
+from app import blacklisted_tokens
+from utils.auth_utils import get_uuid_formated_id
 
 # Blueprint ist eine "Mini-App" innerhalb Flask, um Routen besser zu strukturieren.
 user_bp = Blueprint('user', __name__)
 
 @user_bp.route('/api/user', methods=['POST'])
 def register_user():
-    # Lesen der Daten aus dem Body der Schnittstelle
     data = request.get_json()
 
-    # Einzelne Werte zuweisen
     username = data.get('username')
     email = data.get('email')
     password = data.get('password')
 
-    # Prüfung, ob alle Daten vorhanden:
+    # Pflichtfelder prüfen
     if username is None or email is None or password is None:
-        return jsonify({"error": "Username, Password und Email sind erforderlich"}), 400
+        return jsonify({"error": "Username, Password, E-Mail und Geschlecht sind erforderlich"}), 400
 
-    # Hier die Methode einbinden, die prüft ob Werte i. O.!
+    # Benutzer registrieren
     result = register_user_logic(username, email, password)
 
     if not result["success"]:
@@ -84,19 +83,14 @@ def reset_password():
 
     return jsonify({"message": result["data"]}), 200
 
-@user_bp.route('/api/user/<uuid:id>', methods=['DELETE'])
+@user_bp.route('/api/deleteuser', methods=['DELETE'])
 @jwt_required() # Sicherstellen, dass User eingeloggt ist
-def delete_user(id):
+def delete_user():
     # Prüfen, wer der aktuell eingeloggte User ist
-    current_user_id = get_jwt_identity()
-
-    # Sicherstellen, dass kein anderer User gelöscht wird außer sich selbst.
-    uuid_obj = uuid.UUID(current_user_id)
-    if uuid_obj != id:
-        return jsonify({"error": "Du darfst nur deinen eigenen Account löschen!"}), 404
+    current_user_id = get_uuid_formated_id(get_jwt_identity())
 
     # Logik in Services:
-    message = delete_user_logic(id)
+    message = delete_user_logic(current_user_id)
 
     if not message["success"]:
         return jsonify({"error": message}), 404
@@ -150,3 +144,9 @@ def update_password():
 
     return jsonify({"message": result}), 200
 
+@user_bp.route('/api/logout', methods=['POST'])
+@jwt_required()
+def logout():
+    jti = get_jwt()["jti"]
+    blacklisted_tokens.add(jti)
+    return jsonify({"message": "Logged out"}), 200
