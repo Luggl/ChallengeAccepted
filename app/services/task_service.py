@@ -1,17 +1,24 @@
 import os
 
 from werkzeug.utils import secure_filename
-
 from app.utils.response import response
 from app.repositories.task_repository import (
-    find_task_by_id,
     save_aufgabe,
     find_task_by_challenge_and_date,
-    find_task_by_challenge_and_date_and_typ, mark_task_as_complete, has_user_already_voted, create_user_vote
+    find_task_by_challenge_and_date_and_typ,
+    mark_task_as_complete,
+    has_user_already_voted,
+    create_user_vote,
+    find_tasks_by_user_id,
+    find_aufgabenerfuellung_by_challenge_and_date
 )
-from app.database.models import BeitragVotes, Beitrag
-from repositories.beitrag_repository import find_beitrag_by_id, find_gruppe_by_beitrag, create_beitrag, \
+from app.database.models import BeitragVotes, Beitrag, AufgabeTyp, StandardAufgabe
+from repositories.beitrag_repository import (
+    find_beitrag_by_id,
+    find_gruppe_by_beitrag,
+    create_beitrag,
     find_beitrag_by_erfuellung_id
+)
 from repositories.challenge_repository import (
     find_standard_challenge_by_id,
     find_standard_challenge_sportarten_by_challenge_id,
@@ -22,9 +29,7 @@ import uuid
 import random
 from collections import defaultdict
 from datetime import datetime, time, timedelta
-from app.database.models import AufgabeTyp, StandardAufgabe
 from repositories.membership_repository import find_memberships_by_user
-from repositories.task_repository import find_tasks_by_user_id, find_aufgabenerfuellung_by_challenge_and_date
 from utils.auth_utils import get_uuid_formated_id
 from utils.serialize import serialize_aufgabenerfuellung
 from utils.time import now_berlin, date_today

@@ -3,8 +3,6 @@
 from app.database.models import Achievement
 from app import db
 from database.database import SessionLocal
-from utils.serialize import serialize_achievements
-
 
 def find_achievement_by_id(achievement_id):
     """Finde ein Achievement anhand der ID."""

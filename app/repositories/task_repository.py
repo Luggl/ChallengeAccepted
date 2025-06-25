@@ -1,6 +1,5 @@
 from sqlalchemy import func
 from sqlalchemy.orm import joinedload
-
 from app.database.database import SessionLocal
 from app.database.models import Aufgabe, AufgabeStatus, Aufgabenerfuellung, StandardAufgabe, SurvivalAufgabe
 from repositories.beitrag_repository import find_beitrag_vote_by_user_beitrag

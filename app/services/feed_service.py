@@ -1,7 +1,3 @@
-# from app.repositories.feed_repository import (
-#     get_feed_entries_for_user,
-#     update_post_for_user
-# )
 from app.utils.response import response
 from repositories.beitrag_repository import update_beitrag, find_beitrag_by_id
 from repositories.user_repository import get_user_feed

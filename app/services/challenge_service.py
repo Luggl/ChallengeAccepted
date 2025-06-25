@@ -1,10 +1,17 @@
-from app.database.models import StandardChallenge, Survivalchallenge, StandardChallengeSportart, \
-    SurvivalChallengeSportart, Schwierigkeit
+from app.database.models import (
+    StandardChallenge,
+    Survivalchallenge,
+    StandardChallengeSportart,
+    SurvivalChallengeSportart,
+    Schwierigkeit
+)
 from app.repositories.challenge_repository import (
     create_challenge,
-    delete_challenge_by_id, save_standard_challenge_sportart, save_survival_challenge_sportart,
-    is_user_allowed_to_delete, find_active_challenge_by_group,
-    #    is_user_allowed_to_delete
+    delete_challenge_by_id,
+    save_standard_challenge_sportart,
+    save_survival_challenge_sportart,
+    is_user_allowed_to_delete,
+    find_active_challenge_by_group
 )
 from app.repositories.sportart_repository import find_sportart_by_id
 from app.utils.response import response

@@ -1,8 +1,17 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token, get_jwt
-from app.services.user_service import *
 from app import blacklisted_tokens
 from utils.auth_utils import get_uuid_formated_id
+from app.services.user_service import (
+    register_user_logic,
+    login_user_logic,
+    forgot_password_logic,
+    reset_password_logic,
+    delete_user_logic,
+    get_user_logic,
+    update_user_logic,
+    update_password_logic
+    )
 
 # Blueprint ist eine "Mini-App" innerhalb Flask, um Routen besser zu strukturieren.
 user_bp = Blueprint('user', __name__)

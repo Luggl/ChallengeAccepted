@@ -1,6 +1,5 @@
 from app.database.database import SessionLocal
-from app.database.models import Beitrag
-from app.database.models import BeitragVotes
+from app.database.models import BeitragVotes, Beitrag
 
 
 def find_beitrag_by_id(beitrag_id):
