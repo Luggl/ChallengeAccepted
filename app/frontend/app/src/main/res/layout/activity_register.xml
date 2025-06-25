@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/login_background_pic">
+
+    <!-- Background Image -->
+    <ImageView
+        android:id="@+id/iv_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/login_background_pic" />
+
+    <!-- Overlay -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#99000000" />
+
+    <!-- Logo oben links -->
+    <ImageView
+        android:id="@+id/logo_top"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="40dp"
+        android:contentDescription="App Logo"
+        android:src="@drawable/logo" />
+
+    <!-- Titel -->
+    <TextView
+        android:id="@+id/title_registrieren"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/logo_top"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:text="Registrieren"
+        android:textColor="@color/accent_bright"
+        android:textSize="40sp"
+        android:textStyle="bold" />
+
+    <!-- Benutzername -->
+    <EditText
+        android:id="@+id/edit_username"
+        android:layout_width="280dp"
+        android:layout_height="50dp"
+        android:layout_below="@id/title_registrieren"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="60dp"
+        android:background="@drawable/textfield"
+        android:hint="Benutzername"
+        android:inputType="textEmailAddress"
+        android:paddingHorizontal="16dp"
+        android:textColor="@color/black"
+        android:textColorHint="@color/black" />
+
+    <!-- Email -->
+    <EditText
+        android:id="@+id/edit_email"
+        android:layout_width="280dp"
+        android:layout_height="50dp"
+        android:layout_below="@id/edit_username"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/textfield"
+        android:hint="Email"
+        android:inputType="textEmailAddress"
+        android:paddingHorizontal="16dp"
+        android:textColor="@color/black"
+        android:textColorHint="@color/black" />
+
+    <!-- Passwort -->
+    <EditText
+        android:id="@+id/edit_password1"
+        android:layout_width="280dp"
+        android:layout_height="50dp"
+        android:layout_below="@id/edit_email"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/textfield"
+        android:hint="Passwort"
+        android:inputType="textPassword"
+        android:paddingHorizontal="16dp"
+        android:textColor="@color/black"
+        android:textColorHint="@color/black" />
+
+    <!-- Passwort wiederholen -->
+    <EditText
+        android:id="@+id/edit_password2"
+        android:layout_width="280dp"
+        android:layout_height="50dp"
+        android:layout_below="@id/edit_password1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/textfield"
+        android:hint="Passwort wiederholen"
+        android:inputType="textPassword"
+        android:paddingHorizontal="16dp"
+        android:textColor="@color/black"
+        android:textColorHint="@color/black" />
+
+    <!-- Schon Registriert -->
+    <TextView
+        android:id="@+id/text_already_account"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edit_password2"
+        android:layout_alignStart="@id/edit_password2"
+        android:layout_marginTop="8dp"
+        android:text="Schon Registriert?"
+        android:textColor="@color/white"
+        android:textSize="12sp" />
+
+    <!-- Los geht's Button -->
+    <Button
+        android:id="@+id/button_start_regist"
+        android:layout_width="250dp"
+        android:layout_height="60dp"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="650dp"
+        android:background="@drawable/green_button"
+        android:text="Los gehts!"
+        android:textColor="@color/white"
+        android:textSize="26sp"
+        android:textStyle="bold" />
+
+</RelativeLayout>

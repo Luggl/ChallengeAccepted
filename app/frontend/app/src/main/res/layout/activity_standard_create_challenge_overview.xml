@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    tools:context=".DashboardActivity">
+
+    <LinearLayout
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/grey_background"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:padding="8dp">
+
+        <!-- Gruppenname -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="8dp"
+            android:text="Kämpfernatur\nStandard Challenge"
+            android:textColor="@color/white"
+            android:textSize="25sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <!-- Zurück-Button -->
+    <ImageButton
+        android:id="@+id/btn_back"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_margin="28dp"
+        android:background="@drawable/grey_background"
+        android:src="@drawable/back_icon"
+        android:tint="@android:color/white"
+        tools:ignore="UseAppTint"
+        android:contentDescription="@string/back_button_desc" />
+
+    <!-- Hauptinhalt -->
+    <LinearLayout
+        android:id="@+id/main_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btn_back"
+        android:layout_margin="16dp"
+        android:orientation="vertical">
+
+        <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/black"
+            android:padding="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <!-- Titel -->
+                <TextView
+                    android:id="@+id/titleKalender"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:text="Trainingszeitraum wählen:"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
+
+                <!-- Kalender -->
+                <GridLayout
+                    android:id="@+id/kalenderGrid"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/green_frame"
+                    android:columnCount="7"
+                    android:padding="8dp"
+                    android:rowCount="5">
+
+                    <!-- Beispiel für ein markiertes Datum -->
+                    <TextView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_margin="4dp"
+                        android:background="@drawable/round_background"
+                        android:gravity="center"
+                        android:text="8"
+                        android:textColor="@color/white" />
+
+                    <!-- Weitere Tage kannst du dynamisch hinzufügen -->
+                </GridLayout>
+
+                <!-- Abstand -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="24dp" />
+
+                <!-- Tabelle Sportaktivitäten -->
+                <TableLayout
+                    android:id="@+id/table_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/grey_100"
+                    android:padding="8dp"
+                    android:stretchColumns="0,1,2">
+
+                    <!-- Kopfzeile -->
+                    <TableRow>
+
+                        <TextView
+                            android:text="Aktivitäten"
+                            android:textColor="@color/white"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:text="Start"
+                            android:textColor="@color/white"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:text="Ende"
+                            android:textColor="@color/white"
+                            android:textStyle="bold" />
+                    </TableRow>
+                </TableLayout>
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+
+    <!-- Check Button -->
+    <ImageButton
+        android:id="@+id/btn_confirm_selection"
+        android:layout_width="80dp"
+        android:layout_height="50dp"
+        android:layout_below="@+id/main_content"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="16dp"
+        android:background="@drawable/green_button"
+        android:src="@drawable/check_icon"
+        android:contentDescription="@string/desc_check_confirm" />
+
+    <!-- Bottom Navigation -->
+    <LinearLayout
+        android:id="@+id/ll_bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/grey_300"
+        android:orientation="horizontal"
+        android:weightSum="4">
+        <!-- Community Icon -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/nav_group"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/group_white_icon" />
+
+        </LinearLayout>
+
+        <!-- Home Icon -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/nav_home"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/home_white_icon" />
+
+        </LinearLayout>
+
+        <!-- Add Icon -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/nav_add"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/add_blue_icon" />
+
+        </LinearLayout>
+
+        <!-- Profile Icon -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/nav_profile"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/profile_white_icon" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

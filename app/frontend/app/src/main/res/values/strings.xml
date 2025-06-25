@@ -1,0 +1,80 @@
+<resources>
+    <string name="app_name">Challenge Accepted</string>
+
+    <string name="back_button_desc">Zurück</string>
+    <string name="desc_check_confirm">Auswahl bestätigen</string>
+    <string name="desc_check_cancel">Abbrechen</string>
+    <string name="privacy_policy">
+    <![CDATA[
+
+    1. Allgemeine Hinweise
+Diese Datenschutzerklärung informiert Sie über die Art, den Umfang und Zweck der Verarbeitung personenbezogener Daten in der App „Challenge Accepted“. Die App wird im Rahmen eines studentischen Projekts in Deutschland entwickelt und betrieben.
+
+Da es sich nicht um ein kommerzielles Produkt handelt, erfolgt die Datenverarbeitung ausschließlich zu Test- und Lernzwecken.
+
+2. Verantwortliche Stelle
+Verantwortlich für die Datenverarbeitung im Sinne der Datenschutz-Grundverordnung (DSGVO) sind die studentischen Entwickler:innen der App im Rahmen eines Hochschulprojekts.
+Da kein kommerzieller Betrieb vorliegt, erfolgt keine öffentliche Benennung der Verantwortlichen. Bei Fragen zum Datenschutz kann über die App Kontakt aufgenommen werden.
+
+3. Art der verarbeiteten Daten
+In der App „Challenge Accepted“ werden folgende personenbezogene Daten verarbeitet:
+
+E-Mail-Adresse (für Login/Registrierung)
+
+Nutzername oder Alias
+
+Gruppenmitgliedschaften
+
+Hochgeladene Videos (sichtbar nur für Gruppenmitglieder)
+
+Kommentare zu Videos
+
+Zeitpunkt der Aktivität (Challenge-Daten)
+
+Login-Zeitpunkte und Statusdaten
+
+4. Zweck der Datenverarbeitung
+Die Daten werden verarbeitet, um folgende Funktionen der App zu ermöglichen:
+
+Anlegen und Verwalten eines Benutzerkontos
+
+Teilnahme an Fitness-Challenges im „Standard“- oder „Survival“-Modus
+
+Hochladen und Teilen von Challenge-Videos innerhalb von Gruppen
+
+Kommentarfunktion innerhalb von Gruppen
+
+Teilnahme an gruppenbasierten Herausforderungen und Fortschrittsverfolgung
+
+5. Modus-Spezifische Hinweise
+Die App bietet zwei Modi:
+
+Standard-Modus: Regelmäßige Fitness-Challenges, Teilnahme ohne Eliminierung
+
+Survival-Modus: Eliminierung bei Nichtteilnahme an Challenges
+
+Hinweis: In beiden Modi werden dieselben personenbezogenen Daten verarbeitet. Es erfolgt keine erweiterte Auswertung oder automatisierte Entscheidungsfindung.
+
+6. Zugriff und Sichtbarkeit
+Hochgeladene Videos sind ausschließlich für Mitglieder der jeweiligen Gruppe sichtbar. Eine öffentliche Einsicht ist nicht möglich. Kommentare sind ebenfalls nur innerhalb der Gruppe sichtbar.
+
+7. Datenlöschung
+Nutzer:innen können ihr Konto und alle zugehörigen Daten jederzeit löschen lassen. Eine automatisierte Funktion oder eine Kontaktmöglichkeit zur Löschung wird in der App bereitgestellt.
+
+8. Speicherung der Daten
+Die Daten werden auf einem lokalen Server bzw. einer Entwicklungsumgebung mittels SQLAlchemy in einer SQL-Datenbank gespeichert. Die Speicherung erfolgt ausschließlich in Deutschland.
+
+9. Weitergabe der Daten
+Es erfolgt keine Weitergabe der Daten an Dritte. Es werden keine Drittanbieter-Services wie Google Analytics, Firebase o. ä. verwendet.
+
+10. Sicherheit
+Die Entwickler:innen der App setzen technische und organisatorische Maßnahmen ein, um personenbezogene Daten vor Verlust, Missbrauch oder unbefugtem Zugriff zu schützen. Dennoch kann bei einer studentischen Testumgebung keine vollständige Sicherheit garantiert werden.
+
+11. Keine kommerzielle Nutzung
+Die App „Challenge Accepted“ ist ein studentisches Projekt und dient ausschließlich zu Lernzwecken. Es findet keine werbliche oder wirtschaftliche Nutzung der Daten statt.
+
+]]>
+</string>
+
+
+</resources>

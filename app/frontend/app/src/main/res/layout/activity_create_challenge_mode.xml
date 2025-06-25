@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    tools:context=".DashboardActivity">
+
+    <!-- Gruppenname -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="16dp"
+        android:background="@drawable/grey_background"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:padding="8dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="8dp"
+            android:text="The Hustlers"
+            android:textColor="@color/white"
+            android:textSize="25sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <!-- Zurück-Button -->
+    <ImageButton
+        android:id="@+id/btn_back"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_margin="16dp"
+        android:background="@drawable/grey_background"
+        android:src="@drawable/back_icon"
+        android:tint="@android:color/white"
+        tools:ignore="UseAppTint"
+        android:contentDescription="@string/back_button_desc" />
+
+    <!-- Modusauswahl -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/btn_confirm_selection"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="92dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/grey_background"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Standard-Modus -->
+        <FrameLayout
+            android:id="@+id/fl_standard"
+            android:layout_width="match_parent"
+            android:layout_height="215dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/green_frame"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/iv_standard"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/grey_background"
+                android:clipToOutline="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/standard_mode_pic" />
+
+            <TextView
+                android:id="@+id/tv_standard"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/bright_grey_frame"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="6dp"
+                android:text="Standard"
+                android:textColor="@color/white"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+        </FrameLayout>
+
+        <!-- Survival-Modus -->
+        <FrameLayout
+            android:id="@+id/fl_survival"
+            android:layout_width="match_parent"
+            android:layout_height="215dp">
+
+            <ImageView
+                android:id="@+id/iv_survival"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/grey_background"
+                android:clipToOutline="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/survival_mode_pic" />
+
+            <TextView
+                android:id="@+id/tv_survival"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/bright_grey_frame"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="6dp"
+                android:text="Survival"
+                android:textColor="@color/white"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+        </FrameLayout>
+    </LinearLayout>
+
+    <!-- Check Button -->
+    <ImageButton
+        android:id="@+id/btn_confirm_selection"
+        android:layout_width="80dp"
+        android:layout_height="50dp"
+        android:layout_above="@id/ll_bottom_navigation"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="16dp"
+        android:background="@drawable/green_button"
+        android:src="@drawable/check_icon"
+        android:contentDescription="@string/desc_check_confirm" />
+
+    <!-- Bottom Navigation -->
+    <LinearLayout
+        android:id="@+id/ll_bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/grey_300"
+        android:orientation="horizontal"
+        android:weightSum="4">
+
+        <!-- Community -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/nav_group"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/group_white_icon" />
+        </LinearLayout>
+
+        <!-- Home -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/nav_home"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/home_white_icon" />
+        </LinearLayout>
+
+        <!-- Add -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/nav_add"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/add_blue_icon" />
+        </LinearLayout>
+
+        <!-- Profile -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/nav_profile"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/profile_white_icon" />
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

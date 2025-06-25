@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Background Image -->
+    <ImageView
+        android:id="@+id/iv_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/login_background_pic" />
+
+    <!-- Semi-transparent Overlay -->
+    <View
+        android:id="@+id/view_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#99000000" />
+
+    <!-- Logo -->
+    <ImageView
+        android:id="@+id/imgLogo"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="60dp"
+        android:contentDescription="App Logo"
+        android:src="@drawable/logo" />
+
+
+    <!-- Start Button-->
+    <Button
+        android:id="@+id/btnStart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/imgLogo"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="150dp"
+        android:background="@drawable/green_button"
+        android:backgroundTint="@color/blue"
+        android:padding="10dp"
+        android:text="Jetzt Starten!"
+        android:textColor="@color/white"
+        android:textSize="26sp"
+        android:textStyle="bold" />
+
+    <!-- Registriert-Frage-->
+    <TextView
+        android:id="@+id/txtRegistriert"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btnStart"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="60dp"
+        android:text="Schon registriert?"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
+
+    <!-- Anmeldelink-->
+    <TextView
+        android:id="@+id/txtLogin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txtRegistriert"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"
+        android:text="Dann geht es hier zur Anmeldung >"
+        android:textColor="@color/blue"
+        android:textSize="20sp" />
+
+
+</RelativeLayout>

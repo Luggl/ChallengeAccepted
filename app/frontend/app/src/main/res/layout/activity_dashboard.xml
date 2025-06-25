@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    tools:context=".DashboardActivity">
+
+    <!-- Scrollbarer Inhalt -->
+    <ScrollView
+        android:id="@+id/scroll_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/ll_bottom_navigation">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+        <!-- Greeting Section mit Streak -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cv_greeting"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_margin="16dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/iv_background"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/profile_picture" />
+
+                <TextView
+                    android:id="@+id/tv_greeting"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/grey_background"
+                    android:padding="8dp"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="Hi Mara!"
+                    android:textColor="@color/white"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:id="@+id/ll_streak_display"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_margin="10dp"
+                    android:orientation="horizontal"
+                    android:background="@drawable/grey_background"
+                    android:padding="6dp">
+
+                    <ImageView
+                        android:id="@+id/iv_streak_icon"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/flash_blue_icon" />
+
+                    <TextView
+                        android:id="@+id/tv_streak_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="3"
+                        android:textColor="@color/white"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:layout_marginStart="4dp" />
+                </LinearLayout>
+            </RelativeLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Kalender -->
+        <LinearLayout
+            android:id="@+id/calendar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/cv_greeting"
+            android:layout_margin="16dp"
+            android:background="@drawable/grey_background"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:background="@drawable/green_frame"
+                android:gravity="center"
+                android:text="Mo"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:background="@drawable/red_frame"
+                android:gravity="center"
+                android:text="Di"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:background="@drawable/green_frame"
+                android:gravity="center"
+                android:text="Mi"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:background="@drawable/green_frame"
+                android:gravity="center"
+                android:text="Do"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:background="@drawable/green_frame"
+                android:gravity="center"
+                android:text="Fr"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:background="@drawable/green_frame"
+                android:gravity="center"
+                android:text="Sa"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:background="@drawable/grey_background"
+                android:gravity="center"
+                android:text="So"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+            <!-- Video Placeholder (temporär als Bild) --> <!-- Video Card (mit ExoPlayer ersetzt VideoView) -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cv_video"
+                android:layout_width="4000dp"
+                android:layout_height="300dp"
+                android:layout_below="@id/ll_user_profiles"
+                android:layout_centerHorizontal="true"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp">
+
+                <ImageView
+                    android:id="@+id/video_placeholder"
+                    android:layout_width="wrap_content"
+                    android:layout_height="300dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/login_background_pic" />
+
+                <TextView
+                    android:id="@+id/activity"
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/ll_user_profiles"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginLeft="50dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/grey_background"
+                    android:text="    Liegestütze - 10 Stück"
+                    android:textColor="@color/white"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/description"
+                    android:layout_width="330dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/activity"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="250dp"
+                    android:background="@drawable/grey_background"
+                    android:text="Die heutigen Liegestütze waren deutlich angenehmer in der Ausführung!"
+                    android:textColor="@color/white"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_below="@id/description"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="50dp"
+                    android:background="@drawable/grey_background"
+                    android:src="@drawable/mute_icon" />
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_below="@id/description"
+                    android:layout_marginLeft="360dp"
+                    android:layout_marginTop="250dp"
+                    android:background="@drawable/grey_background"
+                    android:src="@drawable/comment_icon" />
+
+            </androidx.cardview.widget.CardView>
+
+            <!-- Bewertungsbuttons -->
+            <LinearLayout
+                android:id="@+id/ll_action_buttons"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/cv_video"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <Button
+                    android:id="@+id/btn_accepted"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/green_frame"
+                    android:text="Accepted"
+                    android:textColor="@color/button_green" />
+
+                <Button
+                    android:id="@+id/btn_rejected"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/red_frame"
+                    android:text="Rejected"
+                    android:textColor="@color/button_red" />
+            </LinearLayout>
+    </LinearLayout>
+</ScrollView>
+
+    <!-- Bottom Navigation -->
+<LinearLayout
+android:id="@+id/ll_bottom_navigation"
+android:layout_width="match_parent"
+android:layout_height="60dp"
+android:layout_alignParentBottom="true"
+android:background="@color/grey_300"
+android:orientation="horizontal"
+android:weightSum="4">
+
+<!-- Community Icon -->
+<LinearLayout
+    android:layout_width="0dp"
+    android:layout_height="match_parent"
+    android:layout_weight="1"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/nav_group"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/group_white_icon" />
+
+</LinearLayout>
+
+<!-- Home Icon -->
+<LinearLayout
+    android:layout_width="0dp"
+    android:layout_height="match_parent"
+    android:layout_weight="1"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/nav_home"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/home_blue_icon" />
+
+</LinearLayout>
+
+<!-- Add Icon -->
+<LinearLayout
+    android:layout_width="0dp"
+    android:layout_height="match_parent"
+    android:layout_weight="1"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/nav_add"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/add_white_icon" />
+
+</LinearLayout>
+
+<!-- Profile Icon -->
+<LinearLayout
+    android:layout_width="0dp"
+    android:layout_height="match_parent"
+    android:layout_weight="1"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/nav_profile"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/profile_white_icon" />
+
+</LinearLayout>
+</LinearLayout>
+    </RelativeLayout>

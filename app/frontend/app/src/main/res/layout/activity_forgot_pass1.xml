@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/login_background_pic">
+
+    <!-- Background Image -->
+    <ImageView
+        android:id="@+id/iv_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/login_background_pic" />
+
+    <!-- Overlay -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#99000000" />
+
+    <!-- Logo oben links -->
+    <ImageView
+        android:id="@+id/logo_top"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="40dp"
+        android:contentDescription="App Logo"
+        android:src="@drawable/logo" />
+
+    <!-- Titel -->
+    <TextView
+        android:id="@+id/title_passwort_vergessen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/logo_top"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:text=" Passwort\nVergessen"
+        android:textColor="@color/accent_bright"
+        android:textSize="40sp"
+        android:textStyle="bold" />
+
+    <!-- Email -->
+    <EditText
+        android:id="@+id/edit_email"
+        android:layout_width="280dp"
+        android:layout_height="50dp"
+        android:layout_below="@id/title_passwort_vergessen"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="120dp"
+        android:background="@drawable/textfield"
+        android:hint="Email"
+        android:inputType="textEmailAddress"
+        android:paddingHorizontal="16dp"
+        android:textColor="@color/black"
+        android:textColorHint="@color/black" />
+
+    <!-- Los geht's Button -->
+    <Button
+        android:id="@+id/button_request_mail"
+        android:layout_width="250dp"
+        android:layout_height="60dp"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="650dp"
+        android:background="@drawable/green_button"
+        android:text="Mail anfordern"
+        android:textColor="@color/white"
+        android:textSize="26sp"
+        android:textStyle="bold" />
+
+</RelativeLayout>
