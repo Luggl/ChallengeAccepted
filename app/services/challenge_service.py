@@ -59,7 +59,8 @@ def create_challenge_standard_logic(user_id, data, group_id):
         startdatum=startdatum.date(),
         enddatum=enddatum.date(),
         dauer=dauer,
-        ersteller_gruppe_id=group_id_uuid
+        ersteller_gruppe_id=group_id_uuid,
+        typ="standard"
     )
 
     create_challenge(challenge)
@@ -144,7 +145,8 @@ def create_challenge_survival_logic(user_id, data, group_id):
         gruppe_id=group_id_uuid,
         ersteller_user_id=user_id_uuid,
         ersteller_gruppe_id=group_id_uuid,
-        startdatum=startdatum.date()
+        startdatum=startdatum.date(),
+        typ="survival"
     )
 
     create_challenge(challenge)
@@ -179,8 +181,11 @@ def create_challenge_survival_logic(user_id, data, group_id):
 
     return response(True,
                     data={
-                        "id": uuid.UUID(bytes=challenge.challenge_id).hex
-                    })
+        "challenge_id": str(uuid.UUID(bytes=challenge.challenge_id)),
+        "typ": challenge.typ,
+        "startdatum": challenge.startdatum.isoformat()
+                        }
+                    )
 
 
 # ---------- Challenge löschen ----------

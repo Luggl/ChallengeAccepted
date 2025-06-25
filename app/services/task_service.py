@@ -36,6 +36,11 @@ UPLOAD_ROOT = "media/aufgabenerfuellung"
 
 # Alle Tasks für einen User abfragen
 def get_task_logic(user_id):
+    # Survival Tasks erzeugen, falls neue Vorhanden!
+    result = generate_survival_tasks_for_all_challenges()
+    if not result["success"]:
+        return result
+
     #Alle Memberships des Users holen
     memberships = find_memberships_by_user(get_uuid_formated_id(user_id))
     datum = date_today()

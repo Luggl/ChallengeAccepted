@@ -1,12 +1,6 @@
-import uuid
-
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
-
-from services.task_service import generate_standard_tasks_for_challenge_logic, get_task_by_date, generate_survival_tasks_for_all_challenges
-from services.task_service import *
-from repositories.task_repository import find_task_by_id
-from utils.auth_utils import get_uuid_formated_id
+from services.task_service import get_task_logic, complete_task_logic, vote_logic, generate_survival_tasks_for_all_challenges
 
 # Blueprint für alle Aufgaben-Routen
 task_bp = Blueprint("task", __name__)

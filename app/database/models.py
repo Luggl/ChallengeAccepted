@@ -262,7 +262,7 @@ class Aufgabe(Base):
     sportart_id=Column(BLOB, ForeignKey("sportart.sportart_id"))
     sportart=relationship("Sportart")
 
-    erfuellungen=relationship("Aufgabenerfuellung",back_populates="aufgabe")
+    erfuellungen=relationship("Aufgabenerfuellung",back_populates="aufgabe", cascade="all, delete-orphan")
 
     __mapper_args__ = {
             "polymorphic_on": typ,
