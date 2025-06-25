@@ -1,7 +1,6 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token, get_jwt
 from app import blacklisted_tokens
-from utils.auth_utils import get_uuid_formated_id
 from app.services.user_service import (
     register_user_logic,
     login_user_logic,
@@ -96,10 +95,10 @@ def reset_password():
 @jwt_required() # Sicherstellen, dass User eingeloggt ist
 def delete_user():
     # Prüfen, wer der aktuell eingeloggte User ist
-    current_user_id = get_uuid_formated_id(get_jwt_identity())
+    user_id = get_jwt_identity()
 
     # Logik in Services:
-    message = delete_user_logic(current_user_id)
+    message = delete_user_logic(user_id)
 
     if not message["success"]:
         return jsonify({"error": message}), 404

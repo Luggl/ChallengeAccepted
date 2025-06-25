@@ -8,6 +8,7 @@ from services.group_service import (
     get_group_feed_logic,
     leave_group_logic
 )
+from utils.auth_utils import get_uuid_formated_id
 
 # Blueprint für alle Gruppenfunktionen
 group_bp = Blueprint('group', __name__)
@@ -39,17 +40,14 @@ def create_group():
 @group_bp.route('/api/invitationlink', methods=['GET'])
 @jwt_required()
 def invitation_link():
-    current_user_id = uuid.UUID(get_jwt_identity()).bytes
-
+    user_id = get_jwt_identity()
     # Gruppe-ID aus den Query-Parametern holen
-    gruppe_id_str = request.args.get('gruppe_id')
+    group_id = request.args.get('gruppe_id')
 
-    if not gruppe_id_str:
+    if not group_id:
         return jsonify({"error": "gruppe_id ist erforderlich!"}), 400
 
-    gruppe_id = uuid.UUID(gruppe_id_str).bytes
-
-    result = invitation_link_logic(gruppe_id, current_user_id)
+    result = invitation_link_logic(gruppe_id, current_user_id_uuid)
 
     if not result['success']:
         return jsonify({"error": result['data']}), 400

@@ -15,6 +15,7 @@ from app.repositories.user_repository import (
 )
 
 import uuid
+from utils.auth_utils import get_uuid_formated_id
 
 ALLOWED_UPDATE_FIELDS = {"username", "email", "profilbild"}
 
@@ -205,6 +206,7 @@ def update_password_logic(user_id_str, old_password, new_password):
 
 # User löschen (wird über ID angesprochen)
 def delete_user_logic(user_id):
+    user_id = get_uuid_formated_id(user_id)
     result = delete_user_by_id(user_id)
     if not result:
         return response(False, error="User konnte nicht gelöscht werden oder existiert nicht.")

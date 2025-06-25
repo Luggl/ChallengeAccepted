@@ -31,10 +31,10 @@ def create_challenge_standard():
         return jsonify({"error": result["error"]}), 400
 
     challenge_id_str = result["data"]["challenge_id"]
-    challenge_id = uuid.UUID(challenge_id_str).bytes
+    challenge_id_uuid = get_uuid_formated_id(challenge_id_str)
 
     # Aufgaben direkt erzeugen
-    aufgaben_result = generate_standard_tasks_for_challenge_logic(challenge_id)
+    aufgaben_result = generate_standard_tasks_for_challenge_logic(challenge_id_uuid)
 
     if not aufgaben_result["success"]:
         return jsonify({

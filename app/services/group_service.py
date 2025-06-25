@@ -53,10 +53,12 @@ def create_group_logic(name, beschreibung, gruppenbild, created_by):
 
 # Einladung erstellen
 def invitation_link_logic(group_id, user_id):
+    group_id = get_uuid_formated_id(group_id)
     group = find_group_by_id(group_id)
     if not group:
         return response(False, "Gruppe nicht gefunden.")
 
+    user_id = get_uuid_formated_id(user_id)
     membership = find_membership(user_id, group.gruppe_id)
     if not membership:
         return response(False, "User nicht Member der Gruppe!")
