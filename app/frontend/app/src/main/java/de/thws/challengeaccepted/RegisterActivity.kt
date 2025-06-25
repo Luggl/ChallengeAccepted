@@ -7,15 +7,22 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
+import de.thws.challengeaccepted.models.RegisterRequest
+import de.thws.challengeaccepted.network.ApiClient
+import de.thws.challengeaccepted.network.UserService
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import android.util.Patterns
+
 
 class RegisterActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        // Randloses Layout aktivieren
         WindowCompat.setDecorFitsSystemWindows(window, false)
-
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
 
@@ -26,16 +33,27 @@ class RegisterActivity : AppCompatActivity() {
 
         val registerButton = findViewById<Button>(R.id.button_start_regist)
         registerButton.setOnClickListener {
-
             val user = username.text.toString()
             val mail = email.text.toString()
             val pw = password.text.toString()
             val rpw = repeatPassword.text.toString()
 
-            //if (user.isNotEmpty() && mail.isNotEmpty() && pw.isNotEmpty() && rpw.isNotEmpty()) {
-                val intent = Intent(this, DashboardActivity::class.java)
-                startActivity(intent)
-            //}
+            // Felder validieren
+            if (user.isEmpty() || mail.isEmpty() || pw.isEmpty() || rpw.isEmpty()) {
+                Toast.makeText(this, "Bitte alle Felder ausfüllen!", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            if (!Patterns.EMAIL_ADDRESS.matcher(mail).matches()) {
+                Toast.makeText(this, "Bitte eine gültige E-Mail-Adresse eingeben!", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            if (pw != rpw) {
+                Toast.makeText(this, "Passwörter stimmen nicht überein!", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            // Jetzt API-Aufruf
+            registerUser(user, mail, pw)
         }
 
         val alreadyAccount = findViewById<TextView>(R.id.text_already_account)
@@ -43,5 +61,28 @@ class RegisterActivity : AppCompatActivity() {
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
         }
+    }
+
+    private fun registerUser(username: String, email: String, password: String) {
+        val service = ApiClient.retrofit.create(UserService::class.java)
+        val request = RegisterRequest(username, email, password)
+        val call = service.registerUser(request)
+        call.enqueue(object : Callback<Void> {
+            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                if (response.isSuccessful) {
+                    Toast.makeText(this@RegisterActivity, "Registrierung erfolgreich!", Toast.LENGTH_SHORT).show()
+                    // Optional: Direkt zum Login oder Dashboard weiterleiten
+                    val intent = Intent(this@RegisterActivity, LoginActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                } else {
+                    Toast.makeText(this@RegisterActivity, "Registrierung fehlgeschlagen!", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onFailure(call: Call<Void>, t: Throwable) {
+                Toast.makeText(this@RegisterActivity, "Netzwerkfehler: ${t.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 }
