@@ -11,8 +11,6 @@
           <set>
             <option value="$PROJECT_DIR$/app/frontend" />
             <option value="$PROJECT_DIR$/app/frontend/app" />
-            <option value="$PROJECT_DIR$/app/frontend/app/frontend" />
-            <option value="$PROJECT_DIR$/app/frontend/app/frontend/app" />
           </set>
         </option>
       </GradleProjectSettings>
