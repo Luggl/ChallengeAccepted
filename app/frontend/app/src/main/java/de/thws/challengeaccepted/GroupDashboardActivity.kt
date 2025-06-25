@@ -82,9 +82,8 @@ class GroupDashboardActivity : AppCompatActivity() {
                 alertDialog.findViewById<TextView>(android.R.id.message)?.setTextColor(Color.WHITE)
 
                 // Buttonfarben
-                alertDialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(getColor(R.color.button_green))
-                alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(getColor(R.color.button_green))
-                alertDialog.getButton(AlertDialog.BUTTON_NEUTRAL)?.setTextColor(Color.LTGRAY)
+                alertDialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(getColor(R.color.white))
+                alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(getColor(R.color.white))
             }
 
             alertDialog.show()
