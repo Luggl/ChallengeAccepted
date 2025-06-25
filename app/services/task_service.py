@@ -10,7 +10,7 @@ from app.repositories.task_repository import (
     has_user_already_voted,
     create_user_vote,
     find_tasks_by_user_id,
-    find_aufgabenerfuellung_by_challenge_and_date
+    find_aufgabenerfuellung_by_challenge_and_date, update_task_by_video_url
 )
 from app.database.models import BeitragVotes, Beitrag, AufgabeTyp, StandardAufgabe
 from repositories.beitrag_repository import (
@@ -82,6 +82,9 @@ def complete_task_logic(erfuellung_id, user_id, description, video_file):
     if not success["success"]:
         return success
 
+    videopath = success["data"]
+    # Videopfad in Aufgabenerfüllung speichern
+    success= update_task_by_video_url(erfuellung_id_uuid, videopath)
     #Aufgabenerfüllung Status updaten
     success = mark_task_as_complete(erfuellung_id_uuid)
     if not success:
@@ -112,7 +115,7 @@ def safe_video_logic(task_id, video_file):
     full_path = os.path.join(upload_path, filename)
     try:
         video_file.save(full_path)
-        return response(True, filename)
+        return response(True, data=full_path)
     except Exception as e:
         return response(False, "Fehler beim Speichern des Videos!")
 
