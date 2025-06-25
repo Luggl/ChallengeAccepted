@@ -65,7 +65,7 @@ def get_task_logic(user_id):
 
 
 # Aufgabe als erledigt markieren
-def complete_task_logic(erfuellung_id, user_id, video_file, description):
+def complete_task_logic(erfuellung_id, user_id, description, video_file):
     user_id_uuid = get_uuid_formated_id(user_id)
     erfuellung_id_uuid = get_uuid_formated_id(erfuellung_id)
     #Prüfen, ob User diese Task überhaupt hat
@@ -105,7 +105,8 @@ def complete_task_logic(erfuellung_id, user_id, video_file, description):
 
 def safe_video_logic(task_id, video_file):
     filename = secure_filename(f"{uuid.uuid4()}.mp4")
-    upload_path = os.path.join(UPLOAD_ROOT, task_id)
+    task_id_str = str(uuid.UUID(bytes=task_id))
+    upload_path = os.path.join(UPLOAD_ROOT, task_id_str)
     os.makedirs(upload_path, exist_ok=True)
 
     full_path = os.path.join(upload_path, filename)
