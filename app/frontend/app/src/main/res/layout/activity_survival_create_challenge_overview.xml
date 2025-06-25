@@ -7,6 +7,7 @@
     tools:context=".DashboardActivity">
 
     <LinearLayout
+        android:id="@+id/header"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
@@ -27,14 +28,25 @@
             android:textStyle="bold" />
     </LinearLayout>
 
+    <!-- Zurück-Button -->
+    <ImageButton
+        android:id="@+id/btn_back"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_margin="28dp"
+        android:background="@drawable/grey_background"
+        android:src="@drawable/back_icon"
+        android:tint="@android:color/white"
+        tools:ignore="UseAppTint"
+        android:contentDescription="@string/back_button_desc" />
 
     <!-- Hauptinhalt -->
     <LinearLayout
         android:id="@+id/main_content"
+        android:layout_below="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
+        android:layout_margin="16dp"
         android:orientation="vertical">
 
         <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -112,7 +124,7 @@
         android:id="@+id/btn_confirm_selection"
         android:layout_width="80dp"
         android:layout_height="50dp"
-        android:layout_above="@id/ll_bottom_navigation"
+        android:layout_below="@id/main_content"
         android:layout_alignParentEnd="true"
         android:layout_margin="16dp"
         android:background="@drawable/green_button"

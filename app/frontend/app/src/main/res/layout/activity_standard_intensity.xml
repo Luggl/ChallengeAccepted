@@ -110,6 +110,12 @@
                     android:textStyle="bold"
                     />
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="12dp">
                 <SeekBar
                     android:id="@+id/seekbar_start"
                     android:layout_width="200dp"
@@ -118,6 +124,7 @@
                     android:progress="0" />
 
             </LinearLayout>
+    </LinearLayout>
 
         <!-- Endintensität -->
         <LinearLayout

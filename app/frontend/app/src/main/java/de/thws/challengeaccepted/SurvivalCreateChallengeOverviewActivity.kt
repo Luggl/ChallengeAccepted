@@ -13,12 +13,18 @@ class SurvivalCreateChallengeOverviewActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_survival_create_challenge_overview)
 
+        // Navigation Back
+        val navBack = findViewById<ImageView>(R.id.btn_back)
+        navBack.setOnClickListener {
+            val intent = Intent(this, SurvivalIntensityActivity::class.java)
+            startActivity(intent)
+        }
+
         tableLayout = findViewById(R.id.table_layout)
 
         val intesityMap =
             intent.getSerializableExtra("intensities") as? HashMap<String, String> ?: hashMapOf()
         fillTableNeutral(intesityMap)
-
 
         // Bottom Navigation
         val navGroup = findViewById<ImageView>(R.id.nav_group)

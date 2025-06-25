@@ -16,11 +16,38 @@ class StandardCreateChallengeOverviewActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_standard_create_challenge_overview)
 
+        // Navigation Back
+        val navBack = findViewById<ImageView>(R.id.btn_back)
+        navBack.setOnClickListener {
+            val intent = Intent(this, StandardIntensityActivity::class.java)
+            startActivity(intent)
+        }
+
         tableLayout = findViewById(R.id.table_layout)
 
         val intensityMap =
             intent.getSerializableExtra("intensities") as? HashMap<String, Pair<Int, Int>> ?: hashMapOf()
         fillTable(intensityMap)
+
+
+        // Button Navigation
+        val navGroup = findViewById<ImageView>(R.id.nav_group)
+        navGroup.setOnClickListener {
+            val intent = Intent(this, GroupOverviewActivity::class.java)
+            startActivity(intent)
+        }
+
+        val navHome = findViewById<ImageView>(R.id.nav_home)
+        navHome.setOnClickListener {
+            val intent = Intent(this, DashboardActivity::class.java)
+            startActivity(intent)
+        }
+
+        val navProfile = findViewById<ImageView>(R.id.nav_profile)
+        navProfile.setOnClickListener {
+            val intent = Intent(this, ProfileActivity::class.java)
+            startActivity(intent)
+        }
     }
     private fun fillTable(data: Map<String, Pair<Int, Int>>) {
         for ((exercise, pair) in data) {

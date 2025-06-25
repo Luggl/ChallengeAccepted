@@ -7,9 +7,10 @@
     android:background="@color/black"
     tools:context=".DashboardActivity">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <!-- Greeting Section mit Streak -->
         <androidx.cardview.widget.CardView
@@ -245,5 +246,5 @@
 
         </LinearLayout>
 
-    </RelativeLayout>
+    </LinearLayout>
 </ScrollView>

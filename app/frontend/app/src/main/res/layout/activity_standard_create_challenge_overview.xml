@@ -136,7 +136,7 @@
         android:id="@+id/btn_confirm_selection"
         android:layout_width="80dp"
         android:layout_height="50dp"
-        android:layout_above="@id/ll_bottom_navigation"
+        android:layout_below="@+id/main_content"
         android:layout_alignParentEnd="true"
         android:layout_margin="16dp"
         android:background="@drawable/green_button"
