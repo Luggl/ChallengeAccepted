@@ -1,0 +1,116 @@
+[
+  {
+    "bezeichnung": "Push-Ups",
+    "unit": "anzahl",
+    "intervalle": {
+      "easy": [
+        5,
+        15
+      ],
+      "medium": [
+        12,
+        30
+      ],
+      "hard": [
+        25,
+        50
+      ]
+    },
+    "steigerungsfaktor": 1.1
+  },
+  {
+    "bezeichnung": "Sit-Ups",
+    "unit": "anzahl",
+    "intervalle": {
+      "easy": [
+        10,
+        25
+      ],
+      "medium": [
+        25,
+        45
+      ],
+      "hard": [
+        45,
+        70
+      ]
+    },
+    "steigerungsfaktor": 1.0
+  },
+  {
+    "bezeichnung": "Squats",
+    "unit": "anzahl",
+    "intervalle": {
+      "easy": [
+        15,
+        30
+      ],
+      "medium": [
+        30,
+        60
+      ],
+      "hard": [
+        60,
+        100
+      ]
+    },
+    "steigerungsfaktor": 1.0
+  },
+  {
+    "bezeichnung": "Lunges",
+    "unit": "anzahl",
+    "intervalle": {
+      "easy": [
+        15,
+        20
+      ],
+      "medium": [
+        25,
+        40
+      ],
+      "hard": [
+        40,
+        60
+      ]
+    },
+    "steigerungsfaktor": 1.0
+  },
+  {
+    "bezeichnung": "Burpees",
+    "unit": "anzahl",
+    "intervalle": {
+      "easy": [
+        5,
+        15
+      ],
+      "medium": [
+        15,
+        30
+      ],
+      "hard": [
+        25,
+        50
+      ]
+    },
+    "steigerungsfaktor": 1.3
+  },
+  {
+    "bezeichnung": "Plank",
+    "unit": "dauer",
+    "intervalle": {
+      "easy": [
+        20,
+        45
+      ],
+      "medium": [
+        45,
+        75
+      ],
+      "hard": [
+        75,
+        120
+      ]
+    },
+    "steigerungsfaktor": 0.6
+  }
+]
