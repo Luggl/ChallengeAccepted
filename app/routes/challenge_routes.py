@@ -2,8 +2,6 @@ import uuid
 
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
-
-from repositories.challenge_repository import find_active_challenges_by_group
 from services.task_service import generate_standard_tasks_for_challenge_logic
 from services.challenge_service import (
     create_challenge_standard_logic,

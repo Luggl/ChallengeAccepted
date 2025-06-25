@@ -3,7 +3,7 @@ from app.database.models import StandardChallenge, Survivalchallenge, StandardCh
 from app.repositories.challenge_repository import (
     create_challenge,
     delete_challenge_by_id, save_standard_challenge_sportart, save_survival_challenge_sportart,
-    is_user_allowed_to_delete, find_active_challenges_by_group,
+    is_user_allowed_to_delete, find_active_challenge_by_group,
     #    is_user_allowed_to_delete
 )
 from app.repositories.sportart_repository import find_sportart_by_id
@@ -27,7 +27,7 @@ def create_challenge_standard_logic(user_id, data, group_id):
         return response(False, error="Ungültige User-ID")
 
     # Nicht mehrere Challenges gleichzeitig erlaubt
-    active_challenge_check = find_active_challenges_by_group(group_id_uuid)
+    active_challenge_check = find_active_challenge_by_group(group_id_uuid)
     if active_challenge_check:
         return response(False, error="Nur eine aktive Challenge möglich!")
 
@@ -58,7 +58,8 @@ def create_challenge_standard_logic(user_id, data, group_id):
         ersteller_user_id=user_id_uuid,
         startdatum=startdatum.date(),
         enddatum=enddatum.date(),
-        dauer=dauer
+        dauer=dauer,
+        ersteller_gruppe_id=group_id_uuid
     )
 
     create_challenge(challenge)
@@ -110,7 +111,7 @@ def create_challenge_survival_logic(user_id, data, group_id):
         return response(False, error="Ungültige Gruppen-ID")
 
     # Nicht mehrere Challenges gleichzeitig erlaubt
-    active_challenge_check = find_active_challenges_by_group(group_id_uuid)
+    active_challenge_check = find_active_challenge_by_group(group_id_uuid)
     if active_challenge_check:
         return response(False, error="Nur eine aktive Challenge möglich!")
 
@@ -134,15 +135,15 @@ def create_challenge_survival_logic(user_id, data, group_id):
         return response(False, error="Ungültiges Datumsformat für das Startdatum")
     # User-ID in bytes umwandeln
     try:
-        user_id_bytes = uuid.UUID(user_id).bytes
+        user_id_uuid = uuid.UUID(user_id).bytes
     except ValueError:
         return response(False, error="Ungültige User-ID (UUID erwartet")
     # Challenge-Objekt anlegen
     challenge = Survivalchallenge(
         challenge_id=uuid.uuid4().bytes,
-        gruppe_id=group_id,
-        ersteller_user_id=user_id_bytes,
-        ersteller_gruppe_id=group_id,
+        gruppe_id=group_id_uuid,
+        ersteller_user_id=user_id_uuid,
+        ersteller_gruppe_id=group_id_uuid,
         startdatum=startdatum.date()
     )
 

@@ -16,7 +16,7 @@ from repositories.challenge_repository import (
     find_standard_challenge_by_id,
     find_standard_challenge_sportarten_by_challenge_id,
     find_all_survival_challenges,
-    find_active_challenges_by_group
+    find_active_challenge_by_group
 )
 import uuid
 import random
@@ -46,14 +46,10 @@ def get_task_logic(user_id):
     aufgabenerfuellungen = []
     #Für alle Memberships die jeweiligen Tasks laden
     for membership in memberships:
-        challenges = find_active_challenges_by_group(membership.gruppe_id)
-        for challenge in challenges:
-            aufgabenerfuellung = serialize_aufgabenerfuellung(find_aufgabenerfuellung_by_challenge_and_date(challenge.challenge_id, datum))
-
-            if aufgabenerfuellung:
-                aufgabenerfuellungen.append(aufgabenerfuellung)
-
-
+        challenge = find_active_challenge_by_group(membership.gruppe_id)
+        aufgabenerfuellung = find_aufgabenerfuellung_by_challenge_and_date(challenge.challenge_id, datum)
+        if aufgabenerfuellung:
+            aufgabenerfuellungen.append(serialize_aufgabenerfuellung(aufgabenerfuellung))
 
     return response(True, data=aufgabenerfuellungen)
 
