@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 
+
 class SurvivalIntensityActivity : AppCompatActivity() {
 
     //Views
@@ -33,7 +34,6 @@ class SurvivalIntensityActivity : AppCompatActivity() {
         "Planks" to R.drawable.plank_icon,
         "Squats" to R.drawable.squat_icon,
         "Burpees" to R.drawable.burpees_icon
-
     )
 
 
@@ -103,8 +103,8 @@ class SurvivalIntensityActivity : AppCompatActivity() {
             }else{
                 //alle Übungen abgeschlossen -> weitergeben
                 Toast.makeText(this, "Fertig! Ausgewählt: $intensityMap", Toast.LENGTH_SHORT).show()
-                val intent=Intent(this, SurvivalChallengeOverviewActivity::class.java)
-                intent.putExtra("intesities", HashMap(intensityMap))
+                val intent=Intent(this, SurvivalCreateChallengeOverviewActivity::class.java)
+                intent.putExtra("intensities", HashMap(intensityMap))
                 startActivity(intent)
                 finish()
             }
