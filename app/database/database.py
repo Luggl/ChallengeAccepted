@@ -2,7 +2,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
 from sqlalchemy import event
 
-DATABASE_URL = r"sqlite:////mydatabase.db"
+DATABASE_URL = r"sqlite:////root/ChallengeAccepted/mydatabase.db"
 
 Base=declarative_base()
 engine=create_engine(DATABASE_URL, echo=True)
