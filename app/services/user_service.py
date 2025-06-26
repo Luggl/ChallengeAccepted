@@ -16,6 +16,7 @@ from app.repositories.user_repository import (
 
 import uuid
 from utils.auth_utils import get_uuid_formated_id
+from utils.serialize import serialize_user
 
 ALLOWED_UPDATE_FIELDS = {"username", "email", "profilbild"}
 
@@ -68,7 +69,7 @@ def login_user_logic(email, password):
 
     # Wenn Login erfolgreich, dann Daten zurückgeben
     return response(True, data={
-        "id": get_uuid_formated_id(user.user_id),
+        "id": uuid.UUID(bytes=user.user_id),
         "username": user.username,
         "email": user.email
     })
