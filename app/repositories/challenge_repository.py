@@ -1,7 +1,5 @@
 from datetime import date
-
 from sqlalchemy.orm import joinedload
-
 from app.database.models import Challenge, StandardChallengeSportart, Sportart, SurvivalChallengeSportart, \
     StandardChallenge, Survivalchallenge
 from app import db
@@ -20,11 +18,10 @@ def find_sportart_by_id(sportart_id):
         result = session.query(Sportart).filter_by(sportart_id=sportart_id).first()
         return result
 
-def find_active_challenges_by_group(gruppe_id):
-    """Finde alle Challenges einer Gruppe."""
+def find_active_challenge_by_group(gruppe_id):
     with SessionLocal() as session:
         return session.query(Challenge).filter(Challenge.gruppe_id==gruppe_id,
-                                               Challenge.active==True).all()
+                                               Challenge.active==True).first()
 
 
 def find_all_survival_challenges():

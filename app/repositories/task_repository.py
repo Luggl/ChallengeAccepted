@@ -1,6 +1,5 @@
 from sqlalchemy import func
 from sqlalchemy.orm import joinedload
-
 from app.database.database import SessionLocal
 from app.database.models import Aufgabe, AufgabeStatus, Aufgabenerfuellung, StandardAufgabe, SurvivalAufgabe
 from repositories.beitrag_repository import find_beitrag_vote_by_user_beitrag
@@ -85,10 +84,18 @@ def count_survival_tasks_for_challenge(challenge_id):
             typ="survival"
         ).scalar()
 
-
-def mark_task_as_complete(aufgabenerfuellung_id):
+def update_task_by_video_url(erfuellung_id, videopath):
     with SessionLocal() as session:
-        aufgabenerfuellung = session.query(Aufgabenerfuellung).filter_by(aufgabenerfuellung_id=aufgabenerfuellung_id).first()
+        aufgabenerfuellung = session.query(Aufgabenerfuellung).filter_by(erfuellung_id=erfuellung_id).first()
+        aufgabenerfuellung.video_url = videopath
+        session.commit()
+        if not aufgabenerfuellung:
+            return None
+        return aufgabenerfuellung
+
+def mark_task_as_complete(erfuellung_id):
+    with SessionLocal() as session:
+        aufgabenerfuellung = session.query(Aufgabenerfuellung).filter_by(erfuellung_id=erfuellung_id).first()
         aufgabenerfuellung.status=AufgabeStatus.abgeschlossen
         session.commit()
         if not aufgabenerfuellung:

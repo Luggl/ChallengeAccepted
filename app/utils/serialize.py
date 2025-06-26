@@ -47,3 +47,10 @@ def serialize_achievements(achievement):
         "condition_type": achievement.condition_type,
         "condition_value": achievement.condition_value,
     }
+
+def serialize_membership(membership):
+    return{
+        "user_id": membership.user_id.hex(),
+        "gruppe_id": membership.gruppe_id.hex(),
+        "isAdmin": membership.isAdmin,
+    }

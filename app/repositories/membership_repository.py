@@ -1,7 +1,6 @@
 # app/repositories/membership_repository.py
 
 from app.database.models import Membership
-from app import db
 from app.database.database import SessionLocal
 
 def find_membership(user_id, gruppe_id):

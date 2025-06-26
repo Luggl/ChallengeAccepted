@@ -1,9 +1,7 @@
 # app/repositories/group_repository.py
 
 from app.database.models import Gruppe, Beitrag, Aufgabenerfuellung
-from app import db
 from app.database.database import SessionLocal
-from repositories.membership_repository import find_memberships_by_user
 from utils.serialize import serialize_beitrag
 
 

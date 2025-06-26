@@ -1,11 +1,8 @@
 # app/repositories/user_repository.py
 
-from app.database.models import User, Aufgabenerfuellung, \
-    Beitrag  # falls User direkt in models/__init__.py steht, sonst: from app.models.user import User
-from app import db  # Das ist die SQLAlchemy-Instanz (db.session)
-from sqlalchemy import inspect
+from app.database.models import User, Aufgabenerfuellung, Beitrag
 
-from app.database.database import engine, SessionLocal
+from app.database.database import SessionLocal
 from utils.serialize import serialize_beitrag
 
 

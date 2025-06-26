@@ -2,8 +2,6 @@ import uuid
 
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
-
-from repositories.challenge_repository import find_active_challenges_by_group
 from services.task_service import generate_standard_tasks_for_challenge_logic
 from services.challenge_service import (
     create_challenge_standard_logic,
@@ -33,10 +31,10 @@ def create_challenge_standard():
         return jsonify({"error": result["error"]}), 400
 
     challenge_id_str = result["data"]["challenge_id"]
-    challenge_id = uuid.UUID(challenge_id_str).bytes
+    challenge_id_uuid = get_uuid_formated_id(challenge_id_str)
 
     # Aufgaben direkt erzeugen
-    aufgaben_result = generate_standard_tasks_for_challenge_logic(challenge_id)
+    aufgaben_result = generate_standard_tasks_for_challenge_logic(challenge_id_uuid)
 
     if not aufgaben_result["success"]:
         return jsonify({

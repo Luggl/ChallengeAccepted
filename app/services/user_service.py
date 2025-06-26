@@ -1,23 +1,21 @@
 from werkzeug.security import generate_password_hash, check_password_hash
-from app import db
 from app.utils.response import response
 from app.utils.time import now_berlin
 from app.utils.mail_service import send_password_reset_mail
 from datetime import timedelta
-from app.database.models import User
-from app.database.models import ResetToken
+from app.database.models import User, ResetToken
 from app.repositories.token_repository import find_token_by_string, save_token, delete_token, delete_token_by_user_id
 from app.repositories.user_repository import (
     find_user_by_email,
     save_user,
     delete_user_by_id,
     find_user_by_id,
-    update_user, find_user_activities
+    update_user, find_user_activities,
+    find_user_by_username
 )
 
 import uuid
-
-from repositories.user_repository import find_user_by_username
+from utils.auth_utils import get_uuid_formated_id
 
 ALLOWED_UPDATE_FIELDS = {"username", "email", "profilbild"}
 
@@ -208,6 +206,7 @@ def update_password_logic(user_id_str, old_password, new_password):
 
 # User löschen (wird über ID angesprochen)
 def delete_user_logic(user_id):
+    user_id = get_uuid_formated_id(user_id)
     result = delete_user_by_id(user_id)
     if not result:
         return response(False, error="User konnte nicht gelöscht werden oder existiert nicht.")

@@ -1,6 +1,5 @@
 from app.database.database import SessionLocal
-from app.database.models import Beitrag
-from app.database.models import BeitragVotes
+from app.database.models import BeitragVotes, Beitrag
 
 
 def find_beitrag_by_id(beitrag_id):
@@ -25,7 +24,7 @@ def update_beitrag(beitrag_id, beschreibung):
 
 def find_beitrag_by_erfuellung_id(erfuellung_id):
     with SessionLocal() as session:
-        return session.query(Beitrag).filter(erfuellung_id=erfuellung_id).first()
+        return session.query(Beitrag).filter(Beitrag.erfuellung_id == erfuellung_id).first()
 
 def create_beitrag(beitrag):
     with SessionLocal() as session:

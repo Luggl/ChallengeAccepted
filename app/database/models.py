@@ -1,6 +1,6 @@
 import uuid
 import sqlalchemy
-from sqlalchemy import Column, String, Integer, Boolean, Date, ForeignKey, Table, ForeignKeyConstraint, DateTime, Float, Enum as SQLEnum, and_
+from sqlalchemy import Column, String, Integer, Boolean, Date, ForeignKey, ForeignKeyConstraint, DateTime, Float, Enum as SQLEnum, and_
 from sqlalchemy.dialects.mysql import DATETIME
 from sqlalchemy.dialects.sqlite import BLOB
 from sqlalchemy.orm import relationship, foreign, configure_mappers
@@ -262,7 +262,7 @@ class Aufgabe(Base):
     sportart_id=Column(BLOB, ForeignKey("sportart.sportart_id"))
     sportart=relationship("Sportart")
 
-    erfuellungen=relationship("Aufgabenerfuellung",back_populates="aufgabe")
+    erfuellungen=relationship("Aufgabenerfuellung",back_populates="aufgabe", cascade="all, delete-orphan")
 
     __mapper_args__ = {
             "polymorphic_on": typ,

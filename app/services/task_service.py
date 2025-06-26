@@ -1,30 +1,35 @@
 import os
 
 from werkzeug.utils import secure_filename
-
 from app.utils.response import response
 from app.repositories.task_repository import (
-    find_task_by_id,
     save_aufgabe,
     find_task_by_challenge_and_date,
-    find_task_by_challenge_and_date_and_typ, mark_task_as_complete, has_user_already_voted, create_user_vote
+    find_task_by_challenge_and_date_and_typ,
+    mark_task_as_complete,
+    has_user_already_voted,
+    create_user_vote,
+    find_tasks_by_user_id,
+    find_aufgabenerfuellung_by_challenge_and_date, update_task_by_video_url
 )
-from app.database.models import BeitragVotes, Beitrag
-from repositories.beitrag_repository import find_beitrag_by_id, find_gruppe_by_beitrag, create_beitrag, \
+from app.database.models import BeitragVotes, Beitrag, AufgabeTyp, StandardAufgabe
+from repositories.beitrag_repository import (
+    find_beitrag_by_id,
+    find_gruppe_by_beitrag,
+    create_beitrag,
     find_beitrag_by_erfuellung_id
+)
 from repositories.challenge_repository import (
     find_standard_challenge_by_id,
     find_standard_challenge_sportarten_by_challenge_id,
     find_all_survival_challenges,
-    find_active_challenges_by_group
+    find_active_challenge_by_group
 )
 import uuid
 import random
 from collections import defaultdict
 from datetime import datetime, time, timedelta
-from app.database.models import AufgabeTyp, StandardAufgabe
 from repositories.membership_repository import find_memberships_by_user
-from repositories.task_repository import find_tasks_by_user_id, find_aufgabenerfuellung_by_challenge_and_date
 from utils.auth_utils import get_uuid_formated_id
 from utils.serialize import serialize_aufgabenerfuellung
 from utils.time import now_berlin, date_today
@@ -36,6 +41,11 @@ UPLOAD_ROOT = "media/aufgabenerfuellung"
 
 # Alle Tasks für einen User abfragen
 def get_task_logic(user_id):
+    # Survival Tasks erzeugen, falls neue Vorhanden!
+    result = generate_survival_tasks_for_all_challenges()
+    if not result["success"]:
+        return result
+
     #Alle Memberships des Users holen
     memberships = find_memberships_by_user(get_uuid_formated_id(user_id))
     datum = date_today()
@@ -46,20 +56,16 @@ def get_task_logic(user_id):
     aufgabenerfuellungen = []
     #Für alle Memberships die jeweiligen Tasks laden
     for membership in memberships:
-        challenges = find_active_challenges_by_group(membership.gruppe_id)
-        for challenge in challenges:
-            aufgabenerfuellung = serialize_aufgabenerfuellung(find_aufgabenerfuellung_by_challenge_and_date(challenge.challenge_id, datum))
-
-            if aufgabenerfuellung:
-                aufgabenerfuellungen.append(aufgabenerfuellung)
-
-
+        challenge = find_active_challenge_by_group(membership.gruppe_id)
+        aufgabenerfuellung = find_aufgabenerfuellung_by_challenge_and_date(challenge.challenge_id, datum)
+        if aufgabenerfuellung:
+            aufgabenerfuellungen.append(serialize_aufgabenerfuellung(aufgabenerfuellung))
 
     return response(True, data=aufgabenerfuellungen)
 
 
 # Aufgabe als erledigt markieren
-def complete_task_logic(erfuellung_id, user_id, video_file, description):
+def complete_task_logic(erfuellung_id, user_id, description, video_file):
     user_id_uuid = get_uuid_formated_id(user_id)
     erfuellung_id_uuid = get_uuid_formated_id(erfuellung_id)
     #Prüfen, ob User diese Task überhaupt hat
@@ -76,6 +82,9 @@ def complete_task_logic(erfuellung_id, user_id, video_file, description):
     if not success["success"]:
         return success
 
+    videopath = success["data"]
+    # Videopfad in Aufgabenerfüllung speichern
+    success= update_task_by_video_url(erfuellung_id_uuid, videopath)
     #Aufgabenerfüllung Status updaten
     success = mark_task_as_complete(erfuellung_id_uuid)
     if not success:
@@ -99,13 +108,14 @@ def complete_task_logic(erfuellung_id, user_id, video_file, description):
 
 def safe_video_logic(task_id, video_file):
     filename = secure_filename(f"{uuid.uuid4()}.mp4")
-    upload_path = os.path.join(UPLOAD_ROOT, task_id)
+    task_id_str = str(uuid.UUID(bytes=task_id))
+    upload_path = os.path.join(UPLOAD_ROOT, task_id_str)
     os.makedirs(upload_path, exist_ok=True)
 
     full_path = os.path.join(upload_path, filename)
     try:
         video_file.save(full_path)
-        return response(True, filename)
+        return response(True, data=full_path)
     except Exception as e:
         return response(False, "Fehler beim Speichern des Videos!")
 
