@@ -10,6 +10,8 @@ import de.thws.challengeaccepted.models.RegisterRequest
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.POST
+import retrofit2.http.DELETE
+import retrofit2.http.Path
 
 interface UserService {
     //registerUser
@@ -27,5 +29,9 @@ interface UserService {
     //confirmPasswordReset
     @POST("password-reset/confirm")
     suspend fun confirmPasswordReset(@Body request: PasswordResetConfirmRequest): PasswordResetConfirmResponse
+
+
+    @DELETE("users/{id}")
+    suspend fun deleteUser(@Path("id") userId: String)
 
 }

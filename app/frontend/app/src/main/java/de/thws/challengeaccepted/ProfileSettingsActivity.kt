@@ -1,137 +1,140 @@
 package de.thws.challengeaccepted
 
-import android.annotation.SuppressLint
 import android.content.Intent
-import android.graphics.drawable.ColorDrawable
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageView
-import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
-import android.graphics.Color
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
+import de.thws.challengeaccepted.network.ApiClient
+import de.thws.challengeaccepted.network.UserService
+import de.thws.challengeaccepted.ui.viewmodels.UserViewModel
+import kotlinx.coroutines.launch
 
+class ProfileSettingsActivity : AppCompatActivity() {
 
+    private val userViewModel: UserViewModel by viewModels()
+    private lateinit var prefs: SharedPreferences
 
-class ProfileSettingsActivity :  AppCompatActivity() {
-
-
-    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile_settings)
+        prefs = getSharedPreferences("app", MODE_PRIVATE)
 
+        val nameEdit = findViewById<EditText>(R.id.etUserName)
+        val userId = prefs.getString("USER_ID", null)
 
-        // Navigation Back
-        val navBack = findViewById<ImageView>(R.id.btn_back)
-        navBack.setOnClickListener {
-            val intent = Intent(this, ProfileActivity::class.java)
-            startActivity(intent)
+        if (userId != null) {
+            userViewModel.getUser(userId) { user ->
+                user?.let {
+                    nameEdit.setText(it.username)
+                }
+            }
+        }
+        val emailBtn = findViewById<Button>(R.id.btnEmail)
+        if (userId != null) {
+            userViewModel.getUser(userId) { user ->
+                user?.let {
+                    nameEdit.setText(it.username)
+                    emailBtn.text = it.email         // <-- Email dynamisch setzen
+                }
+            }
         }
 
-        // Navigation Passwort ändern
-        val navChangePass = findViewById<Button>(R.id.btn_change_password)
-        navChangePass.setOnClickListener {
-            val intent = Intent(this, ProfileChangePassActivity::class.java)
-            startActivity(intent)
+        // Name speichern (wie gehabt)
+        nameEdit.setOnFocusChangeListener { _, hasFocus ->
+            if (!hasFocus && userId != null) {
+                val newName = nameEdit.text.toString()
+                userViewModel.getUser(userId) { user ->
+                    user?.let {
+                        if (it.username != newName && newName.isNotBlank()) {
+                            val updatedUser = it.copy(username = newName)
+                            userViewModel.insertUser(updatedUser)
+                            Toast.makeText(this, "Name aktualisiert", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+            }
         }
 
-        // Navigation Datenschutz
-        val navDataPriv = findViewById<Button>(R.id.btn_datenschutz)
-        navDataPriv.setOnClickListener {
-            val intent = Intent(this, DataPrivacyActivity::class.java)
-            startActivity(intent)
+        // --- Navigation/Buttons ---
+
+        findViewById<ImageView>(R.id.btn_back).setOnClickListener {
+            startActivity(Intent(this, ProfileActivity::class.java))
+        }
+        findViewById<Button>(R.id.btn_change_password).setOnClickListener {
+            startActivity(Intent(this, ProfileChangePassActivity::class.java))
+        }
+        findViewById<Button>(R.id.btn_datenschutz).setOnClickListener {
+            startActivity(Intent(this, DataPrivacyActivity::class.java))
         }
 
         // Abmelden
-        val logoutBtn = findViewById<Button>(R.id.btn_logout)
-        logoutBtn.setOnClickListener {
-            val dialogBuilder = AlertDialog.Builder(this)
-            dialogBuilder.setMessage("Wirklich abmelden?")
-
-            dialogBuilder.setPositiveButton("Abmelden") { _, _ ->
-                Toast.makeText(this, "Sie haben sich abgemeldet!", Toast.LENGTH_SHORT).show()
-                // Hier deine Logik zum Ausloggen einfügen
-            }
-
-            // Abbrechen
-            val alertDialog = dialogBuilder.create()
-
-            // Hintergrund schwarz
-            alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.BLACK))
-
-            // Dialog anzeigen, dann Textfarben ändern
-            alertDialog.setOnShowListener {
-                // Textfarbe für Titel und Nachricht
-                    val titleId = resources.getIdentifier("alertTitle", "id", "android")
-                    val titleView = alertDialog.findViewById<TextView>(titleId)
-                    titleView?.setTextColor(Color.WHITE)
-
-                    val messageView = alertDialog.findViewById<TextView>(android.R.id.message)
-                    messageView?.setTextColor(Color.WHITE)
-
-                // Button-Farbe
-                alertDialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(Color.WHITE)
-            }
-
-            alertDialog.show()
+        findViewById<Button>(R.id.btn_logout).setOnClickListener {
+            AlertDialog.Builder(this)
+                .setMessage("Wirklich abmelden?")
+                .setPositiveButton("Abmelden") { _, _ ->
+                    prefs.edit().clear().apply()
+                    val intent = Intent(this, LoginActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    startActivity(intent)
+                    finish()
+                }
+                .setNegativeButton("Abbrechen", null)
+                .show()
         }
 
-        // Profil löschen
-        val deleteBtn = findViewById<Button>(R.id.btn_deactivate_delete)
-        deleteBtn.setOnClickListener {
-            val dialogBuilder = AlertDialog.Builder(this)
-            dialogBuilder.setTitle("Profil wirklich löschen?")
-            dialogBuilder.setMessage("Profil wirklich löschen?")
-
-            dialogBuilder.setPositiveButton("Profil löschen") { _, _ ->
-                Toast.makeText(this, "Profil wurde gelöscht", Toast.LENGTH_SHORT).show()
-                // Hier deine Logik zur Löschung einfügen
-            }
-
-            // Abbrechen
-            val alertDialog = dialogBuilder.create()
-
-            // Hintergrund schwarz
-            alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.BLACK))
-
-            // Text- & Buttonfarben setzen, nachdem Dialog angezeigt wurde
-            alertDialog.setOnShowListener {
-                    val titleId = resources.getIdentifier("alertTitle", "id", "android")
-                    val titleView = alertDialog.findViewById<TextView>(titleId)
-                    titleView?.setTextColor(Color.WHITE)
-
-                    val messageView = alertDialog.findViewById<TextView>(android.R.id.message)
-                    messageView?.setTextColor(Color.WHITE)
-
-                alertDialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(getColor(R.color.button_red))
-            }
-            alertDialog.show()
+        // Profil löschen (mit Backend-API-Call!)
+        findViewById<Button>(R.id.btn_deactivate_delete).setOnClickListener {
+            AlertDialog.Builder(this)
+                .setTitle("Profil wirklich löschen?")
+                .setMessage("Profil wirklich löschen? Das kann nicht rückgängig gemacht werden.")
+                .setPositiveButton("Profil löschen") { _, _ ->
+                    if (userId != null) {
+                        userViewModel.getUser(userId) { user ->
+                            user?.let {
+                                lifecycleScope.launch {
+                                    val api = ApiClient.retrofit.create(UserService::class.java)
+                                    try {
+                                        // 1. Backend-Delete (suspend, kein Rückgabewert)
+                                        api.deleteUser(userId)
+                                        // 2. Lokal löschen
+                                        userViewModel.deleteUser(it)
+                                        // 3. Preferences clearen & zu Login
+                                        prefs.edit().clear().apply()
+                                        val intent = Intent(this@ProfileSettingsActivity, LoginActivity::class.java)
+                                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                        startActivity(intent)
+                                        finish()
+                                    } catch (e: Exception) {
+                                        Toast.makeText(this@ProfileSettingsActivity, "Löschen fehlgeschlagen: ${e.message}", Toast.LENGTH_SHORT).show()
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                .setNegativeButton("Abbrechen", null)
+                .show()
         }
 
-
-
-        // Bottom Navigation
-        val navGroup = findViewById<ImageView>(R.id.nav_group)
-        navGroup.setOnClickListener {
-            val intent = Intent(this, GroupOverviewActivity::class.java)
-            startActivity(intent)
+        // Bottom Navigation (wie gehabt)
+        findViewById<ImageView>(R.id.nav_group).setOnClickListener {
+            startActivity(Intent(this, GroupOverviewActivity::class.java))
         }
-        val navHome = findViewById<ImageView>(R.id.nav_home)
-        navHome.setOnClickListener {
-            val intent = Intent(this, DashboardActivity::class.java)
-            startActivity(intent)
+        findViewById<ImageView>(R.id.nav_home).setOnClickListener {
+            startActivity(Intent(this, DashboardActivity::class.java))
         }
-        val navAdd = findViewById<ImageView>(R.id.nav_add)
-        navAdd.setOnClickListener {
-            val intent = Intent(this, CreateNewGroupActivity::class.java)
-            startActivity(intent)
+        findViewById<ImageView>(R.id.nav_add).setOnClickListener {
+            startActivity(Intent(this, CreateNewGroupActivity::class.java))
         }
-        val navProfile = findViewById<ImageView>(R.id.nav_profile)
-        navProfile.setOnClickListener {
-            val intent = Intent(this, ProfileActivity::class.java)
-            startActivity(intent)
+        findViewById<ImageView>(R.id.nav_profile).setOnClickListener {
+            startActivity(Intent(this, ProfileActivity::class.java))
         }
     }
 }

@@ -33,28 +33,5 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
         }
-
-        // Room-Datenbank-Test (Einmalig!)
-        lifecycleScope.launch {
-            // Test-User speichern
-            val user = User(
-                userId = "test-uuid",
-                username = "Moritz",
-                email = "moritz@example.com",
-                streak = 10,
-                profilbild = null
-            )
-            App.database.userDao().insertUser(user)
-
-            // User aus DB abrufen und in Log ausgeben
-            val storedUser = App.database.userDao().getUser("test-uuid")
-            storedUser?.let {
-                Toast.makeText(
-                    this@MainActivity,
-                    "User aus DB: ${it.username}, Streak: ${it.streak}",
-                    Toast.LENGTH_LONG
-                ).show()
-            }
-        }
     }
 }

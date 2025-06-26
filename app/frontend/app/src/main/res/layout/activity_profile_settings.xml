@@ -79,19 +79,18 @@
         </LinearLayout>
 
         <!-- Benutzername -->
-        <TextView
+        <EditText
             android:id="@+id/etUserName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="100dp"
             android:gravity="center_vertical"
             android:paddingStart="8dp"
-            android:text="Mara"
+            android:text=""
             android:textColor="@color/white"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:focusable="false"
-            android:clickable="false" />
+            android:background="@null"/>
 
         <!-- Indikatoren -->
         <LinearLayout
@@ -160,11 +159,12 @@
 
             <!-- E-Mail -->
             <Button
+                android:id="@+id/btnEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:background="@drawable/grey_background"
-                android:text="marak@gmail.com"
+                android:text="E-Mail"
                 android:textColor="@color/white" />
 
             <!-- Passwort ändern mit Icon -->
