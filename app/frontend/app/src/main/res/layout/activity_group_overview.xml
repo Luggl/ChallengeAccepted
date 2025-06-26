@@ -36,10 +36,11 @@
             android:padding="8dp">
 
             <TextView
+                android:id="@+id/tv_group_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingStart="8dp"
-                android:text="The Hustlers"
+                android:text="Meine Gruppen"
                 android:textColor="@color/white"
                 android:textSize="25sp"
                 android:textStyle="bold" />
@@ -49,297 +50,29 @@
     </androidx.cardview.widget.CardView>
 
     <TextView
+        android:id="@+id/tv_group_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/cv_greeting"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
-        android:text="Aktiv in 4 Gruppen:"
+        android:text="Aktiv in 0 Gruppen:"
         android:textColor="@color/white"
         android:textSize="18sp"
         android:textStyle="bold" />
 
-    <LinearLayout
-        android:id="@+id/group_list"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewGroups"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/cv_greeting"
-        android:layout_marginLeft="16dp"
+        android:layout_above="@id/ll_bottom_navigation"
         android:layout_marginTop="70dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:orientation="vertical"
-        android:padding="16dp">
+        />
 
-        <!-- Eine Gruppe (kann kopiert werden) -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:layout_marginBottom="16dp"
-            android:background="@drawable/grey_background"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:padding="8dp">
-
-            <!-- Gruppenbild -->
-            <ImageView
-                android:layout_width="70dp"
-                android:layout_height="70dp"
-                android:layout_marginEnd="8dp"
-                android:background="@drawable/round_background"
-                android:clipToOutline="true"
-                android:scaleType="centerCrop"
-                android:src="@drawable/group_profile_picture" />
-
-            <!-- Gruppenname -->
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:paddingStart="8dp"
-                android:text="Kämpfernatur"
-                android:textColor="@color/white"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <!-- Indikatoren -->
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <!-- Oberes Kästchen: ! -->
-                <LinearLayout
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:layout_marginBottom="4dp"
-                    android:background="@drawable/grey_background"
-                    android:gravity="center">
-
-                    <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:src="@drawable/standard_chal_blue_icon" />
-                </LinearLayout>
-
-                <!-- Unteres Kästchen: 5 ⚡ -->
-                <LinearLayout
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:background="@drawable/grey_background"
-                    android:gravity="center"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="5"
-                        android:textColor="#00d5cf"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
-
-                    <ImageView
-                        android:layout_width="12dp"
-                        android:layout_height="12dp"
-                        android:layout_marginStart="2dp"
-                        android:src="@drawable/flash_blue_icon" />
-                </LinearLayout>
-            </LinearLayout>
-        </LinearLayout>
-
-        <!-- Eine Gruppe (kann kopiert werden) -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:layout_marginBottom="16dp"
-            android:background="@drawable/green_frame"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:padding="8dp">
-
-            <!-- Gruppenbild -->
-            <ImageView
-                android:layout_width="70dp"
-                android:layout_height="70dp"
-                android:layout_marginEnd="8dp"
-                android:background="@drawable/round_background"
-                android:clipToOutline="true"
-                android:scaleType="centerCrop"
-                android:src="@drawable/group_profile_picture" />
-
-            <!-- Gruppenname -->
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:paddingStart="8dp"
-                android:text="Däumchen drehen"
-                android:textColor="@color/white"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-        </LinearLayout>
-
-        <!-- Eine Gruppe (kann kopiert werden) -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:layout_marginBottom="16dp"
-            android:background="@drawable/grey_background"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:padding="8dp">
-
-            <!-- Gruppenbild -->
-            <ImageView
-                android:layout_width="70dp"
-                android:layout_height="70dp"
-                android:layout_marginEnd="8dp"
-                android:background="@drawable/round_background"
-                android:clipToOutline="true"
-                android:scaleType="centerCrop"
-                android:src="@drawable/group_profile_picture" />
-
-            <!-- Gruppenname -->
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:paddingStart="8dp"
-                android:text="The Hustlers"
-                android:textColor="@color/white"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <!-- Indikatoren -->
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <!-- Oberes Kästchen: ! -->
-                <LinearLayout
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:layout_marginBottom="4dp"
-                    android:background="@drawable/grey_background"
-                    android:gravity="center">
-
-                    <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:src="@drawable/flash_full_red_icon" />
-                </LinearLayout>
-
-                <!-- Unteres Kästchen: 5 ⚡ -->
-                <LinearLayout
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:background="@drawable/grey_background"
-                    android:gravity="center"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="30"
-                        android:textColor="#00d5cf"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
-
-                    <ImageView
-                        android:layout_width="12dp"
-                        android:layout_height="12dp"
-                        android:layout_marginStart="2dp"
-                        android:src="@drawable/flash_blue_icon" />
-                </LinearLayout>
-            </LinearLayout>
-        </LinearLayout>
-
-        <!-- Eine Gruppe (kann kopiert werden) -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:layout_marginBottom="16dp"
-            android:background="@drawable/grey_background"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:padding="8dp">
-
-            <!-- Gruppenbild -->
-            <ImageView
-                android:layout_width="70dp"
-                android:layout_height="70dp"
-                android:layout_marginEnd="8dp"
-                android:background="@drawable/round_background"
-                android:clipToOutline="true"
-                android:scaleType="centerCrop"
-                android:src="@drawable/group_profile_picture" />
-
-            <!-- Gruppenname -->
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:paddingStart="8dp"
-                android:text="Better together!"
-                android:textColor="@color/white"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <!-- Indikatoren -->
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <!-- Oberes Kästchen: ! -->
-                <LinearLayout
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:layout_marginBottom="4dp"
-                    android:background="@drawable/grey_background"
-                    android:gravity="center">
-
-                    <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:src="@drawable/standard_chal_red_icon" />
-                </LinearLayout>
-
-                <!-- Unteres Kästchen: 5 ⚡ -->
-                <LinearLayout
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:background="@drawable/grey_background"
-                    android:gravity="center"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="5"
-                        android:textColor="#00d5cf"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
-
-                    <ImageView
-                        android:layout_width="12dp"
-                        android:layout_height="12dp"
-                        android:layout_marginStart="2dp"
-                        android:src="@drawable/flash_blue_icon" />
-                </LinearLayout>
-            </LinearLayout>
-        </LinearLayout>
-        <!-- Weitere Gruppen kopieren -->
-        <!-- <LinearLayout>...</LinearLayout> -->
-
-    </LinearLayout>
 
 
     <!-- Bottom Navigation -->

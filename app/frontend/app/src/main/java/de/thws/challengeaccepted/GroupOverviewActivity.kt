@@ -2,23 +2,42 @@ package de.thws.challengeaccepted
 
 import android.content.Intent
 import android.os.Bundle
-import android.text.Layout
-import android.widget.ImageView
-import android.widget.LinearLayout
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import de.thws.challengeaccepted.ui.adapter.GroupAdapter
+import de.thws.challengeaccepted.ui.viewmodels.GroupViewModel
+import android.widget.ImageView
 
 class GroupOverviewActivity : AppCompatActivity() {
+
+    private val groupViewModel: GroupViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_group_overview)
 
-        // Group Dashbord
-        val navToGroup = findViewById<LinearLayout>(R.id.group_list)
-        navToGroup.setOnClickListener {
-            val intent = Intent(this, GroupDashboardActivity::class.java)
-            startActivity(intent)
+        val prefs = getSharedPreferences("app", MODE_PRIVATE)
+        val userId = prefs.getString("USER_ID", null)
+        val token = prefs.getString("token", null)
+
+        val recycler = findViewById<RecyclerView>(R.id.recyclerViewGroups)
+        recycler.layoutManager = LinearLayoutManager(this)
+
+        if (userId != null && token != null) {
+            groupViewModel.getGroups(userId, token) { groups ->
+                runOnUiThread {
+                    recycler.adapter = GroupAdapter(groups) { group ->
+                        // Klick auf Gruppe → Gruppen-Dashboard öffnen
+                        val intent = Intent(this, GroupDashboardActivity::class.java)
+                        intent.putExtra("GROUP_ID", group.gruppe_id)
+                        startActivity(intent)
+                    }
+                }
+            }
         }
+
 
 
         // Bottom Navigation
