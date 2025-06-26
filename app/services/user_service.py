@@ -68,7 +68,7 @@ def login_user_logic(email, password):
 
     # Wenn Login erfolgreich, dann Daten zurückgeben
     return response(True, data={
-        "id": user.user_id.hex(),
+        "id": get_uuid_formated_id(user.user_id),
         "username": user.username,
         "email": user.email
     })
