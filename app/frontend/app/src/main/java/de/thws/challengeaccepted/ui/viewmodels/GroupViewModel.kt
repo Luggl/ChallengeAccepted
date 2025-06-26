@@ -12,13 +12,14 @@ import kotlinx.coroutines.launch
 
 class GroupViewModel(application: Application) : AndroidViewModel(application) {
     private val repository = GroupRepository(
-        ApiClient.retrofit.create(GroupService::class.java)
+        // Context nutzen, damit der ApiClient den Token automatisch einfügt!
+        ApiClient.getRetrofit(application).create(GroupService::class.java)
     )
 
-    fun getGroups(userId: String, token: String, onResult: (List<GroupResponse>) -> Unit) {
+    fun getGroups(userId: String, onResult: (List<GroupResponse>) -> Unit) {
         viewModelScope.launch {
             try {
-                val groups = repository.getGroupsForUser(userId, token)
+                val groups = repository.getGroupsForUser(userId)
                 onResult(groups)
             } catch (e: Exception) {
                 onResult(emptyList())

@@ -25,11 +25,10 @@ class GroupOverviewActivity : AppCompatActivity() {
         val recycler = findViewById<RecyclerView>(R.id.recyclerViewGroups)
         recycler.layoutManager = LinearLayoutManager(this)
 
-        if (userId != null && token != null) {
-            groupViewModel.getGroups(userId, token) { groups ->
+        if (userId != null) {
+            groupViewModel.getGroups(userId) { groups ->
                 runOnUiThread {
                     recycler.adapter = GroupAdapter(groups) { group ->
-                        // Klick auf Gruppe → Gruppen-Dashboard öffnen
                         val intent = Intent(this, GroupDashboardActivity::class.java)
                         intent.putExtra("GROUP_ID", group.gruppe_id)
                         startActivity(intent)
@@ -37,8 +36,6 @@ class GroupOverviewActivity : AppCompatActivity() {
                 }
             }
         }
-
-
 
         // Bottom Navigation
         val navHome = findViewById<ImageView>(R.id.nav_home)
