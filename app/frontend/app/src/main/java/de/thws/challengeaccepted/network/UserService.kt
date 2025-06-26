@@ -11,6 +11,8 @@ import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.POST
 import retrofit2.http.DELETE
+import retrofit2.http.Header
+import retrofit2.http.PATCH
 import retrofit2.http.Path
 
 interface UserService {
@@ -33,5 +35,18 @@ interface UserService {
 
     @DELETE("users/{id}")
     suspend fun deleteUser(@Path("id") userId: String)
+
+
+    data class ChangePasswordRequest(
+        val oldPassword: String,
+        val newPassword: String
+    )
+
+    @PATCH("user/password")
+    suspend fun changePassword(
+        @Header("Authorization") token: String,
+        @Body request: ChangePasswordRequest
+    )
+
 
 }
