@@ -41,7 +41,8 @@ class DashboardActivity : AppCompatActivity() {
         }
 
         // Holt die User-ID, die beim Login mitgegeben wurde
-        val userId = intent.getStringExtra("USER_ID")
+        val prefs = getSharedPreferences("app", MODE_PRIVATE)
+        val userId = prefs.getString("USER_ID", null)
         if (userId != null) {
             userViewModel.getUser(userId) { user ->
                 user?.let {

@@ -61,6 +61,32 @@
             android:scaleType="centerCrop"
             android:src="@drawable/profile_picture" />
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/tv_streak"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Streak: 0"
+                android:textSize="16sp"
+                android:textColor="@color/white"
+                android:layout_marginEnd="12dp" />
+
+            <TextView
+                android:id="@+id/tv_username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nutzername"
+                android:textSize="20sp"
+                android:textColor="@color/white"
+                android:layout_marginEnd="12dp" />
+
+        </LinearLayout>
+
         <!-- Gruppenname -->
         <TextView
             android:layout_width="wrap_content"
@@ -68,7 +94,7 @@
             android:layout_weight="1"
             android:gravity="center_vertical"
             android:paddingStart="8dp"
-            android:text="Mara"
+            android:text=""
             android:textColor="@color/white"
             android:textSize="18sp"
             android:textStyle="bold" />

@@ -55,6 +55,9 @@ class LoginActivity : AppCompatActivity() {
                     // User lokal speichern
                     val userEntity = response.user.toRoomUser()
                     App.database.userDao().insertUser(userEntity)
+                    val prefs = getSharedPreferences("app", MODE_PRIVATE)
+                    prefs.edit().putString("USER_ID", userEntity.userId).apply()
+                    prefs.edit().putString("token", response.access_token).apply()
 
                     // USER_ID an Dashboard übergeben!
                     val intent = Intent(this@LoginActivity, DashboardActivity::class.java)
