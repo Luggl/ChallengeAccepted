@@ -1,23 +1,19 @@
-// XML -> activity_register
-
 package de.thws.challengeaccepted
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Patterns
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
+import androidx.lifecycle.lifecycleScope
 import de.thws.challengeaccepted.models.RegisterRequest
 import de.thws.challengeaccepted.network.ApiClient
 import de.thws.challengeaccepted.network.UserService
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import android.util.Patterns
-
+import kotlinx.coroutines.launch
 
 class RegisterActivity : AppCompatActivity() {
 
@@ -30,8 +26,9 @@ class RegisterActivity : AppCompatActivity() {
         val email = findViewById<EditText>(R.id.edit_email)
         val password = findViewById<EditText>(R.id.edit_password1)
         val repeatPassword = findViewById<EditText>(R.id.edit_password2)
-
         val registerButton = findViewById<Button>(R.id.button_start_regist)
+        val alreadyAccount = findViewById<TextView>(R.id.text_already_account)
+
         registerButton.setOnClickListener {
             val user = username.text.toString()
             val mail = email.text.toString()
@@ -51,12 +48,10 @@ class RegisterActivity : AppCompatActivity() {
                 Toast.makeText(this, "Passwörter stimmen nicht überein!", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-
             // Jetzt API-Aufruf
             registerUser(user, mail, pw)
         }
 
-        val alreadyAccount = findViewById<TextView>(R.id.text_already_account)
         alreadyAccount.setOnClickListener {
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
@@ -66,23 +61,26 @@ class RegisterActivity : AppCompatActivity() {
     private fun registerUser(username: String, email: String, password: String) {
         val service = ApiClient.retrofit.create(UserService::class.java)
         val request = RegisterRequest(username, email, password)
-        val call = service.registerUser(request)
-        call.enqueue(object : Callback<Void> {
-            override fun onResponse(call: Call<Void>, response: Response<Void>) {
-                if (response.isSuccessful) {
-                    Toast.makeText(this@RegisterActivity, "Registrierung erfolgreich!", Toast.LENGTH_SHORT).show()
-                    // Optional: Direkt zum Login oder Dashboard weiterleiten
-                    val intent = Intent(this@RegisterActivity, LoginActivity::class.java)
-                    startActivity(intent)
-                    finish()
-                } else {
-                    Toast.makeText(this@RegisterActivity, "Registrierung fehlgeschlagen!", Toast.LENGTH_SHORT).show()
-                }
-            }
 
-            override fun onFailure(call: Call<Void>, t: Throwable) {
-                Toast.makeText(this@RegisterActivity, "Netzwerkfehler: ${t.message}", Toast.LENGTH_SHORT).show()
+        lifecycleScope.launch {
+            try {
+                service.registerUser(request) // suspend! Kein Rückgabewert nötig.
+                Toast.makeText(
+                    this@RegisterActivity,
+                    "Registrierung erfolgreich!",
+                    Toast.LENGTH_SHORT
+                ).show()
+                // Optional: Direkt zum Login weiterleiten
+                val intent = Intent(this@RegisterActivity, LoginActivity::class.java)
+                startActivity(intent)
+                finish()
+            } catch (e: Exception) {
+                Toast.makeText(
+                    this@RegisterActivity,
+                    "Registrierung fehlgeschlagen: ${e.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
-        })
+        }
     }
 }

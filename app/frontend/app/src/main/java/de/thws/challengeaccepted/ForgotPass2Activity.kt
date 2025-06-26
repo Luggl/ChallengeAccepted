@@ -6,13 +6,11 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
+import androidx.lifecycle.lifecycleScope
 import de.thws.challengeaccepted.models.PasswordResetConfirmRequest
-import de.thws.challengeaccepted.models.PasswordResetConfirmResponse
 import de.thws.challengeaccepted.network.ApiClient
 import de.thws.challengeaccepted.network.UserService
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import kotlinx.coroutines.launch
 
 class ResetPasswordActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,8 +25,7 @@ class ResetPasswordActivity : AppCompatActivity() {
         changeButton.setOnClickListener {
             val pw = newPassword.text.toString()
             val rpw = repeatPassword.text.toString()
-            // Den Token solltest du z.B. über einen Intent-Extra bekommen!
-            val token = "" // TODO: Token aus Intent holen
+            val token = "" // TODO: Token aus Intent holen!
 
             if (pw.isEmpty() || rpw.isEmpty()) {
                 Toast.makeText(this, "Bitte alle Felder ausfüllen!", Toast.LENGTH_SHORT).show()
@@ -45,19 +42,23 @@ class ResetPasswordActivity : AppCompatActivity() {
     private fun confirmPasswordReset(token: String, password: String) {
         val service = ApiClient.retrofit.create(UserService::class.java)
         val request = PasswordResetConfirmRequest(token, password)
-        val call = service.confirmPasswordReset(request)
-        call.enqueue(object : Callback<PasswordResetConfirmResponse> {
-            override fun onResponse(call: Call<PasswordResetConfirmResponse>, response: Response<PasswordResetConfirmResponse>) {
-                if (response.isSuccessful && response.body() != null) {
-                    Toast.makeText(this@ResetPasswordActivity, response.body()!!.message, Toast.LENGTH_LONG).show()
-                    // Optional: zurück zum Login
-                } else {
-                    Toast.makeText(this@ResetPasswordActivity, "Fehler beim Zurücksetzen!", Toast.LENGTH_SHORT).show()
-                }
+
+        lifecycleScope.launch {
+            try {
+                val response = service.confirmPasswordReset(request)
+                Toast.makeText(
+                    this@ResetPasswordActivity,
+                    response.message,
+                    Toast.LENGTH_LONG
+                ).show()
+                // Optional: zurück zum Login gehen!
+            } catch (e: Exception) {
+                Toast.makeText(
+                    this@ResetPasswordActivity,
+                    "Netzwerkfehler: ${e.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
-            override fun onFailure(call: Call<PasswordResetConfirmResponse>, t: Throwable) {
-                Toast.makeText(this@ResetPasswordActivity, "Netzwerkfehler: ${t.message}", Toast.LENGTH_SHORT).show()
-            }
-        })
+        }
     }
 }

@@ -14,18 +14,18 @@ import retrofit2.http.POST
 interface UserService {
     //registerUser
     @POST("user")
-    fun registerUser(@Body registerRequest: RegisterRequest): Call<Void>
+    suspend fun registerUser(@Body registerRequest: RegisterRequest): Void
 
     //loginUser
     @POST("login")
-    fun loginUser(@Body loginRequest: LoginRequest): Call<LoginResponse>
+    suspend fun loginUser(@Body loginRequest: LoginRequest): LoginResponse
 
     //requestPasswordReset
     @POST("password-reset")
-    fun requestPasswordReset(@Body request: PasswordResetRequest): Call<PasswordResetResponse>
+    suspend fun requestPasswordReset(@Body request: PasswordResetRequest): PasswordResetResponse
 
     //confirmPasswordReset
     @POST("password-reset/confirm")
-    fun confirmPasswordReset(@Body request: PasswordResetConfirmRequest): Call<PasswordResetConfirmResponse>
+    suspend fun confirmPasswordReset(@Body request: PasswordResetConfirmRequest): PasswordResetConfirmResponse
 
 }

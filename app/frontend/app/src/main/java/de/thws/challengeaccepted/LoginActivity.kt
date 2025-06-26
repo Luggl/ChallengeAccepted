@@ -1,7 +1,4 @@
-// XML -> activity_login
-
 package de.thws.challengeaccepted
-
 
 import android.content.Intent
 import android.os.Bundle
@@ -11,13 +8,13 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
+import androidx.lifecycle.lifecycleScope
 import de.thws.challengeaccepted.models.LoginRequest
 import de.thws.challengeaccepted.models.LoginResponse
+import de.thws.challengeaccepted.models.toRoomUser    // <-- Mapping importieren!
 import de.thws.challengeaccepted.network.ApiClient
 import de.thws.challengeaccepted.network.UserService
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import kotlinx.coroutines.launch
 
 class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,24 +47,26 @@ class LoginActivity : AppCompatActivity() {
     private fun loginUser(email: String, password: String) {
         val service = ApiClient.retrofit.create(UserService::class.java)
         val loginRequest = LoginRequest(email = email, password = password)
-        val call = service.loginUser(loginRequest)
-        call.enqueue(object : Callback<LoginResponse> {
-            override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
-                if (response.isSuccessful && response.body() != null && response.body()!!.access_token != null) {
-                    // Token speichern, wenn du willst:
-                    // val token = response.body()!!.access_token
-                    // getSharedPreferences("app", MODE_PRIVATE).edit().putString("token", token).apply()
 
-                    val intent = Intent(this@LoginActivity, CreateChallengeModeActivity::class.java)
+        lifecycleScope.launch {
+            try {
+                val response = service.loginUser(loginRequest)
+                if (response.access_token != null && response.user != null) {
+                    // User lokal speichern
+                    val userEntity = response.user.toRoomUser()
+                    App.database.userDao().insertUser(userEntity)
+
+                    // USER_ID an Dashboard übergeben!
+                    val intent = Intent(this@LoginActivity, DashboardActivity::class.java)
+                    intent.putExtra("USER_ID", userEntity.userId)
                     startActivity(intent)
                     finish()
                 } else {
                     Toast.makeText(this@LoginActivity, "Login fehlgeschlagen!", Toast.LENGTH_SHORT).show()
                 }
+            } catch (e: Exception) {
+                Toast.makeText(this@LoginActivity, "Netzwerkfehler: ${e.message}", Toast.LENGTH_SHORT).show()
             }
-            override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
-                Toast.makeText(this@LoginActivity, "Netzwerkfehler: ${t.message}", Toast.LENGTH_SHORT).show()
-            }
-        })
+        }
     }
 }
