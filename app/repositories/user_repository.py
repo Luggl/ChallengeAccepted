@@ -1,6 +1,6 @@
 # app/repositories/user_repository.py
 
-from app.database.models import User, Aufgabenerfuellung, Beitrag
+from app.database.models import User, Aufgabenerfuellung, Beitrag, Membership
 
 from app.database.database import SessionLocal
 from utils.serialize import serialize_beitrag
@@ -51,6 +51,14 @@ def find_user_activities(user):
 
 def get_user_feed(user_id):
     with SessionLocal() as session:
-        beitraege = session.query(Beitrag).filter_by(user_id=user_id).order_by(Beitrag.erstellDatum.desc()).all()
+
+        subquery = session.query(Membership.gruppe_id).filter(Membership.user_id == user_id).subquery()
+
+        beitraege = session.query(Beitrag) \
+            .join(Beitrag.erfuellung) \
+            .filter(Aufgabenerfuellung.gruppe_id.in_(subquery)) \
+            .order_by(Beitrag.erstellDatum.desc()) \
+            .all()
+
         result = [serialize_beitrag(b) for b in beitraege]
         return result

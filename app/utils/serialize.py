@@ -7,15 +7,15 @@ from utils.auth_utils import get_uuid_formated_string
 
 def serialize_beitrag(beitrag):
     #Da die Aufgabenerfüllung alle relevanten Informationen hält, muss diese hier erstmal geladen werden
-    erfuellung = find_aufgabenerfuellung_by_id(beitrag.erfuellung.id)
+    erfuellung = find_aufgabenerfuellung_by_id(beitrag.erfuellung_id)
 
     return{
         "beitrag_id": get_uuid_formated_string(beitrag.beitrag_id),
         "beschreibung": beitrag.erfuellung.beschreibung if beitrag.erfuellung.beschreibung else None,
-        "erstellt_am": beitrag.erfuellung.datum.isoformat(),
+        "erstellt_am": beitrag.erfuellung.datum.isoformat() if beitrag.erfuellung.datum else None,
         "user_id": get_uuid_formated_string(beitrag.erfuellung.user_id),
         "gruppe_id": get_uuid_formated_string(beitrag.erfuellung.gruppe_id),
-        "video_url": f"/media/{beitrag.erfuellung.video_path}" if beitrag.video_path else None
+        "video_url": f"/media/{beitrag.erfuellung.video_url}" if beitrag.erfuellung.video_url else None
     }
 
 def serialize_gruppe(gruppe):
