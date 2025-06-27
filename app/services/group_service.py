@@ -75,22 +75,27 @@ def create_group_logic(name, beschreibung, gruppenbild, created_by):
 
 # Einladung erstellen
 def invitation_link_logic(group_id, user_id):
-    group_id = get_uuid_formated_id(group_id)
+    try:
+        group_id = get_uuid_formated_id(group_id)
+        user_id = get_uuid_formated_id(user_id)
+    except ValueError:
+        return response(False, error="Ungültige Group oder User-ID")
+
     group = find_group_by_id(group_id)
     if not group:
-        return response(False, "Gruppe nicht gefunden.")
+        return response(False, error="Gruppe nicht gefunden.")
 
-    user_id = get_uuid_formated_id(user_id)
     membership = find_membership(user_id, group.gruppe_id)
     if not membership:
         return response(False, "User nicht Member der Gruppe!")
-
-    group.einladungscode = str(uuid.uuid4())
-    group.einladungscode_gueltig_bis = now_berlin() + timedelta(hours=4)  # Link ist 4 Std gültig
-
-    updated = update_group(group)
-    if not updated:
-        return response(False, "Link konnte nicht aktualisiert werden.")
+    try:
+        group.einladungscode = str(uuid.uuid4())
+        group.einladungscode_gueltig_bis = now_berlin() + timedelta(hours=4)  # Link ist 4 Std gültig
+        updated = update_group(group)
+        if not updated:
+            return response(False, error="Link konnte nicht aktualisiert werden.")
+    except ValueError as e:
+        return response(False, error=f"Fehler beim Aktualisieren: {str(e)}")
 
     return response(True, group.einladungscode)
 
@@ -98,13 +103,16 @@ def invitation_link_logic(group_id, user_id):
 def join_group_via_link_logic(user_id, invitation_link):
     group = find_group_by_invite_code(invitation_link)
     if not group:
-        return response(False, "Ungültiger Einladungslink.")
+        return response(False, error="Ungültiger Einladungslink.")
 
     # Ist Ablaufdatum kleiner als aktuelles
     if group.einladungscode_gueltig_bis.date() < now_berlin().date():
-        return response(False, "Einladungslink ist abgelaufen.")
+        return response(False, error="Einladungslink ist abgelaufen.")
 
-    user_id_uuid = get_uuid_formated_id(user_id)
+    try:
+        user_id_uuid = get_uuid_formated_id(user_id)
+    except ValueError:
+        return response(False, error="User-ID ungültig")
 
     # Failcheck, falls User bereits Gruppenmitglied!
     membershipcheck = find_membership(user_id_uuid, group.gruppe_id)
@@ -125,11 +133,13 @@ def join_group_via_link_logic(user_id, invitation_link):
 # Gruppe löschen
 def delete_group_logic(group_id, user_id):
 
-    user_id_bytes = get_uuid_formated_id(user_id)
-    group_id_bytes = get_uuid_formated_id(group_id)
+    try:
+        user_id_bytes = get_uuid_formated_id(user_id)
+        group_id_bytes = get_uuid_formated_id(group_id)
+    except ValueError:
+        return response(False, "User oder Group-ID ungültig")
 
     membership = find_membership(user_id_bytes, group_id_bytes)
-
     if not membership:
         return response(False, "Membership existiert nicht - Entweder Gruppe falsch oder User nicht berechtigt")
 
@@ -143,11 +153,13 @@ def delete_group_logic(group_id, user_id):
 
 # Gruppenfeed abrufen
 def get_group_feed_logic(group_id, user_id):
-    group_id_uuid = get_uuid_formated_id(group_id)
-    user_id_uuid = get_uuid_formated_id(user_id)
+    try:
+        group_id_uuid = get_uuid_formated_id(group_id)
+        user_id_uuid = get_uuid_formated_id(user_id)
+    except ValueError:
+        return response(False, error="User oder Group-ID ungültig")
 
     membership = find_membership(user_id_uuid, group_id_uuid)
-
     if not membership:
         return response(False, "User ist kein Gruppenmitglied!")
 
@@ -158,15 +170,18 @@ def get_group_feed_logic(group_id, user_id):
 
 
 def leave_group_logic(user_id, group_id):
-    user_id_str = get_uuid_formated_id(user_id)
-    group_id_str = get_uuid_formated_id(group_id)
+    try:
+        user_id_str = get_uuid_formated_id(user_id)
+        group_id_str = get_uuid_formated_id(group_id)
+    except ValueError:
+        return response(False, error="User oder Group-ID ungültig")
 
     group =find_group_by_id(group_id_str)
     if not group:
         return response(False, "Gruppe nicht gefunden.")
 
     result = delete_membership(user_id_str, group_id_str)
-
     if not result:
         return response(False, "Fehlgeschlagen")
+
     return response(True, "User entfernt")
