@@ -50,10 +50,14 @@ def login_user():
     # Hier Methode einbinden aus Services - login kann Username oder E-Mail sein!
     result = login_user_logic(email, password)
     if not result["success"]:
-        return jsonify({"error": result}), 401 # Nicht authorisiert!
+        return jsonify({"error": result["error"]}), 401 # Nicht authorisiert!
 
     # Token erzeugen
-    access_token = create_access_token(identity=result["data"]["id"])
+    try:
+        access_token = create_access_token(identity=result["data"]["id"])
+    except Exception:
+        return jsonify({"error": "Fehler beim Erstellen des Access_Tokens"}), 401
+
 
     return jsonify({"message": "Login erfolgreich",
                     "user": result["data"],
@@ -155,6 +159,9 @@ def update_password():
 @user_bp.route('/api/logout', methods=['POST'])
 @jwt_required()
 def logout():
-    jti = get_jwt()["jti"]
-    blacklisted_tokens.add(jti)
-    return jsonify({"message": "Logged out"}), 200
+    try:
+        jti = get_jwt()["jti"]
+        blacklisted_tokens.add(jti)
+        return jsonify({"message": "Logged out"}), 200
+    except Exception:
+        return jsonify({"error": "Fehler beim Logout"})
