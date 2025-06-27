@@ -1,5 +1,8 @@
 import uuid
 from datetime import timedelta
+
+from sqlalchemy.exc import SQLAlchemyError
+
 from app.utils.time import now_berlin, date_today
 from repositories.membership_repository import find_membership, delete_membership, create_membership
 from utils.auth_utils import get_uuid_formated_id
@@ -17,39 +20,58 @@ from app.repositories.group_repository import (
 
 # Gruppe erstellen
 def create_group_logic(name, beschreibung, gruppenbild, created_by):
-    invite_link = str(uuid.uuid4())  # einfacher Invite-Code
+    try:
+        invite_link = str(uuid.uuid4())  # einfacher Invite-Code
+    except ValueError:
+        return response(False, error="Fehler beim Erzeugen des Invite-Links")
+
+    try:
+        user_id_uuid = get_uuid_formated_id(created_by)
+    except ValueError:
+        return response(False, error="User-ID konnte nicht umformatiert werden")
 
     # Hier der DB-Zugriff direkt in Services, da Gruppe und Membership durch FK-Bedingung in einer Session comitted werden müssen!
-    with SessionLocal() as session:
-        group = Gruppe(
-            gruppenname=name,
-            beschreibung=beschreibung,
-            gruppenbild=gruppenbild,
-            einladungscode=invite_link,
-            einladungscode_gueltig_bis=date_today(),
-            erstellungsDatum=date_today()
-        )
+    try:
+
+        with SessionLocal() as session:
+            group = Gruppe(
+                gruppenname=name,
+                beschreibung=beschreibung,
+                gruppenbild=gruppenbild,
+                einladungscode=invite_link,
+                einladungscode_gueltig_bis=date_today(),
+                erstellungsDatum=date_today()
+            )
 
 
-        session.add(group)
-        session.flush()
+            session.add(group)
+            session.flush()
 
-        membership = Membership(
-            user_id=get_uuid_formated_id(created_by),
-            gruppe_id=group.gruppe_id,
-            isAdmin=True
-        )
-        session.add(membership)
-        session.commit()
-        session.refresh(group)
+            membership = Membership(
+                user_id=user_id_uuid,
+                gruppe_id=group.gruppe_id,
+                isAdmin=True
+            )
+            session.add(membership)
+            session.commit()
+            session.refresh(group)
+
+            return response(True, {
+                "id": str(uuid.UUID(bytes=group.gruppe_id)),
+                "name": group.gruppenname,
+                "beschreibung": group.beschreibung,
+                "invite_link": group.einladungscode
+            })
+
+    except SQLAlchemyError as e:
+        # Fehler bei DB-Zugriff
+        return response(False, error=f"Datenbankfehler: {str(e)}")
+
+    except Exception as e:
+        # Fallback für unerwartete Fehler
+        return response(False, error=f"Unbekannter Fehler: {str(e)}")
 
 
-    return response(True, {
-        "id": str(uuid.UUID(bytes=group.gruppe_id)),
-        "name": group.gruppenname,
-        "beschreibung": group.beschreibung,
-        "invite_link": group.einladungscode
-    })
 
 # Einladung erstellen
 def invitation_link_logic(group_id, user_id):
