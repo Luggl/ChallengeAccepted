@@ -39,7 +39,7 @@ def create_group_logic(name, beschreibung, gruppenbild, created_by):
                 beschreibung=beschreibung,
                 gruppenbild=gruppenbild,
                 einladungscode=invite_link,
-                einladungscode_gueltig_bis=date_today(),
+                einladungscode_gueltig_bis=now_berlin() + timedelta(hours=4),
                 erstellungsDatum=date_today()
             )
 

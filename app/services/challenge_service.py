@@ -57,15 +57,12 @@ def create_challenge_standard_logic(user_id, data, group_id):
     if enddatum <= startdatum:
         return response(False, error="Enddatum muss nach Startdatum liegen.")
 
-    dauer = (enddatum - startdatum).days
-
     challenge = StandardChallenge(
         challenge_id=uuid.uuid4().bytes,
         gruppe_id=group_id_uuid,
         ersteller_user_id=user_id_uuid,
         startdatum=startdatum.date(),
         enddatum=enddatum.date(),
-        dauer=dauer,
         ersteller_gruppe_id=group_id_uuid,
         typ="standard"
     )
@@ -151,7 +148,6 @@ def create_challenge_survival_logic(user_id, data, group_id):
         challenge_id=uuid.uuid4().bytes,
         gruppe_id=group_id_uuid,
         ersteller_user_id=user_id_uuid,
-        ersteller_gruppe_id=group_id_uuid,
         startdatum=startdatum.date(),
         typ="survival"
     )

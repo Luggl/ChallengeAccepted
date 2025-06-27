@@ -116,6 +116,7 @@ class Membership(Base):
 
     user=relationship("User", back_populates="membership")
     gruppe=relationship("Gruppe", back_populates="memberships")
+    erstellt_challenges=relationship("Challenge", back_populates="ersteller", overlaps="gruppe,challenges")
 
 class Gruppe(Base):
     __tablename__="gruppe"
@@ -192,11 +193,10 @@ class Challenge(Base):
     gruppe=relationship("Gruppe", back_populates="challenges")
 
     ersteller_user_id = Column(BLOB)
-    ersteller_gruppe_id = Column(BLOB)
 
     __table_args__ = (
         ForeignKeyConstraint(
-            ["ersteller_user_id", "ersteller_gruppe_id"],
+            ["ersteller_user_id", "gruppe_id"],
             ["membership.user_id", "membership.gruppe_id"],
             ondelete="CASCADE"
         ),
@@ -206,8 +206,10 @@ class Challenge(Base):
         "Membership",
         primaryjoin=and_(
             foreign(ersteller_user_id)==Membership.user_id,
-            foreign(ersteller_gruppe_id)==Membership.gruppe_id
+            foreign(gruppe_id)==Membership.gruppe_id
         ),
+        back_populates="erstellt_challenges",
+        overlaps="gruppe,challenges",
         foreign_keys=[Membership.user_id, Membership.gruppe_id],
     )
 
@@ -225,7 +227,6 @@ class Challenge(Base):
 class StandardChallenge(Challenge):
     __tablename__ = "standard_challenge"
     challenge_id = Column(BLOB, ForeignKey("challenge.challenge_id", ondelete="CASCADE"),primary_key=True)
-    dauer=Column(Integer)
     enddatum = Column(Date)
 
     __mapper_args_ = {

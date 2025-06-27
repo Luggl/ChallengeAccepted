@@ -104,7 +104,7 @@ def complete_task_logic(erfuellung_id, user_id, description, video_file):
 
     videopath = success["data"]
     # Videopfad in Aufgabenerfüllung speichern
-    success= update_task_by_video_url(erfuellung_id_uuid, videopath)
+    success = update_task_by_video_url(erfuellung_id_uuid, videopath)
     #Aufgabenerfüllung Status updaten
     success = mark_task_as_complete(erfuellung_id_uuid)
     if not success:
