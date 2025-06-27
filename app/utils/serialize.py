@@ -54,3 +54,10 @@ def serialize_membership(membership):
         "gruppe_id": membership.gruppe_id.hex(),
         "isAdmin": membership.isAdmin,
     }
+
+def serialize_user(user):
+    return{
+        "user_id": user.user_id.hex(),
+        "username": user.username,
+        "email": user.email
+    }
