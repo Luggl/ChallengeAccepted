@@ -57,6 +57,8 @@ def get_task_logic(user_id):
     #Für alle Memberships die jeweiligen Tasks laden
     for membership in memberships:
         challenge = find_active_challenge_by_group(membership.gruppe_id)
+        if not challenge:
+            return response(False, error="Keine aktive Challenge vorhanden")
         aufgabenerfuellung = find_aufgabenerfuellung_by_challenge_and_date(challenge.challenge_id, datum)
         if aufgabenerfuellung:
             aufgabenerfuellungen.append(serialize_aufgabenerfuellung(aufgabenerfuellung))
