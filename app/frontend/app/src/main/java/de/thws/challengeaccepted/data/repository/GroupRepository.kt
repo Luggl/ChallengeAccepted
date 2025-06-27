@@ -4,7 +4,7 @@ import de.thws.challengeaccepted.models.GroupResponse
 import de.thws.challengeaccepted.network.GroupService
 
 class GroupRepository(private val groupService: GroupService) {
-    suspend fun getGroupsForUser(userId: String): List<GroupResponse> {
-        return groupService.getGroupsForUser(userId)
+    suspend fun getGroupOverview(): List<GroupResponse> {
+        return groupService.getGroupOverview().message.data
     }
 }

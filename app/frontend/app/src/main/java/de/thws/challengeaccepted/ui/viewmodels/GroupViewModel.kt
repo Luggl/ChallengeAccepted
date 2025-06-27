@@ -16,10 +16,10 @@ class GroupViewModel(application: Application) : AndroidViewModel(application) {
         ApiClient.getRetrofit(application).create(GroupService::class.java)
     )
 
-    fun getGroups(userId: String, onResult: (List<GroupResponse>) -> Unit) {
+    fun loadGroupOverview(onResult: (List<GroupResponse>) -> Unit) {
         viewModelScope.launch {
             try {
-                val groups = repository.getGroupsForUser(userId)
+                val groups = repository.getGroupOverview()
                 onResult(groups)
             } catch (e: Exception) {
                 onResult(emptyList())

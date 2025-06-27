@@ -26,9 +26,15 @@ class GroupAdapter(
 
     override fun onBindViewHolder(holder: GroupViewHolder, position: Int) {
         val group = groups[position]
-        holder.name.text = group.gruppenname
-        // Wenn du Gruppensymbol aus dem Backend hast, hier laden (ggf. Glide/Picasso!)
-        // z.B. Glide.with(holder.image.context).load(group.gruppenbild).into(holder.image)
+        holder.name.text = group.gruppenname // <-- angepasst!
+
+        // Beispiel für ein Gruppenbild (optional):
+        // if (!group.gruppenbild.isNullOrEmpty()) {
+        //     Glide.with(holder.image.context).load(group.gruppenbild).into(holder.image)
+        // } else {
+        //     holder.image.setImageResource(R.drawable.default_group_icon)
+        // }
+
         holder.itemView.setOnClickListener { onClick(group) }
     }
 

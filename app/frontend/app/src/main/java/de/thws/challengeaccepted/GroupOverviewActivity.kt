@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import de.thws.challengeaccepted.ui.adapter.GroupAdapter
 import de.thws.challengeaccepted.ui.viewmodels.GroupViewModel
 import android.widget.ImageView
+import android.widget.TextView
 
 class GroupOverviewActivity : AppCompatActivity() {
 
@@ -18,22 +19,19 @@ class GroupOverviewActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_group_overview)
 
-        val prefs = getSharedPreferences("app", MODE_PRIVATE)
-        val userId = prefs.getString("USER_ID", null)
-        val token = prefs.getString("token", null)
-
         val recycler = findViewById<RecyclerView>(R.id.recyclerViewGroups)
         recycler.layoutManager = LinearLayoutManager(this)
 
-        if (userId != null) {
-            groupViewModel.getGroups(userId) { groups ->
-                runOnUiThread {
-                    recycler.adapter = GroupAdapter(groups) { group ->
-                        val intent = Intent(this, GroupDashboardActivity::class.java)
-                        intent.putExtra("GROUP_ID", group.gruppe_id)
-                        startActivity(intent)
-                    }
+        val tvGroupCount = findViewById<TextView>(R.id.tv_group_count) // <- Deine ID!
+        // Jetzt wird OHNE userId geladen, der Server erkennt den User über das JWT!
+        groupViewModel.loadGroupOverview { groups ->
+            runOnUiThread {
+                recycler.adapter = GroupAdapter(groups) { group ->
+                    val intent = Intent(this, GroupDashboardActivity::class.java)
+                    intent.putExtra("GROUP_ID", group.gruppe_id)
+                    startActivity(intent)
                 }
+                tvGroupCount.text = "Aktiv in ${groups.size} Gruppen:"
             }
         }
 
