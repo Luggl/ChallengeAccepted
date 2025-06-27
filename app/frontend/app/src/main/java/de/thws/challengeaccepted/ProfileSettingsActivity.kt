@@ -26,6 +26,12 @@ class ProfileSettingsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_profile_settings)
         prefs = getSharedPreferences("app", MODE_PRIVATE)
 
+        findViewById<ImageView>(R.id.btn_back).setOnClickListener {
+            finish()
+        }
+
+
+
         val nameEdit = findViewById<EditText>(R.id.etUserName)
         val userId = prefs.getString("USER_ID", null)
 
