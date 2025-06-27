@@ -25,7 +25,7 @@ def get_membership_overview_logic(user_id):
     user_id_uuid = get_uuid_formated_id(user_id)
     memberships = find_memberships_by_user(user_id_uuid)
     if not memberships:
-        return response(False, "User in keiner Gruppe enthalten")
+        return response(False, error="User in keiner Gruppe enthalten")
 
     groups = []
     for membership in memberships:

@@ -178,10 +178,10 @@ def leave_group_logic(user_id, group_id):
 
     group =find_group_by_id(group_id_str)
     if not group:
-        return response(False, "Gruppe nicht gefunden.")
+        return response(False, error="Gruppe nicht gefunden.")
 
     result = delete_membership(user_id_str, group_id_str)
     if not result:
-        return response(False, "Fehlgeschlagen")
+        return response(False, error="Fehlgeschlagen")
 
     return response(True, "User entfernt")

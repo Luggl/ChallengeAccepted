@@ -119,7 +119,7 @@ def safe_video_logic(task_id, video_file):
         video_file.save(full_path)
         return response(True, data=full_path)
     except Exception as e:
-        return response(False, "Fehler beim Speichern des Videos!")
+        return response(False, error="Fehler beim Speichern des Videos!")
 
 
 # Vote abgeben für ein Task-Ergebnis
