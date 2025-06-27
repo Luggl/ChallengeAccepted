@@ -125,12 +125,15 @@ def get_user():
 @jwt_required()
 def update_user():
     current_user_id = get_jwt_identity()
-    update_data = request.get_json()
 
-    if not update_data:
+    username = request.form.get("username")
+    email = request.form.get("email")
+    profilbild = request.files.get("profilbild")
+
+    if not username and not email and not profilbild:
         return jsonify({"error": "Keine Daten übergeben."}), 400
 
-    result = update_user_logic(current_user_id, update_data)
+    result = update_user_logic(current_user_id, username, email, profilbild)
 
     if not result["success"]:
         return jsonify({"error": result["error"]}), 404

@@ -67,7 +67,7 @@ class User(Base):
     username=Column(String, nullable=False, unique=True)
     email=Column(String, nullable=False, unique=True)
     passwordHash=Column(String)
-    profilbild=Column(String)
+    profilbild_url=Column(String)
     streak=Column(Integer, default=0)
 
     achievement_links=relationship(

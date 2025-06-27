@@ -1,4 +1,8 @@
+import os
+
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import secure_filename
+
 from app.utils.response import response
 from app.utils.time import now_berlin
 from app.utils.mail_service import send_password_reset_mail
@@ -17,7 +21,8 @@ from app.repositories.user_repository import (
 import uuid
 from utils.auth_utils import get_uuid_formated_id
 
-ALLOWED_UPDATE_FIELDS = {"username", "email", "profilbild"}
+ALLOWED_UPDATE_FIELDS = {"username", "email", "profilbild_url"}
+UPLOAD_ROOT = "media/profilbilder"
 
 
 # Registrierung eines neuen Users
@@ -140,7 +145,7 @@ def get_user_logic(user_id_str):
         "id": str(uuid.UUID(bytes=user.user_id)),
         "username": user.username,
         "email": user.email,
-        "profilbild": user.profilbild,
+        "profilbild": user.profilbild_url,
         "streak": user.streak,
         "Kalender": kalender
     }
@@ -162,7 +167,7 @@ def get_user_kalender_logic(user_id):
 
     return kalender
 
-def update_user_logic(user_id_str, update_data):
+def update_user_logic(user_id_str, username, email, profilbild):
     try:
         user_id = uuid.UUID(user_id_str).bytes
     except ValueError:
@@ -173,10 +178,19 @@ def update_user_logic(user_id_str, update_data):
         return response(False, error="Benutzer nicht gefunden")
 
     updated = False
-    for field in ALLOWED_UPDATE_FIELDS:
-        if field in update_data and getattr(user, field) != update_data[field]:
-            setattr(user, field, update_data[field])
-            updated = True
+
+    if username and username != getattr(user, "username"):
+        user.username = username
+        updated = True
+    if email and email != getattr(user, "email"):
+        user.email = email
+        updated = True
+
+    if profilbild:
+        result = save_profilbild(user_id, profilbild)
+        if not result["success"]:
+            return response(False, error=result["error"])
+        user.profilbild_url = result["data"]
 
     if not updated:
         return response(False, error="Keine gültigen Änderungen übergeben")
@@ -184,6 +198,23 @@ def update_user_logic(user_id_str, update_data):
     update_user(user)
 
     return response(True, data="Benutzer erfolgreich aktualisiert")
+
+def save_profilbild(user_id, profilbild):
+    if not profilbild.mimetype.startswith("image/"):
+        return response(False, error="Nur Bilddateien erlaubt")
+    try:
+        filename = secure_filename(f"{user_id}.jpg")
+        upload_path = os.path.abspath(UPLOAD_ROOT)
+        os.makedirs(upload_path, exist_ok=True)
+
+        full_path = os.path.join(upload_path, filename)
+        profilbild.save(full_path)
+
+        relative_path = os.path.join("profilbilder", filename)
+        return response(True, data=relative_path)
+
+    except Exception as e:
+        return response(False, error=f"Fehler beim Speichern des Bilds: {str(e)}")
 
 
 def update_password_logic(user_id_str, old_password, new_password):
