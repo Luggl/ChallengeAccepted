@@ -20,7 +20,7 @@ def serialize_beitrag(beitrag):
 
 def serialize_gruppe(gruppe):
     return{
-        "gruppe_id": gruppe.gruppe_id.hex(),
+        "gruppe_id": get_uuid_formated_string(gruppe.gruppe_id),
         "gruppenname": gruppe.gruppenname,
         "beschreibung": gruppe.beschreibung,
         "gruppenbild": gruppe.gruppenbild,
