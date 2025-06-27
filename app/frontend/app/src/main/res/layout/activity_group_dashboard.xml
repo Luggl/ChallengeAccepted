@@ -38,6 +38,7 @@
 
                     <!-- Gruppenbild -->
                     <ImageView
+                        android:id="@+id/ivGroupImageDashboard"
                         android:layout_width="60dp"
                         android:layout_height="60dp"
                         android:background="@drawable/round_background"
@@ -47,6 +48,7 @@
 
 
                     <TextView
+                        android:id="@+id/tvGroupNameDashboard"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="40dp"
@@ -54,7 +56,6 @@
                         android:text="Kämpfernatur"
                         android:textColor="@color/white"
                         android:textSize="30dp" />
-
                 </LinearLayout>
             </LinearLayout>
 

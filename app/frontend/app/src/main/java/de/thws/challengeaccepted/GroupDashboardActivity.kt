@@ -1,21 +1,45 @@
 package de.thws.challengeaccepted
 
 import android.content.Intent
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
+
+// Für Bilder von URLs (optional, falls du ein Bild hast und Glide nutzen willst)
+import com.bumptech.glide.Glide
 
 class GroupDashboardActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_group_dashboard)
+
+        // Übergebene Daten holen
+        val groupId = intent.getStringExtra("GROUP_ID")
+        val groupName = intent.getStringExtra("GROUP_NAME")
+        val groupBeschreibung = intent.getStringExtra("GROUP_BESCHREIBUNG")
+        val groupBild = intent.getStringExtra("GROUP_BILD")
+
+        // Gruppenname setzen (passt die ID ggf. an dein Layout an)
+        val groupNameTextView = findViewById<TextView>(R.id.tvGroupNameDashboard)
+        groupNameTextView?.text = groupName ?: "Kein Name"
+
+
+        // Gruppenbild anzeigen (optional)
+        val groupImageView = findViewById<ImageView>(R.id.ivGroupImageDashboard)
+        if (!groupBild.isNullOrEmpty() && groupImageView != null) {
+            // Falls Bild eine URL ist, lade es mit Glide (füge Glide als Dependency hinzu!)
+            Glide.with(this).load(groupBild).into(groupImageView)
+        } else {
+            // Setze ein Platzhalter-Bild, falls kein Bild vorhanden
+            groupImageView?.setImageResource(R.drawable.group_profile_picture)
+        }
 
         // Navigation Groupstatus
         val navGroupstatus = findViewById<LinearLayout>(R.id.ll_groupstatus)
@@ -59,29 +83,23 @@ class GroupDashboardActivity : AppCompatActivity() {
 
             dialogBuilder.setPositiveButton("Aufgabe erledigen") { _, _ ->
                 Toast.makeText(this, "Aufgaben-Erledigungs-Flow startet...", Toast.LENGTH_SHORT).show()
-                    val intent = Intent(this, RecordActivity::class.java)
-                    startActivity(intent)
+                val intent = Intent(this, RecordActivity::class.java)
+                startActivity(intent)
             }
 
             dialogBuilder.setNegativeButton("Challenge erstellen") { _, _ ->
                 Toast.makeText(this, "Challenge-Erstellung startet...", Toast.LENGTH_SHORT).show()
-                    val intent = Intent(this, CreateChallengeModeActivity::class.java)
-                    startActivity(intent)
+                val intent = Intent(this, CreateChallengeModeActivity::class.java)
+                startActivity(intent)
             }
 
-            // Abbrechen
             val alertDialog = dialogBuilder.create()
-
-            // Schwarzer Hintergrund
             alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.BLACK))
 
             alertDialog.setOnShowListener {
-                // Titel & Nachricht in weiß
                 val titleId = resources.getIdentifier("alertTitle", "id", "android")
-                alertDialog.findViewById<TextView>(titleId)?.setTextColor(Color.WHITE)
-                alertDialog.findViewById<TextView>(android.R.id.message)?.setTextColor(Color.WHITE)
-
-                // Buttonfarben
+                alertDialog.findViewById<TextView>(titleId)?.setTextColor(getColor(R.color.white))
+                alertDialog.findViewById<TextView>(android.R.id.message)?.setTextColor(getColor(R.color.white))
                 alertDialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(getColor(R.color.white))
                 alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(getColor(R.color.white))
             }

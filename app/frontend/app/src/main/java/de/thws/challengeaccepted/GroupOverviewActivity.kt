@@ -11,6 +11,7 @@ import de.thws.challengeaccepted.ui.viewmodels.GroupViewModel
 import android.widget.ImageView
 import android.widget.TextView
 
+
 class GroupOverviewActivity : AppCompatActivity() {
 
     private val groupViewModel: GroupViewModel by viewModels()
@@ -29,6 +30,9 @@ class GroupOverviewActivity : AppCompatActivity() {
                 recycler.adapter = GroupAdapter(groups) { group ->
                     val intent = Intent(this, GroupDashboardActivity::class.java)
                     intent.putExtra("GROUP_ID", group.gruppe_id)
+                    intent.putExtra("GROUP_NAME", group.gruppenname)
+                    intent.putExtra("GROUP_BESCHREIBUNG", group.beschreibung)
+                    intent.putExtra("GROUP_BILD", group.gruppenbild)
                     startActivity(intent)
                 }
                 tvGroupCount.text = "Aktiv in ${groups.size} Gruppen:"
