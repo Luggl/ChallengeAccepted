@@ -1,10 +1,9 @@
 # app/repositories/user_repository.py
 
-from app.database.models import User, Aufgabenerfuellung  # falls User direkt in models/__init__.py steht, sonst: from app.models.user import User
-from app import db  # Das ist die SQLAlchemy-Instanz (db.session)
-from sqlalchemy import inspect
+from app.database.models import User, Aufgabenerfuellung, Beitrag
 
-from app.database.database import engine, SessionLocal
+from app.database.database import SessionLocal
+from utils.serialize import serialize_beitrag
 
 
 def find_user_by_email(email):
@@ -31,7 +30,7 @@ def save_user(user):
 
 def delete_user_by_id(user_id):
     """Lösche einen User anhand seiner user_id."""
-    user = find_user_by_id(user_id.bytes)
+    user = find_user_by_id(user_id)
     if user:
         with SessionLocal() as session:
             session.delete(user)
@@ -50,3 +49,8 @@ def find_user_activities(user):
     with SessionLocal() as session:
         return session.query(Aufgabenerfuellung).filter_by(user_id=user.user_id).first()
 
+def get_user_feed(user_id):
+    with SessionLocal() as session:
+        beitraege = session.query(Beitrag).filter_by(user_id=user_id).order_by(Beitrag.erstellDatum.desc()).all()
+        result = [serialize_beitrag(b) for b in beitraege]
+        return result

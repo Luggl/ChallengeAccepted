@@ -2,6 +2,7 @@
 
 from app.database.models import Achievement
 from app import db
+from database.database import SessionLocal
 
 def find_achievement_by_id(achievement_id):
     """Finde ein Achievement anhand der ID."""
@@ -33,4 +34,5 @@ def update_achievement(achievement):
 
 def get_all_achievements():
     """Gibt alle Achievements zurück."""
-    return db.session.query(Achievement).all()
+    with SessionLocal() as session:
+        return session.query(Achievement).all()

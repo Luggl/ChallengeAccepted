@@ -1,13 +1,19 @@
 import uuid
-import app.repositories.group_repository
-from datetime import datetime, timedelta
+from datetime import timedelta
 from app.utils.time import now_berlin, date_today
-from repositories.membership_repository import find_membership, delete_membership
+from repositories.membership_repository import find_membership, delete_membership, create_membership
 from utils.auth_utils import get_uuid_formated_id
 from utils.response import response
-from app.database.models import Gruppe, Membership
-from app.repositories.group_repository import *
-
+from app.database.models import Membership
+from app.repositories.group_repository import (
+    SessionLocal,
+    Gruppe,
+    find_group_by_id,
+    update_group,
+    find_group_by_invite_code,
+    delete_group_by_id,
+    get_group_feed_by_group_id
+)
 
 # Gruppe erstellen
 def create_group_logic(name, beschreibung, gruppenbild, created_by):
@@ -29,7 +35,7 @@ def create_group_logic(name, beschreibung, gruppenbild, created_by):
         session.flush()
 
         membership = Membership(
-            user_id=uuid.UUID(created_by).bytes,
+            user_id=get_uuid_formated_id(created_by),
             gruppe_id=group.gruppe_id,
             isAdmin=True
         )
@@ -47,10 +53,12 @@ def create_group_logic(name, beschreibung, gruppenbild, created_by):
 
 # Einladung erstellen
 def invitation_link_logic(group_id, user_id):
+    group_id = get_uuid_formated_id(group_id)
     group = find_group_by_id(group_id)
     if not group:
         return response(False, "Gruppe nicht gefunden.")
 
+    user_id = get_uuid_formated_id(user_id)
     membership = find_membership(user_id, group.gruppe_id)
     if not membership:
         return response(False, "User nicht Member der Gruppe!")
@@ -74,8 +82,15 @@ def join_group_via_link_logic(user_id, invitation_link):
     if group.einladungscode_gueltig_bis.date() < now_berlin().date():
         return response(False, "Einladungslink ist abgelaufen.")
 
+    user_id_uuid = get_uuid_formated_id(user_id)
+
+    # Failcheck, falls User bereits Gruppenmitglied!
+    membershipcheck = find_membership(user_id_uuid, group.gruppe_id)
+    if membershipcheck:
+        return response(False, "User bereits Mitglied der Gruppe")
+
     membership = Membership(
-        user_id=uuid.UUID(user_id).bytes,
+        user_id=user_id_uuid,
         gruppe_id=group.gruppe_id,
         isAdmin=False)
 
@@ -87,11 +102,14 @@ def join_group_via_link_logic(user_id, invitation_link):
 
 # Gruppe löschen
 def delete_group_logic(group_id, user_id):
-    # Optional: prüfen, ob user der Admin ist → kommt später
-    user_id_bytes = uuid.UUID(user_id).bytes
-    group_id_bytes = uuid.UUID(group_id).bytes
+
+    user_id_bytes = get_uuid_formated_id(user_id)
+    group_id_bytes = get_uuid_formated_id(group_id)
 
     membership = find_membership(user_id_bytes, group_id_bytes)
+
+    if not membership:
+        return response(False, "Membership existiert nicht - Entweder Gruppe falsch oder User nicht berechtigt")
 
     if not membership.isAdmin:
         return response(False, "User darf die Gruppe nicht löschen")
@@ -103,17 +121,19 @@ def delete_group_logic(group_id, user_id):
 
 # Gruppenfeed abrufen
 def get_group_feed_logic(group_id, user_id):
-    feed = get_group_feed_data(group_id, user_id)
+    group_id_uuid = get_uuid_formated_id(group_id)
+    user_id_uuid = get_uuid_formated_id(user_id)
+
+    membership = find_membership(user_id_uuid, group_id_uuid)
+
+    if not membership:
+        return response(False, "User ist kein Gruppenmitglied!")
+
+    feed = get_group_feed_by_group_id(group_id_uuid)
     if not feed:
         return response(False, "Zugriff verweigert oder keine Daten.")
     return response(True, feed)
 
-# Gruppenübersicht für User abrufen
-def get_group_overview_logic(user_id):
-    groups = get_groups_for_user(user_id)
-    if not groups:
-        return response(False, "Keine Gruppen gefunden.")
-    return response(True, groups)
 
 def leave_group_logic(user_id, group_id):
     user_id_str = get_uuid_formated_id(user_id)
