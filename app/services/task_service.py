@@ -29,6 +29,8 @@ import uuid
 import random
 from collections import defaultdict
 from datetime import datetime, time, timedelta
+
+from repositories.group_repository import find_group_by_id
 from repositories.membership_repository import find_memberships_by_user
 from utils.auth_utils import get_uuid_formated_id
 from utils.serialize import serialize_aufgabenerfuellung
@@ -54,16 +56,32 @@ def get_task_logic(user_id):
 
     #Liste an Aufgabenerfüllungen erzeugen
     aufgabenerfuellungen = []
+    inaktive_Challenges = []
     #Für alle Memberships die jeweiligen Tasks laden
     for membership in memberships:
         challenge = find_active_challenge_by_group(membership.gruppe_id)
         if not challenge:
-            return response(False, error="Keine aktive Challenge vorhanden")
+            try:
+                gruppe_id = str(uuid.UUID(bytes=membership.gruppe_id))
+                gruppe_name = find_group_by_id(membership.gruppe_id).gruppenname
+                inaktive_Challenges.append({
+                    "gruppe-id": gruppe_id,
+                    "gruppe-name": gruppe_name,
+                    "status": "Keine aktive Challenge gefunden"
+                })
+            except Exception:
+                inaktive_Challenges.append({
+                    "status": "Fehler beim Laden der Gruppe aus der Membership!"
+                })
+            continue
         aufgabenerfuellung = find_aufgabenerfuellung_by_challenge_and_date(challenge.challenge_id, datum)
         if aufgabenerfuellung:
             aufgabenerfuellungen.append(serialize_aufgabenerfuellung(aufgabenerfuellung))
 
-    return response(True, data=aufgabenerfuellungen)
+    return response(True, data={
+        "Aufgaben": aufgabenerfuellungen,
+        "Hinweise": inaktive_Challenges,
+    })
 
 
 # Aufgabe als erledigt markieren
