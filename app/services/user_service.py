@@ -4,7 +4,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 
 from app.utils.response import response
-from app.utils.time import now_berlin
+from app.utils.time import now_berlin, date_today, get_all_days
 from app.utils.mail_service import send_password_reset_mail
 from datetime import timedelta
 from app.database.models import User, ResetToken, AufgabeStatus
@@ -19,6 +19,7 @@ from app.repositories.user_repository import (
 )
 
 import uuid
+from repositories.task_repository import find_all_tasks_by_user
 from utils.auth_utils import get_uuid_formated_id
 
 ALLOWED_UPDATE_FIELDS = {"username", "email", "profilbild_url"}
@@ -154,17 +155,31 @@ def get_user_logic(user_id_str):
 
 def get_user_kalender_logic(user_id):
     user = find_user_by_id(user_id)
-    kalender = {}
     if not user:
         return response(False, error="Benutzer nicht gefunden")
 
+    kalender = {}
+    tage = get_all_days(date_today().year, date_today().month)
+
     erfuellungen = find_user_activities(user)
 
-    if erfuellungen:
-        for eintrag in erfuellungen:
-            if eintrag.status == AufgabeStatus.abgeschlossen:
-                datum_str = eintrag.datum.strftime("%d.%m.%Y")
-                kalender[datum_str] = eintrag.status.value
+    #JSON Format Map Datum --> Status
+    status_map = {}
+    for e in erfuellungen:
+        datum = e.datum
+        status = e.status.value
+        status_map[datum] = status
+
+    #Prüfung für jeden Tag im Monat, ob es eine Aufgabenerfüllung gab
+    for tag in tage:
+        aktuelles_datum = tag
+
+        if aktuelles_datum in status_map:
+            #Falls Aufgabenerfüllung vorhanden, Status übernehmen
+            kalender[aktuelles_datum.isoformat()] = status_map[aktuelles_datum]
+        else:
+            #Ansonsten gab es keine Aufgabe zu bewältigen
+            kalender[aktuelles_datum.isoformat()] = "Keine_Aufgabe"
 
     return kalender
 

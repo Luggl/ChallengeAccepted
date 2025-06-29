@@ -24,12 +24,14 @@ def find_task_by_challenge_and_date(challenge_id, datum):
     with SessionLocal() as session:
         return session.query(Aufgabe).filter_by(challenge_id=challenge_id, datum=datum).first()
 
-def find_tasks_by_user_id(user_id):
-    """Finde Aufgaben anhand der User ID"""
+def find_aufgabenerfuellung_by_user_id(user_id):
+    """Finde Aufgabenerfüllung anhand der User ID"""
     with SessionLocal() as session:
         return session.query(Aufgabenerfuellung).filter_by(user_id=user_id).all()
 
-
+def find_all_tasks_by_user(user_id):
+    with SessionLocal() as session:
+        return session.query(Aufgabe).filter_by(user_id=user_id).all()
 
 def find_task_by_challenge_and_date_and_typ(challenge_id, datum, typ):
     """Finde Aufgabe zu Challenge, Datum und Typ."""

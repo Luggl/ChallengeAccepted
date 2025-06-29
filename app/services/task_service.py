@@ -9,7 +9,7 @@ from app.repositories.task_repository import (
     mark_task_as_complete,
     has_user_already_voted,
     create_user_vote,
-    find_tasks_by_user_id,
+    find_aufgabenerfuellung_by_user_id,
     find_aufgabenerfuellung_by_challenge_and_date, update_task_by_video_url,
     add_streak
 )
@@ -90,7 +90,7 @@ def complete_task_logic(erfuellung_id, user_id, description, video_file):
     user_id_uuid = get_uuid_formated_id(user_id)
     erfuellung_id_uuid = get_uuid_formated_id(erfuellung_id)
     #Prüfen, ob User diese Task überhaupt hat
-    usercheck = find_tasks_by_user_id(user_id_uuid)
+    usercheck = find_aufgabenerfuellung_by_user_id(user_id_uuid)
 
     if not any(e.erfuellung_id == erfuellung_id_uuid for e in usercheck):
         return response(False, error="User hält diese Aufgabe nicht!")
