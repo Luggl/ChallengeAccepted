@@ -1,13 +1,11 @@
 # um Videoformat per JSON über Flask zurückzugeben
 import uuid
 
-from repositories.task_repository import find_aufgabenerfuellung_by_id
 from utils.auth_utils import get_uuid_formated_string
 
 
 def serialize_beitrag(beitrag):
     #Da die Aufgabenerfüllung alle relevanten Informationen hält, muss diese hier erstmal geladen werden
-    erfuellung = find_aufgabenerfuellung_by_id(beitrag.erfuellung_id)
 
     return{
         "beitrag_id": get_uuid_formated_string(beitrag.beitrag_id),

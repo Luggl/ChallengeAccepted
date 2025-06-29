@@ -63,7 +63,6 @@ def create_challenge_standard_logic(user_id, data, group_id):
         ersteller_user_id=user_id_uuid,
         startdatum=startdatum.date(),
         enddatum=enddatum.date(),
-        ersteller_gruppe_id=group_id_uuid,
         typ="standard"
     )
 

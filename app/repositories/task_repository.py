@@ -1,10 +1,12 @@
 from sqlalchemy import func
 from sqlalchemy.orm import joinedload
 from app.database.database import SessionLocal
-from app.database.models import Aufgabe, AufgabeStatus, Aufgabenerfuellung, StandardAufgabe, SurvivalAufgabe
+from app.database.models import Aufgabe, AufgabeStatus, Aufgabenerfuellung, User
 from repositories.beitrag_repository import find_beitrag_vote_by_user_beitrag
 from repositories.challenge_repository import find_challenge_by_id
 from repositories.membership_repository import find_memberships_by_group
+from repositories.user_repository import find_user_by_id
+from utils.time import date_today
 
 
 def find_task_by_id(aufgabe_id):
@@ -93,10 +95,13 @@ def update_task_by_video_url(erfuellung_id, videopath):
             return None
         return aufgabenerfuellung
 
-def mark_task_as_complete(erfuellung_id):
+def mark_task_as_complete(erfuellung_id, description):
     with SessionLocal() as session:
         aufgabenerfuellung = session.query(Aufgabenerfuellung).filter_by(erfuellung_id=erfuellung_id).first()
         aufgabenerfuellung.status=AufgabeStatus.abgeschlossen
+        aufgabenerfuellung.datum=date_today()
+        if description:
+            aufgabenerfuellung.beschreibung=description
         session.commit()
         if not aufgabenerfuellung:
             return None
@@ -124,3 +129,21 @@ def create_user_vote(beitrag_votes):
 def find_aufgabenerfuellung_by_id(erfuellung_id):
     with SessionLocal() as session:
         return session.query(Aufgabenerfuellung).filter(Aufgabenerfuellung.erfuellung_id == erfuellung_id).first()
+
+def add_streak(user_id):
+    with SessionLocal() as session:
+        user = session.query(User).filter(User.user_id == user_id).first()
+        if user is None:
+            return None
+        user.streak += 1
+        session.commit()
+        return user
+
+def delete_streak(user_id):
+    with SessionLocal() as session:
+        user = session.query(User).filter(User.user_id == user_id).first()
+        if user is None:
+            return None
+        user.streak = 0
+        session.commit()
+        return user

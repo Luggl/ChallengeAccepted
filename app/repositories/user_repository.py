@@ -3,7 +3,7 @@
 from app.database.models import User, Aufgabenerfuellung, Beitrag, Membership
 
 from app.database.database import SessionLocal
-from utils.serialize import serialize_beitrag
+from app.utils.serialize import serialize_beitrag
 
 
 def find_user_by_email(email):
@@ -47,7 +47,7 @@ def update_user(user):
 
 def find_user_activities(user):
     with SessionLocal() as session:
-        return session.query(Aufgabenerfuellung).filter_by(user_id=user.user_id).first()
+        return session.query(Aufgabenerfuellung).filter_by(user_id=user.user_id).all()
 
 def get_user_feed(user_id):
     with SessionLocal() as session:

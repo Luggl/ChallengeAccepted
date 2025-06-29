@@ -7,7 +7,7 @@ from app.utils.response import response
 from app.utils.time import now_berlin
 from app.utils.mail_service import send_password_reset_mail
 from datetime import timedelta
-from app.database.models import User, ResetToken
+from app.database.models import User, ResetToken, AufgabeStatus
 from app.repositories.token_repository import find_token_by_string, save_token, delete_token, delete_token_by_user_id
 from app.repositories.user_repository import (
     find_user_by_email,
@@ -162,8 +162,9 @@ def get_user_kalender_logic(user_id):
 
     if erfuellungen:
         for eintrag in erfuellungen:
-            datum_str = eintrag.datum.strftime("%d.%m.%Y")
-            kalender[datum_str] = eintrag.status
+            if eintrag.status == AufgabeStatus.abgeschlossen:
+                datum_str = eintrag.datum.strftime("%d.%m.%Y")
+                kalender[datum_str] = eintrag.status.value
 
     return kalender
 

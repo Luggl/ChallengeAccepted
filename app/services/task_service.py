@@ -10,7 +10,8 @@ from app.repositories.task_repository import (
     has_user_already_voted,
     create_user_vote,
     find_tasks_by_user_id,
-    find_aufgabenerfuellung_by_challenge_and_date, update_task_by_video_url
+    find_aufgabenerfuellung_by_challenge_and_date, update_task_by_video_url,
+    add_streak
 )
 from app.database.models import BeitragVotes, Beitrag, AufgabeTyp, StandardAufgabe
 from repositories.beitrag_repository import (
@@ -106,7 +107,7 @@ def complete_task_logic(erfuellung_id, user_id, description, video_file):
     # Videopfad in Aufgabenerfüllung speichern
     success = update_task_by_video_url(erfuellung_id_uuid, videopath)
     #Aufgabenerfüllung Status updaten
-    success = mark_task_as_complete(erfuellung_id_uuid)
+    success = mark_task_as_complete(erfuellung_id_uuid, description)
     if not success:
         return response(False, error="Aufgabe nicht gefunden oder konnte nicht abgeschlossen werden.")
 
@@ -123,6 +124,11 @@ def complete_task_logic(erfuellung_id, user_id, description, video_file):
     success = create_beitrag(beitrag)
     if not success:
         return response(False, error="Beitrag konnte nicht erstellt werden")
+
+    # Streak wird nach Abschluss entsprechend erhöht
+    success = add_streak(user_id_uuid)
+    if not success:
+        return response(False, error="Streak konnte nicht erfolgreich erhöht werden!")
 
     return response(True, data="Aufgabe als erledigt markiert und Beitrag erstellt.")
 
