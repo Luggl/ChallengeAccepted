@@ -1,7 +1,7 @@
 # um Videoformat per JSON über Flask zurückzugeben
 import uuid
 
-from utils.auth_utils import get_uuid_formated_string
+from app.utils.auth_utils import get_uuid_formated_string
 
 
 def serialize_beitrag(beitrag):

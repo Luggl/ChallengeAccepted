@@ -33,6 +33,7 @@ from datetime import datetime, time, timedelta
 
 from repositories.group_repository import find_group_by_id
 from repositories.membership_repository import find_memberships_by_user
+from services.schedule import schedule_deadline_job
 from utils.auth_utils import get_uuid_formated_id
 from utils.serialize import serialize_aufgabenerfuellung
 from utils.time import now_berlin, date_today
@@ -241,6 +242,8 @@ def generate_standard_tasks_for_challenge_logic(challenge_id: bytes):
         )
 
         save_aufgabe(aufgabe)
+        schedule_deadline_job(aufgabe)  # Hier wird der Hintergrundjob initialisiert, der den Status nach Deadline verändert
+
 
     return response(True, data=f"{duration} Aufgaben erstellt")
 

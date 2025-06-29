@@ -19,8 +19,7 @@ from app.repositories.user_repository import (
 )
 
 import uuid
-from repositories.task_repository import find_all_tasks_by_user
-from utils.auth_utils import get_uuid_formated_id
+from app.utils.auth_utils import get_uuid_formated_id
 
 ALLOWED_UPDATE_FIELDS = {"username", "email", "profilbild_url"}
 UPLOAD_ROOT = "media/profilbilder"

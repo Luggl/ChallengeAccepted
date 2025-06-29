@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from services.group_service import (
+from app.services.group_service import (
     create_group_logic,
     invitation_link_logic,
     join_group_via_link_logic,

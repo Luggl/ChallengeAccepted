@@ -115,7 +115,6 @@ def delete_user():
 @jwt_required()
 def get_user():
     current_user_id = get_jwt_identity()
-
     result = get_user_logic(current_user_id)
 
     if not result["success"]:

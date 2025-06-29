@@ -5,7 +5,6 @@ from app.database.models import Aufgabe, AufgabeStatus, Aufgabenerfuellung, User
 from repositories.beitrag_repository import find_beitrag_vote_by_user_beitrag
 from repositories.challenge_repository import find_challenge_by_id
 from repositories.membership_repository import find_memberships_by_group
-from repositories.user_repository import find_user_by_id
 from utils.time import date_today
 
 
@@ -47,6 +46,7 @@ def save_aufgabe(aufgabe):
         session.add(aufgabe)
         session.commit()
         session.refresh(aufgabe)  # wichtig!
+
 
         # Alle User zur Challenge holen
         memberships = find_memberships_by_group(find_challenge_by_id(aufgabe.challenge_id).gruppe_id)
@@ -149,3 +149,18 @@ def delete_streak(user_id):
         user.streak = 0
         session.commit()
         return user
+
+def handle_abgelaufene_aufgabe(aufgabe_id):
+    with SessionLocal() as session:
+        aufgabe = session.query(Aufgabe).get(aufgabe_id)
+        if not aufgabe:
+            return
+
+        erfuellungen = session.query(Aufgabenerfuellung).filter_by(aufgabe_id=aufgabe_id).all()
+
+        for erfuellung in erfuellungen:
+            if erfuellung.status != AufgabeStatus.abgeschlossen:
+                erfuellung.status = AufgabeStatus.nicht_gemacht
+                delete_streak(erfuellung.user_id)
+
+        session.commit()
