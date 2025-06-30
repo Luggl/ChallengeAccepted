@@ -18,6 +18,7 @@ from app.utils.response import response
 from datetime import datetime
 import uuid
 
+from repositories.group_repository import find_group_by_id
 from utils.auth_utils import get_uuid_formated_id
 from utils.time import now_berlin
 
@@ -111,8 +112,12 @@ def create_challenge_survival_logic(user_id, data, group_id):
     """Erstellt eine Survival-Challenge mit mehreren Sportarten und Schwierigkeitsgraden."""
 
     group_id_uuid = get_uuid_formated_id(group_id)
-    if not group_id:
+    if not group_id_uuid:
         return response(False, error="Ungültige Gruppen-ID")
+
+    result = find_group_by_id(group_id_uuid)
+    if not result:
+        return response(False, error="Gruppe wurde nicht gefunden")
 
     # Nicht mehrere Challenges gleichzeitig erlaubt
     active_challenge_check = find_active_challenge_by_group(group_id_uuid)
@@ -144,16 +149,17 @@ def create_challenge_survival_logic(user_id, data, group_id):
         return response(False, error="Ungültiges Datumsformat für das Startdatum")
     # User-ID in bytes umwandeln
     try:
-        user_id_uuid = uuid.UUID(user_id).bytes
+        user_id_uuid = get_uuid_formated_id(user_id)
     except ValueError:
         return response(False, error="Ungültige User-ID (UUID erwartet")
     # Challenge-Objekt anlegen
     challenge = Survivalchallenge(
         challenge_id=uuid.uuid4().bytes,
-        gruppe_id=group_id_uuid,
-        ersteller_user_id=user_id_uuid,
         startdatum=startdatum.date(),
-        typ="survival"
+        typ="survival",
+        active=True,
+        gruppe_id=group_id_uuid,
+        ersteller_user_id=user_id_uuid
     )
 
     create_challenge(challenge)

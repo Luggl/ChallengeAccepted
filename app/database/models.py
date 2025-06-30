@@ -213,7 +213,7 @@ class Challenge(Base):
         foreign_keys=[Membership.user_id, Membership.gruppe_id],
     )
 
-    __mapper_args_={
+    __mapper_args__={
         "polymorphic_identity":"challenge",
         "polymorphic_on":typ
     }
@@ -304,7 +304,7 @@ class Aufgabenerfuellung (Base):
     erfuellung_id=Column(BLOB, primary_key=True, default=lambda: uuid.uuid4().bytes)
     status=Column(SQLEnum(AufgabeStatus), nullable=False)
     video_url=Column(String)
-    datum=Column(Date)
+    erfuellungsdatum=Column(Date)
     beschreibung=Column(String)
     aufgabe_id= Column(BLOB, ForeignKey("aufgabe.aufgabe_id"))
     aufgabe=relationship("Aufgabe", back_populates="erfuellungen")

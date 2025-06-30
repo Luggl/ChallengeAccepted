@@ -165,7 +165,7 @@ def get_user_kalender_logic(user_id):
     #JSON Format Map Datum --> Status
     status_map = {}
     for e in erfuellungen:
-        datum = e.datum
+        datum = e.aufgabe.datum
         status = e.status.value
         status_map[datum] = status
 
