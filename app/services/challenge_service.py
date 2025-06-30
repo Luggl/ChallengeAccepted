@@ -129,6 +129,11 @@ def create_challenge_survival_logic(user_id, data, group_id):
             return response(False,
                             error=f"Sportart #{i + 1} ist unvollständig. Bitte Sportart_ID und Schwierigkeitsgrad angeben.")
 
+        sportart_uuid = get_uuid_formated_id(eintrag["sportart_id"])
+        sportart = find_sportart_by_id(sportart_uuid)
+        if not sportart:
+            return response(False, error=f"Sportart #{i + 1} mit ID {eintrag["sportart_id"]} existiert nicht.")
+
     # Startdatum parsen
     try:
         startdatum = datetime.fromisoformat(data["startdatum"])

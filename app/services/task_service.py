@@ -326,4 +326,6 @@ def generate_survival_tasks_for_all_challenges():
         aufgabe_id = save_aufgabe(aufgabe)
         erfolge.append({"challenge_id": str(uuid.UUID(bytes=challenge.challenge_id)), "status": "erstellt", "task_id": str(uuid.UUID(bytes=aufgabe_id))})
 
+        schedule_deadline_job(aufgabe)  # Hier wird der Hintergrundjob initialisiert, der den Status nach Deadline verändert
+
     return response(True, data=erfolge)
