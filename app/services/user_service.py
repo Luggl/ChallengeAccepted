@@ -20,6 +20,7 @@ from app.repositories.user_repository import (
 
 import uuid
 from app.utils.auth_utils import get_uuid_formated_id
+from repositories.user_repository import find_user_activities_and_erfuellungen
 
 ALLOWED_UPDATE_FIELDS = {"username", "email", "profilbild_url"}
 UPLOAD_ROOT = "media/profilbilder"
@@ -160,7 +161,7 @@ def get_user_kalender_logic(user_id):
     kalender = {}
     tage = get_all_days(date_today().year, date_today().month)
 
-    erfuellungen = find_user_activities(user)
+    erfuellungen = find_user_activities_and_erfuellungen(user)
 
     #JSON Format Map Datum --> Status
     status_map = {}
