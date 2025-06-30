@@ -1,5 +1,5 @@
 from flask import jsonify, Blueprint
-from utils.scheduler import scheduler
+from app import scheduler
 
 scheduler_bp = Blueprint('scheduler', __name__)
 

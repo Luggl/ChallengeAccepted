@@ -1,5 +1,5 @@
 from apscheduler.triggers.date import DateTrigger
-from app.utils.scheduler import scheduler
+from app import scheduler
 from repositories.task_repository import handle_abgelaufene_aufgabe
 
 

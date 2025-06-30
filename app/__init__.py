@@ -1,3 +1,4 @@
+from apscheduler.schedulers.background import BackgroundScheduler
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager
@@ -7,6 +8,8 @@ from app.database.models import Aufgabe, SurvivalAufgabe, StandardAufgabe
 db = SQLAlchemy()
 jwt = JWTManager()  # JWTManager global verfügbar machen
 
+scheduler = BackgroundScheduler()       #Scheduler für den Background Check verantwortlich, ob Deadlines überschritten
+scheduler.start()
 
 #Für den Logout werden die erzeugten Tokens zur Auth. in eine Blacklist gespeichert!
 blacklisted_tokens = set()
