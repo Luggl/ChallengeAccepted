@@ -229,7 +229,7 @@ class StandardChallenge(Challenge):
     challenge_id = Column(BLOB, ForeignKey("challenge.challenge_id", ondelete="CASCADE"),primary_key=True)
     enddatum = Column(Date)
 
-    __mapper_args_ = {
+    __mapper_args__ = {
         "polymorphic_identity":"standard"
     }
 
