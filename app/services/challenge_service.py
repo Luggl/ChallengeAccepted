@@ -18,7 +18,9 @@ from app.utils.response import response
 from datetime import datetime
 import uuid
 
+from repositories.challenge_repository import find_standard_challenge_by_id, find_survival_challenge_by_id
 from repositories.group_repository import find_group_by_id
+from repositories.membership_repository import find_memberships_by_group
 from utils.auth_utils import get_uuid_formated_id
 from utils.time import now_berlin
 
@@ -211,3 +213,12 @@ def delete_challenge_logic(challenge_id, user_id):
         return response(False, error="Challenge konnte nicht gelöscht werden oder existiert nicht.")
 
     return response(True, data="Challenge erfolgreich gelöscht.")
+
+
+def challenge_overview_logic(challenge_id, user_id):
+    challenge = find_survival_challenge_by_id(challenge_id) or find_standard_challenge_by_id(challenge_id)
+
+    if not challenge:
+        return response(False, error="Challenge konnte nicht gefunden werden.")
+
+    membership = find_memberships_by_group(challenge.gruppe_id)

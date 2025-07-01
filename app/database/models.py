@@ -85,6 +85,8 @@ class User(Base):
         back_populates="user",
         cascade="all, delete-orphan")
 
+    challenge_links = relationship("ChallengeParticipation", back_populates="user", cascade="all, delete-orphan")
+
 class Achievement (Base):
     __tablename__="achievement"
     achievement_id=Column(BLOB, primary_key=True, default=lambda: uuid.uuid4().bytes)
@@ -213,6 +215,8 @@ class Challenge(Base):
         foreign_keys=[Membership.user_id, Membership.gruppe_id],
     )
 
+    teilnehmer_links = relationship("ChallengeParticipation", back_populates="challenge", cascade="all, delete-orphans")
+
     __mapper_args__={
         "polymorphic_identity":"challenge",
         "polymorphic_on":typ
@@ -243,6 +247,31 @@ class Survivalchallenge(Challenge):
     }
 
     sportarten_links = relationship("SurvivalChallengeSportart", back_populates="challenge", cascade="all, delete-orphan")
+
+class ChallengeParticipation(Base):
+    __tablename__ = "challenge_participation"
+    user_id = Column(BLOB, primary_key=True)
+    challenge_id = Column(BLOB, primary_key=True)
+
+    aktiv = Column(Boolean, default=True)
+    entfernt_datum = Column(DateTime, nullable=True)
+
+    __table_args__ = (
+        ForeignKeyConstraint(
+            ["user_id"],
+            ["user.user_id"],
+            ondelete="CASCADE",
+        ),
+        ForeignKeyConstraint(
+            ["challenge_id"],
+            ["challenge.challenge_id"],
+            ondelete="CASCADE"
+        ),
+    )
+
+    user = relationship("User", back_populates="challenge_links")
+    challenge = relationship("Challenge", back_populates="teilnehmer_links")
+
 
 class Aufgabe(Base):
     __tablename__="aufgabe"
