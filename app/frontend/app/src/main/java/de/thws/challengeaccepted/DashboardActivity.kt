@@ -1,14 +1,22 @@
 package de.thws.challengeaccepted
 
 import android.content.Intent
-import android.widget.TextView
 import android.os.Bundle
+import android.graphics.Color
+import android.util.TypedValue
+import android.view.Gravity
 import android.widget.ImageView
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.WindowCompat
+import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.WindowCompat
 import de.thws.challengeaccepted.ui.viewmodels.UserViewModel
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.time.temporal.WeekFields
+import java.util.Locale
 
 class DashboardActivity : AppCompatActivity() {
 
@@ -18,12 +26,14 @@ class DashboardActivity : AppCompatActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_dashboard)
+
         val tvGreeting = findViewById<TextView>(R.id.tv_greeting)
         val tvStreak = findViewById<TextView>(R.id.tv_streak_count)
         val navGroup = findViewById<ImageView>(R.id.nav_group)
         val navHome = findViewById<ImageView>(R.id.nav_home)
         val navAdd = findViewById<ImageView>(R.id.nav_add)
         val navProfile = findViewById<ImageView>(R.id.nav_profile)
+        val calendarLayout = findViewById<LinearLayout>(R.id.calendar)
 
         navGroup.setOnClickListener {
             val intent = Intent(this, GroupOverviewActivity::class.java)
@@ -40,18 +50,52 @@ class DashboardActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        // Holt die User-ID, die beim Login mitgegeben wurde
+        // Token aus SharedPreferences holen
         val prefs = getSharedPreferences("app", MODE_PRIVATE)
-        val userId = prefs.getString("USER_ID", null)
-        if (userId != null) {
-            userViewModel.getUser(userId) { user ->
-                user?.let {
-                    tvGreeting.text = "Hi ${it.username}!"
-                    tvStreak.text = it.streak.toString()
+        val token = prefs.getString("token", null)
+
+        if (token != null) {
+            // Kalender und User laden (Kalender-API verwendet Token!)
+            userViewModel.fetchUserAndCalendar()
+            userViewModel.kalender.observe(this) { kalenderMap ->
+                calendarLayout.removeAllViews()
+
+                // --- NEU: Nur aktuelle Woche anzeigen ---
+                val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+                val today = LocalDate.now()
+                val weekFields = WeekFields.of(Locale.getDefault())
+                val currentWeek = today.get(weekFields.weekOfWeekBasedYear())
+                val currentYear = today.year
+
+                // Wochentage Mo–So in dieser Woche bestimmen
+                val firstDayOfWeek = today.with(weekFields.dayOfWeek(), 1)
+                val weekDates = (0..6).map { firstDayOfWeek.plusDays(it.toLong()) }
+
+                weekDates.forEach { date ->
+                    val dateStr = date.format(formatter)
+                    val status = kalenderMap[dateStr] ?: "leer"  // <-- Default, wenn nichts gefunden!
+                    val tv = TextView(this)
+                    tv.text = date.dayOfMonth.toString()
+                    tv.gravity = Gravity.CENTER
+                    tv.setTextColor(Color.WHITE)
+                    tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18f)
+                    val params = LinearLayout.LayoutParams(0, 80, 1f)
+                    params.setMargins(6, 0, 6, 0)
+                    tv.layoutParams = params
+
+                    // Hintergrund je nach Status
+                    when (status) {
+                        "abgeschlossen" -> tv.setBackgroundResource(R.drawable.blue_frame)
+                        "offen" -> tv.setBackgroundResource(R.drawable.green_frame)
+                        "nicht gemacht" -> tv.setBackgroundResource(R.drawable.red_frame)
+                        else -> tv.setBackgroundResource(R.drawable.grey_background)  // Neutral
+                    }
+
+                    calendarLayout.addView(tv)
                 }
             }
         } else {
-            Toast.makeText(this, "Kein Nutzer gefunden!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Kein Token gefunden!", Toast.LENGTH_SHORT).show()
         }
     }
 }

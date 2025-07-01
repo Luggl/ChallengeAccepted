@@ -49,7 +49,7 @@ class SurvivalActivitiesActivity : AppCompatActivity(){
                 }else{
                     //neuAuswählen
                     selectedExercises.add(text)
-                    child.setBackgroundResource(R.drawable.green_frame)
+                    child.setBackgroundResource(R.drawable.blue_frame)
                     Toast.makeText(this, "$text ausgewählt", Toast.LENGTH_SHORT).show()
                 }
                 Log.d("DashboardActivity", "Geklickt: $text")

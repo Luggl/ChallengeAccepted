@@ -96,7 +96,7 @@ class CreateChallengeModeActivity : AppCompatActivity() {
     }
     //Funktion zur visuellen Hervorhebung des ausgewählten Modus
     private fun updateSelectedModeUI() {
-        val activeFrame= R.drawable.green_frame
+        val activeFrame= R.drawable.blue_frame
         val inactiveFrame=R.drawable.bright_grey_frame
         flStandard.setBackgroundResource(
         if (selectedMode == "standard")

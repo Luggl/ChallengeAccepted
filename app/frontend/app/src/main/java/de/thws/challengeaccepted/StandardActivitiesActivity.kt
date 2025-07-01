@@ -51,7 +51,7 @@ class StandardActivitiesActivity : AppCompatActivity() {
                 }else{
                     //neu auswählen
                     selectedExercises.add(text)
-                    child.setBackgroundResource(R.drawable.green_frame)
+                    child.setBackgroundResource(R.drawable.blue_frame)
                     Toast.makeText(this,"$text ausgewählt", Toast.LENGTH_SHORT).show()
                 }
 

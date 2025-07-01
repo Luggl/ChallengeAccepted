@@ -169,7 +169,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="12dp"
             android:layout_marginEnd="16dp"
-            android:background="@drawable/green_frame"
+            android:background="@drawable/blue_frame"
             android:gravity="center"
             android:padding="12dp"
             android:text="Verbleibende Zeit für die Aufgabe: 5h"
@@ -205,7 +205,7 @@
             android:layout_width="match_parent"
             android:layout_height="80dp"
             android:layout_marginBottom="8dp"
-            android:background="@drawable/green_frame"
+            android:background="@drawable/blue_frame"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:padding="8dp">
@@ -235,7 +235,7 @@
             android:layout_width="match_parent"
             android:layout_height="80dp"
             android:layout_marginBottom="8dp"
-            android:background="@drawable/green_frame"
+            android:background="@drawable/blue_frame"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:padding="8dp">

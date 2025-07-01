@@ -81,7 +81,7 @@
                     android:columnCount="7"
                     android:rowCount="5"
                     android:padding="8dp"
-                    android:background="@drawable/green_frame">
+                    android:background="@drawable/blue_frame">
 
                     <!-- Beispiel für ein markiertes Datum -->
                     <TextView

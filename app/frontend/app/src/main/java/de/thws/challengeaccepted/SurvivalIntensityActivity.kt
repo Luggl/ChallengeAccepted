@@ -134,7 +134,7 @@ class SurvivalIntensityActivity : AppCompatActivity() {
     }
     // UI-Aktualisierung: Rahmen setzen je nach Auswahl
     private fun updateSelectionUI() {
-        val selectedDrawable = R.drawable.green_frame
+        val selectedDrawable = R.drawable.blue_frame
         val defaultDrawable = R.drawable.bright_grey_frame
 
         tvEasy.setBackgroundResource(if (selectedLevel == "easy") selectedDrawable else defaultDrawable)

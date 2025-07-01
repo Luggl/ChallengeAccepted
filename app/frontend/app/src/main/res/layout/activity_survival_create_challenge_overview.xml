@@ -76,7 +76,7 @@
                     android:id="@+id/kalenderGrid"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/green_frame"
+                    android:background="@drawable/blue_frame"
                     android:columnCount="7"
                     android:rowCount="5"
                     android:padding="8dp">

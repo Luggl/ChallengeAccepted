@@ -1,8 +1,7 @@
-<shape xmlns:tools="http://schemas.android.com/tools"
-
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    tools:ignore="ExtraText">
-    <corners android:radius="10dp" />
-    <solid android:color="@color/grey_100" /> <!-- 50% Transparentes Schwarz -->
-    <stroke android:width="3dp" android:color="@color/button_green" />
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="#212121"/> <!-- Hintergrund dunkel, falls du nur Rahmen willst -->
+    <corners android:radius="12dp"/>
+    <stroke
+        android:width="2dp"
+        android:color="#3CB371" /> <!-- schönes Grün, z.B. #3CB371 oder #4CAF50 -->
 </shape>
