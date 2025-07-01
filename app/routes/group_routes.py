@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from services.group_service import (
+from app.services.group_service import (
     create_group_logic,
     invitation_link_logic,
     join_group_via_link_logic,
@@ -47,7 +47,7 @@ def invitation_link():
     if not group_id:
         return jsonify({"error": "gruppe_id ist erforderlich!"}), 400
 
-    result = invitation_link_logic(gruppe_id, current_user_id_uuid)
+    result = invitation_link_logic(group_id, user_id)
 
     if not result['success']:
         return jsonify({"error": result['data']}), 400

@@ -19,13 +19,15 @@ user_bp = Blueprint('user', __name__)
 def register_user():
     data = request.get_json()
 
-    username = data.get('username')
-    email = data.get('email')
-    password = data.get('password')
+    username = data.get("username")
+    email = data.get("email")
+    password = data.get("password")
 
-    # Pflichtfelder prüfen
-    if username is None or email is None or password is None:
-        return jsonify({"error": "Username, Password, E-Mail und Geschlecht sind erforderlich"}), 400
+    # Pflichtfelder prüfen - ob Vorhanden oder leer
+    if username is None or not username.strip() \
+    or email is None or not email.strip() \
+    or password is None or not password.strip():
+        return jsonify({"error": "Username, Password und E-Mail sind erforderlich"}), 400
 
     # Benutzer registrieren
     result = register_user_logic(username, email, password)
@@ -44,16 +46,20 @@ def login_user():
     email = data.get('email')
     password = data.get('password')
 
-    if email is None or password is None:
+    if email is None or not email.strip()\
+    or password is None or not password.strip():
         return jsonify({"error": "Login und Password sind erforderlich"}), 400
 
-    # Hier Methode einbinden aus Services - login kann Username oder E-Mail sein!
     result = login_user_logic(email, password)
     if not result["success"]:
-        return jsonify({"error": result}), 401 # Nicht authorisiert!
+        return jsonify({"error": result["error"]}), 401 # Nicht authorisiert!
 
     # Token erzeugen
-    access_token = create_access_token(identity=result["data"]["id"])
+    try:
+        access_token = create_access_token(identity=result["data"]["id"])
+    except Exception:
+        return jsonify({"error": "Fehler beim Erstellen des Access_Tokens"}), 401
+
 
     return jsonify({"message": "Login erfolgreich",
                     "user": result["data"],
@@ -64,7 +70,7 @@ def forgot_password():
     data = request.get_json()
     email = data.get('email')
 
-    if not email:
+    if email is None or not email.strip():
         return jsonify({"error": "Email ist erforderlich"}), 400
 
     result = forgot_password_logic(email)
@@ -81,7 +87,8 @@ def reset_password():
     token = data.get('token')
     new_pw = data.get('newPassword')
 
-    if not token or not new_pw:
+    if token is None or not token.strip() \
+    or new_pw is None or not new_pw.strip():
         return jsonify({"error": "Token und neues Passwort sind erforderlich"}), 400
 
     result = reset_password_logic(token, new_pw)
@@ -97,7 +104,6 @@ def delete_user():
     # Prüfen, wer der aktuell eingeloggte User ist
     user_id = get_jwt_identity()
 
-    # Logik in Services:
     message = delete_user_logic(user_id)
 
     if not message["success"]:
@@ -109,7 +115,6 @@ def delete_user():
 @jwt_required()
 def get_user():
     current_user_id = get_jwt_identity()
-
     result = get_user_logic(current_user_id)
 
     if not result["success"]:
@@ -121,12 +126,17 @@ def get_user():
 @jwt_required()
 def update_user():
     current_user_id = get_jwt_identity()
-    update_data = request.get_json()
 
-    if not update_data:
+    username = request.form.get("username")
+    email = request.form.get("email")
+    profilbild = request.files.get("profilbild")
+
+    if username is None or not username.strip() \
+    and email is None or not email.strip() \
+    and not profilbild :
         return jsonify({"error": "Keine Daten übergeben."}), 400
 
-    result = update_user_logic(current_user_id, update_data)
+    result = update_user_logic(current_user_id, username, email, profilbild)
 
     if not result["success"]:
         return jsonify({"error": result["error"]}), 404
@@ -155,6 +165,9 @@ def update_password():
 @user_bp.route('/api/logout', methods=['POST'])
 @jwt_required()
 def logout():
-    jti = get_jwt()["jti"]
-    blacklisted_tokens.add(jti)
-    return jsonify({"message": "Logged out"}), 200
+    try:
+        jti = get_jwt()["jti"]
+        blacklisted_tokens.add(jti)
+        return jsonify({"message": "Logged out"}), 200
+    except Exception:
+        return jsonify({"error": "Fehler beim Logout"})

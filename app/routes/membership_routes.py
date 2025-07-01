@@ -31,5 +31,5 @@ def get_group_overview():
     result = get_membership_overview_logic(current_user_id)
 
     if not result["success"]:
-        return jsonify({"error": result}), 403
-    return jsonify({"message": result}), 200
+        return jsonify({"error": result["error"]}), 403
+    return jsonify({"message": result["data"]}), 200

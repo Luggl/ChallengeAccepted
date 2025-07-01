@@ -67,7 +67,7 @@ class User(Base):
     username=Column(String, nullable=False, unique=True)
     email=Column(String, nullable=False, unique=True)
     passwordHash=Column(String)
-    profilbild=Column(String)
+    profilbild_url=Column(String)
     streak=Column(Integer, default=0)
 
     achievement_links=relationship(
@@ -82,6 +82,11 @@ class User(Base):
         cascade="all, delete-orphan")
     membership=relationship(
         "Membership",
+        back_populates="user",
+        cascade="all, delete-orphan")
+
+    challenge_links = relationship(
+        "ChallengeParticipation",
         back_populates="user",
         cascade="all, delete-orphan")
 
@@ -116,6 +121,7 @@ class Membership(Base):
 
     user=relationship("User", back_populates="membership")
     gruppe=relationship("Gruppe", back_populates="memberships")
+    erstellt_challenges=relationship("Challenge", back_populates="ersteller", overlaps="gruppe,challenges")
 
 class Gruppe(Base):
     __tablename__="gruppe"
@@ -192,11 +198,10 @@ class Challenge(Base):
     gruppe=relationship("Gruppe", back_populates="challenges")
 
     ersteller_user_id = Column(BLOB)
-    ersteller_gruppe_id = Column(BLOB)
 
     __table_args__ = (
         ForeignKeyConstraint(
-            ["ersteller_user_id", "ersteller_gruppe_id"],
+            ["ersteller_user_id", "gruppe_id"],
             ["membership.user_id", "membership.gruppe_id"],
             ondelete="CASCADE"
         ),
@@ -206,12 +211,19 @@ class Challenge(Base):
         "Membership",
         primaryjoin=and_(
             foreign(ersteller_user_id)==Membership.user_id,
-            foreign(ersteller_gruppe_id)==Membership.gruppe_id
+            foreign(gruppe_id)==Membership.gruppe_id
         ),
+        back_populates="erstellt_challenges",
+        overlaps="gruppe,challenges",
         foreign_keys=[Membership.user_id, Membership.gruppe_id],
     )
 
-    __mapper_args_={
+    teilnehmer_links = relationship(
+        "ChallengeParticipation",
+        back_populates="challenge",
+        cascade="all")
+
+    __mapper_args__={
         "polymorphic_identity":"challenge",
         "polymorphic_on":typ
     }
@@ -225,10 +237,9 @@ class Challenge(Base):
 class StandardChallenge(Challenge):
     __tablename__ = "standard_challenge"
     challenge_id = Column(BLOB, ForeignKey("challenge.challenge_id", ondelete="CASCADE"),primary_key=True)
-    dauer=Column(Integer)
     enddatum = Column(Date)
 
-    __mapper_args_ = {
+    __mapper_args__ = {
         "polymorphic_identity":"standard"
     }
 
@@ -242,6 +253,31 @@ class Survivalchallenge(Challenge):
     }
 
     sportarten_links = relationship("SurvivalChallengeSportart", back_populates="challenge", cascade="all, delete-orphan")
+
+class ChallengeParticipation(Base):
+    __tablename__ = "challenge_participation"
+    user_id = Column(BLOB, ForeignKey("user.user_id"), primary_key=True)
+    challenge_id = Column(BLOB, ForeignKey("challenge.challenge_id", ondelete="CASCADE"), primary_key=True)
+
+    aktiv = Column(Boolean, default=True)
+    entfernt_datum = Column(DateTime, nullable=True)
+
+    __table_args__ = (
+        ForeignKeyConstraint(
+            ["user_id"],
+            ["user.user_id"],
+            ondelete="CASCADE",
+        ),
+        ForeignKeyConstraint(
+            ["challenge_id"],
+            ["challenge.challenge_id"],
+            ondelete="CASCADE"
+        ),
+    )
+
+    user = relationship("User", back_populates="challenge_links")
+    challenge = relationship("Challenge", back_populates="teilnehmer_links")
+
 
 class Aufgabe(Base):
     __tablename__="aufgabe"
@@ -303,7 +339,7 @@ class Aufgabenerfuellung (Base):
     erfuellung_id=Column(BLOB, primary_key=True, default=lambda: uuid.uuid4().bytes)
     status=Column(SQLEnum(AufgabeStatus), nullable=False)
     video_url=Column(String)
-    datum=Column(Date)
+    erfuellungsdatum=Column(Date)
     beschreibung=Column(String)
     aufgabe_id= Column(BLOB, ForeignKey("aufgabe.aufgabe_id"))
     aufgabe=relationship("Aufgabe", back_populates="erfuellungen")
