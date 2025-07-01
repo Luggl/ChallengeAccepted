@@ -10,7 +10,7 @@ def serialize_beitrag(beitrag):
     return{
         "beitrag_id": get_uuid_formated_string(beitrag.beitrag_id),
         "beschreibung": beitrag.erfuellung.beschreibung if beitrag.erfuellung.beschreibung else None,
-        "erstellt_am": beitrag.erfuellung.datum.isoformat() if beitrag.erfuellung.datum else None,
+        "erstellt_am": beitrag.erfuellung.erfuellungsdatum.isoformat() if beitrag.erfuellung.erfuellungsdatum else None,
         "user_id": get_uuid_formated_string(beitrag.erfuellung.user_id),
         "gruppe_id": get_uuid_formated_string(beitrag.erfuellung.gruppe_id),
         "video_url": f"/media/{beitrag.erfuellung.video_url}" if beitrag.erfuellung.video_url else None
