@@ -7,3 +7,9 @@ def get_uuid_formated_id(stringValue):
         return uuid.UUID(stringValue).bytes
     except ValueError:
         return None
+
+def get_uuid_formated_string(value):
+    try:
+        return str(uuid.UUID(bytes=value))
+    except ValueError:
+        return None

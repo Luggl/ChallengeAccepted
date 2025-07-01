@@ -18,6 +18,9 @@ from app.utils.response import response
 from datetime import datetime
 import uuid
 
+from repositories.challenge_repository import find_standard_challenge_by_id, find_survival_challenge_by_id
+from repositories.group_repository import find_group_by_id
+from repositories.membership_repository import find_memberships_by_group
 from utils.auth_utils import get_uuid_formated_id
 from utils.time import now_berlin
 
@@ -57,16 +60,12 @@ def create_challenge_standard_logic(user_id, data, group_id):
     if enddatum <= startdatum:
         return response(False, error="Enddatum muss nach Startdatum liegen.")
 
-    dauer = (enddatum - startdatum).days
-
     challenge = StandardChallenge(
         challenge_id=uuid.uuid4().bytes,
         gruppe_id=group_id_uuid,
         ersteller_user_id=user_id_uuid,
         startdatum=startdatum.date(),
         enddatum=enddatum.date(),
-        dauer=dauer,
-        ersteller_gruppe_id=group_id_uuid,
         typ="standard"
     )
 
@@ -115,8 +114,12 @@ def create_challenge_survival_logic(user_id, data, group_id):
     """Erstellt eine Survival-Challenge mit mehreren Sportarten und Schwierigkeitsgraden."""
 
     group_id_uuid = get_uuid_formated_id(group_id)
-    if not group_id:
+    if not group_id_uuid:
         return response(False, error="Ungültige Gruppen-ID")
+
+    result = find_group_by_id(group_id_uuid)
+    if not result:
+        return response(False, error="Gruppe wurde nicht gefunden")
 
     # Nicht mehrere Challenges gleichzeitig erlaubt
     active_challenge_check = find_active_challenge_by_group(group_id_uuid)
@@ -133,6 +136,11 @@ def create_challenge_survival_logic(user_id, data, group_id):
             return response(False,
                             error=f"Sportart #{i + 1} ist unvollständig. Bitte Sportart_ID und Schwierigkeitsgrad angeben.")
 
+        sportart_uuid = get_uuid_formated_id(eintrag["sportart_id"])
+        sportart = find_sportart_by_id(sportart_uuid)
+        if not sportart:
+            return response(False, error=f"Sportart #{i + 1} mit ID {eintrag["sportart_id"]} existiert nicht.")
+
     # Startdatum parsen
     try:
         startdatum = datetime.fromisoformat(data["startdatum"])
@@ -143,17 +151,17 @@ def create_challenge_survival_logic(user_id, data, group_id):
         return response(False, error="Ungültiges Datumsformat für das Startdatum")
     # User-ID in bytes umwandeln
     try:
-        user_id_uuid = uuid.UUID(user_id).bytes
+        user_id_uuid = get_uuid_formated_id(user_id)
     except ValueError:
         return response(False, error="Ungültige User-ID (UUID erwartet")
     # Challenge-Objekt anlegen
     challenge = Survivalchallenge(
         challenge_id=uuid.uuid4().bytes,
-        gruppe_id=group_id_uuid,
-        ersteller_user_id=user_id_uuid,
-        ersteller_gruppe_id=group_id_uuid,
         startdatum=startdatum.date(),
-        typ="survival"
+        typ="survival",
+        active=True,
+        gruppe_id=group_id_uuid,
+        ersteller_user_id=user_id_uuid
     )
 
     create_challenge(challenge)
@@ -205,3 +213,12 @@ def delete_challenge_logic(challenge_id, user_id):
         return response(False, error="Challenge konnte nicht gelöscht werden oder existiert nicht.")
 
     return response(True, data="Challenge erfolgreich gelöscht.")
+
+
+def challenge_overview_logic(challenge_id, user_id):
+    challenge = find_survival_challenge_by_id(challenge_id) or find_standard_challenge_by_id(challenge_id)
+
+    if not challenge:
+        return response(False, error="Challenge konnte nicht gefunden werden.")
+
+    membership = find_memberships_by_group(challenge.gruppe_id)

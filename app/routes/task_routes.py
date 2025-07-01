@@ -14,8 +14,8 @@ def get_tasks():
     result = get_task_logic(get_jwt_identity())
 
     if not result["success"]:
-        return jsonify({"message": result}), 400
-    return jsonify({"message": result}), 200
+        return jsonify({"error": result["error"]}), 400
+    return jsonify({"message": result["data"]}), 200
 
 
 @task_bp.route("/api/task", methods=["POST"])
@@ -29,7 +29,7 @@ def complete_task():
     result = complete_task_logic(erfuellung_id, user_id, description, video_file)
 
     if not result["success"]:
-        return jsonify({"error": result}), 400
+        return jsonify({"error": result["error"]}), 400
 
     return jsonify({"message": result}), 201
 
@@ -48,9 +48,9 @@ def vote():
     result = vote_logic(current_user_id, beitrag_id, vote)
 
     if not result["success"]:
-        return jsonify({"error": result}), 400
+        return jsonify({"error": result["error"]}), 400
 
-    return jsonify({"message": result}), 200
+    return jsonify({"message": result["data"]}), 200
 
 
 @task_bp.route('/api/survivaltasks', methods=["GET"])
@@ -58,5 +58,5 @@ def create_survivaltasks():
     result = generate_survival_tasks_for_all_challenges()
 
     if not result:
-        return jsonify({"message": result}), 400
-    return jsonify({"message": result}), 201
+        return jsonify({"message": result["error"]}), 400
+    return jsonify({"message": result["data"]}), 201
