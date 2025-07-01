@@ -51,14 +51,14 @@ def serialize_achievements(achievement):
 
 def serialize_membership(membership):
     return{
-        "user_id": membership.user_id.hex(),
+        "user_id": get_uuid_formated_string(membership.user_id),
         "gruppe_id": membership.gruppe_id.hex(),
         "isAdmin": membership.isAdmin,
     }
 
 def serialize_user(user):
     return{
-        "user_id": user.user_id.hex(),
+        "user_id": get_uuid_formated_string(user.user_id),
         "username": user.username,
         "email": user.email
     }

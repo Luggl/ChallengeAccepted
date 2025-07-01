@@ -28,6 +28,14 @@ def find_aufgabenerfuellung_by_user_id(user_id):
     with SessionLocal() as session:
         return session.query(Aufgabenerfuellung).filter_by(user_id=user_id).all()
 
+def find_aufgabenerfuellung_by_aufgabe_and_user_and_group(aufgabe_id, user_id, gruppe_id):
+    with SessionLocal() as session:
+        aufgabenerfuellug = session.query(Aufgabenerfuellung).filter_by(aufgabe_id=aufgabe_id, user_id=user_id, gruppe_id=gruppe_id).first()
+        if not aufgabenerfuellug:
+            return None
+        return aufgabenerfuellug
+
+
 def find_all_tasks_by_user(user_id):
     with SessionLocal() as session:
         return session.query(Aufgabe).filter_by(user_id=user_id).all()
