@@ -71,7 +71,8 @@ def create_challenge_standard_logic(user_id, data, group_id):
         ersteller_user_id=user_id_uuid,
         startdatum=startdatum.date(),
         enddatum=enddatum.date(),
-        typ="standard"
+        typ="standard",
+        active=True
     )
 
     create_challenge(challenge)
@@ -104,15 +105,15 @@ def create_challenge_standard_logic(user_id, data, group_id):
         )
         save_standard_challenge_sportart(standard_sportart_link)
 
-        memberships = find_memberships_by_group(group_id_uuid)
+    memberships = find_memberships_by_group(group_id_uuid)
 
-        for m in memberships:
-            challenge_participation = ChallengeParticipation(
-                user_id=m.user_id,
-                challenge_id=challenge.challenge_id,
-                aktiv=True,
-            )
-            save_challenge_participation(challenge_participation)
+    for m in memberships:
+        challenge_participation = ChallengeParticipation(
+            user_id=m.user_id,
+            challenge_id=challenge.challenge_id,
+            aktiv=True,
+        )
+        save_challenge_participation(challenge_participation)
 
     return response(True,
                     data={
