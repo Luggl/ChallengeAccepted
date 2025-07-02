@@ -18,18 +18,21 @@
             android:layout_width="match_parent"
             android:layout_height="200dp">
 
-            <!-- Bild oder Video -->
+            <!-- VideoView (anfangs GONE) -->
+            <VideoView
+                android:id="@+id/feedVideo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone" />
+
+            <!-- Default-Bild (wird ausgeblendet, wenn Video da) -->
             <ImageView
                 android:id="@+id/feedImage"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"
                 android:src="@drawable/login_background_pic" />
-            <VideoView
-                android:id="@+id/feedVideo"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="gone"/>
+
             <!-- Beschreibung als Overlay -->
             <TextView
                 android:id="@+id/tvBeschreibung"
