@@ -163,7 +163,7 @@ def get_group_feed_logic(group_id, user_id):
     if not membership:
         return response(False, "User ist kein Gruppenmitglied!")
 
-    feed = get_group_feed_by_group_id(group_id_uuid)
+    feed = get_group_feed_by_group_id(group_id_uuid, user_id_uuid)
     if not feed:
         return response(False, "Zugriff verweigert oder keine Daten.")
     return response(True, feed)
