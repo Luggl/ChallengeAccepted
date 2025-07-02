@@ -6,7 +6,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object ApiClient {
-    private const val BASE_URL = "http://192.168.178.37:5000/api/"
+    private const val BASE_URL = "http://10.31.39.188:5000/api/"
 
     // Standard-Client (ohne Auth)
     val retrofit: Retrofit = Retrofit.Builder()
