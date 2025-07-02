@@ -109,7 +109,7 @@ def mark_task_as_complete(erfuellung_id, description):
     with SessionLocal() as session:
         aufgabenerfuellung = session.query(Aufgabenerfuellung).filter_by(erfuellung_id=erfuellung_id).first()
         aufgabenerfuellung.status=AufgabeStatus.abgeschlossen
-        aufgabenerfuellung.datum=date_today()
+        aufgabenerfuellung.erfuellungsdatum=date_today()
         if description:
             aufgabenerfuellung.beschreibung=description
         session.commit()

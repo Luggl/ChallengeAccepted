@@ -47,15 +47,6 @@ def update_group(gruppe):
 
 def get_group_feed_by_group_id(group_id):
     with (SessionLocal() as session):
-        #Beiträge inkl Aufgabenerfüllung holen, damit serialize_beitrag die benötigten Werte erhält
-        # beitraege_mit_erfuellung = session.query(Beitrag, Aufgabenerfuellung)\
-        #                             .join(Aufgabenerfuellung, Beitrag.erfuellung_id == Aufgabenerfuellung.erfuellung_id)\
-        #                             .filter(Aufgabenerfuellung.gruppe_id == group_id)\
-        #                             .order_by(Beitrag.erstellDatum.des())\
-        #                             .all()
-        #
-        # result = [serialize_beitrag(beitrag, erfuellung) for beitrag, erfuellung in beitraege_mit_erfuellung]
-        # return result
 
         beitraege = session.query(Beitrag)\
                     .join(Beitrag.erfuellung)\
