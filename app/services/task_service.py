@@ -13,7 +13,7 @@ from app.repositories.task_repository import (
     find_aufgabenerfuellung_by_challenge_and_date, update_task_by_video_url,
     add_streak
 )
-from app.database.models import BeitragVotes, Beitrag, AufgabeTyp, StandardAufgabe
+from app.database.models import BeitragVotes, Beitrag, AufgabeTyp, StandardAufgabe, Vote
 from repositories.beitrag_repository import (
     find_beitrag_by_id,
     find_gruppe_by_beitrag,
@@ -34,7 +34,7 @@ from datetime import datetime, time, timedelta
 from repositories.group_repository import find_group_by_id
 from repositories.membership_repository import find_memberships_by_user
 from services.schedule import schedule_deadline_job
-from utils.auth_utils import get_uuid_formated_id
+from utils.auth_utils import get_uuid_formated_id, get_uuid_formated_string
 from utils.serialize import serialize_aufgabenerfuellung
 from utils.time import now_berlin, date_today
 from app.repositories.sportart_repository import find_sportart_by_id, find_intervall_by_sportart_and_schwierigkeit
@@ -155,13 +155,16 @@ def vote_logic(user_id, beitrag_id, vote):
     if has_user_already_voted(user_id_uuid, beitrag_id_uuid):
         return response(False, error="Du hast bereits abgestimmt.")
 
-    gruppe_id = find_gruppe_by_beitrag(find_beitrag_by_id(beitrag_id))
+    gruppe = find_gruppe_by_beitrag(find_beitrag_by_id(beitrag_id_uuid))
+
+    vote_value = Vote.akzeptiert if vote == "akzeptiert" else Vote.abgelehnt
+
 
     vote = BeitragVotes(
-        beitrag_id=beitrag_id,
-        user_id=user_id,
-        vote=vote,
-        gruppe_id=gruppe_id,
+        beitrag_id=get_uuid_formated_id(beitrag_id),
+        user_id=get_uuid_formated_id(user_id),
+        vote=vote_value,
+        gruppe_id=gruppe.gruppe_id,
     )
 
     result = create_user_vote(vote)

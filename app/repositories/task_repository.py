@@ -131,10 +131,14 @@ def has_user_already_voted(user_id, beitrag_id):
     return False
 
 def create_user_vote(beitrag_votes):
-    with SessionLocal() as session:
-        session.add(beitrag_votes)
-        session.flush()
-        session.commit()
+    try:
+        with SessionLocal() as session:
+            session.add(beitrag_votes)
+            session.flush()
+            session.commit()
+            return True
+    except Exception:
+        return False
 
 def find_aufgabenerfuellung_by_id(erfuellung_id):
     with SessionLocal() as session:

@@ -37,7 +37,7 @@ def complete_task():
 @jwt_required()
 def vote():
     current_user_id = get_jwt_identity()
-    beitrag_id = request.json.get("beitrag_id")
+    beitrag_id = request.args.get("beitrag_id")
 
     vote = request.json.get('vote')
 

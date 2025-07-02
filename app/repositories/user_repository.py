@@ -1,7 +1,7 @@
 # app/repositories/user_repository.py
 from sqlalchemy.orm import joinedload
 
-from app.database.models import User, Aufgabenerfuellung, Beitrag, Membership
+from app.database.models import User, Aufgabenerfuellung, Beitrag, Membership, Aufgabe
 
 from app.database.database import SessionLocal
 from app.utils.serialize import serialize_beitrag
@@ -61,9 +61,17 @@ def get_user_feed(user_id):
 
         beitraege = session.query(Beitrag) \
             .join(Beitrag.erfuellung) \
+            .join(Aufgabenerfuellung.aufgabe) \
+            .join(Aufgabe.sportart) \
+            .options(
+                joinedload(Beitrag.erfuellung) \
+                    .joinedload(Aufgabenerfuellung.aufgabe)\
+                    .joinedload(Aufgabe.sportart),
+                joinedload(Beitrag.votes)
+        ) \
             .filter(Aufgabenerfuellung.gruppe_id.in_(subquery)) \
             .order_by(Beitrag.erstellDatum.desc()) \
             .all()
 
-        result = [serialize_beitrag(b) for b in beitraege]
+        result = [serialize_beitrag(b, user_id) for b in beitraege]
         return result

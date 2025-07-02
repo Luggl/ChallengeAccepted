@@ -4,16 +4,24 @@ import uuid
 from app.utils.auth_utils import get_uuid_formated_string
 
 
-def serialize_beitrag(beitrag):
-    #Da die Aufgabenerfüllung alle relevanten Informationen hält, muss diese hier erstmal geladen werden
+def serialize_beitrag(beitrag, user_id):
+    user_vote = None
+    for vote in beitrag.votes:
+        if vote.user_id == user_id:
+            user_vote = vote.vote.value
+            break
 
     return{
         "beitrag_id": get_uuid_formated_string(beitrag.beitrag_id),
+        "aufgabe_sportart": beitrag.erfuellung.aufgabe.sportart.bezeichnung,
+        "aufgabe_anzahl": beitrag.erfuellung.aufgabe.zielwert,
+        "aufgabe_unit": beitrag.erfuellung.aufgabe.unit.value,
         "beschreibung": beitrag.erfuellung.beschreibung if beitrag.erfuellung.beschreibung else None,
         "erstellt_am": beitrag.erfuellung.erfuellungsdatum.isoformat() if beitrag.erfuellung.erfuellungsdatum else None,
         "user_id": get_uuid_formated_string(beitrag.erfuellung.user_id),
         "gruppe_id": get_uuid_formated_string(beitrag.erfuellung.gruppe_id),
-        "video_url": f"/media/{beitrag.erfuellung.video_url}" if beitrag.erfuellung.video_url else None
+        "video_url": f"/media/{beitrag.erfuellung.video_url}" if beitrag.erfuellung.video_url else None,
+        "user_vote": user_vote
     }
 
 def serialize_gruppe(gruppe):
