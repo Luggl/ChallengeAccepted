@@ -176,3 +176,13 @@ def handle_abgelaufene_aufgabe(aufgabe_id):
                 delete_streak(erfuellung.user_id)
 
         session.commit()
+
+def update_task_by_thumbnail(erfuellung_id, thumbnail_path):
+    with SessionLocal() as session:
+        erfuellung = session.query(Aufgabenerfuellung).get(erfuellung_id)
+        if not erfuellung:
+            return False
+        erfuellung.thumbnail_path = thumbnail_path
+        session.commit()
+        session.refresh(erfuellung)
+        return True

@@ -339,6 +339,7 @@ class Aufgabenerfuellung (Base):
     erfuellung_id=Column(BLOB, primary_key=True, default=lambda: uuid.uuid4().bytes)
     status=Column(SQLEnum(AufgabeStatus), nullable=False)
     video_url=Column(String)
+    thumbnail_path=Column(String)
     erfuellungsdatum=Column(Date)
     beschreibung=Column(String)
     aufgabe_id= Column(BLOB, ForeignKey("aufgabe.aufgabe_id"))

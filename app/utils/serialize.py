@@ -21,6 +21,7 @@ def serialize_beitrag(beitrag, user_id):
         "user_id": get_uuid_formated_string(beitrag.erfuellung.user_id),
         "gruppe_id": get_uuid_formated_string(beitrag.erfuellung.gruppe_id),
         "video_url": f"/media/{beitrag.erfuellung.video_url}" if beitrag.erfuellung.video_url else None,
+        "thumbnail_url": f"/media/{beitrag.erfuellung.thumbnail_path}" if beitrag.erfuellung.thumbnail_path else None,
         "user_vote": user_vote
     }
 

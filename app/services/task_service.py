@@ -11,7 +11,7 @@ from app.repositories.task_repository import (
     create_user_vote,
     find_aufgabenerfuellung_by_user_id,
     find_aufgabenerfuellung_by_challenge_and_date, update_task_by_video_url,
-    add_streak
+    add_streak, update_task_by_thumbnail
 )
 from app.database.models import BeitragVotes, Beitrag, AufgabeTyp, StandardAufgabe, Vote
 from repositories.beitrag_repository import (
@@ -35,13 +35,13 @@ from repositories.group_repository import find_group_by_id
 from repositories.membership_repository import find_memberships_by_user
 from services.schedule import schedule_deadline_job
 from utils.auth_utils import get_uuid_formated_id, get_uuid_formated_string
+from utils.media import safe_video_logic, generate_video_thumbnail
 from utils.serialize import serialize_aufgabenerfuellung
 from utils.time import now_berlin, date_today
 from app.repositories.sportart_repository import find_sportart_by_id, find_intervall_by_sportart_and_schwierigkeit
 from app.database.models import SurvivalAufgabe
 
 
-UPLOAD_ROOT = "media/aufgabenerfuellung"
 
 # Alle Tasks für einen User abfragen
 def get_task_logic(user_id):
@@ -90,9 +90,9 @@ def get_task_logic(user_id):
 def complete_task_logic(erfuellung_id, user_id, description, video_file):
     user_id_uuid = get_uuid_formated_id(user_id)
     erfuellung_id_uuid = get_uuid_formated_id(erfuellung_id)
+
     #Prüfen, ob User diese Task überhaupt hat
     usercheck = find_aufgabenerfuellung_by_user_id(user_id_uuid)
-
     if not any(e.erfuellung_id == erfuellung_id_uuid for e in usercheck):
         return response(False, error="User hält diese Aufgabe nicht!")
 
@@ -104,9 +104,16 @@ def complete_task_logic(erfuellung_id, user_id, description, video_file):
     if not success["success"]:
         return success
 
-    videopath = success["data"]
     # Videopfad in Aufgabenerfüllung speichern
+    videopath = success["data"]
     success = update_task_by_video_url(erfuellung_id_uuid, videopath)
+
+    #thumbnail erzeugen und in Aufgabenerfüllung speichern
+    thumbnail_path = generate_video_thumbnail(videopath)
+    success = update_task_by_thumbnail(erfuellung_id_uuid, thumbnail_path)
+    if not success:
+        return response(False, error="Thumbnail_path konnte nicht aktualisiert werden")
+
     #Aufgabenerfüllung Status updaten
     success = mark_task_as_complete(erfuellung_id_uuid, description)
     if not success:
@@ -133,18 +140,6 @@ def complete_task_logic(erfuellung_id, user_id, description, video_file):
 
     return response(True, data="Aufgabe als erledigt markiert und Beitrag erstellt.")
 
-def safe_video_logic(task_id, video_file):
-    filename = secure_filename(f"{uuid.uuid4()}.mp4")
-    task_id_str = str(uuid.UUID(bytes=task_id))
-    upload_path = os.path.join(UPLOAD_ROOT, task_id_str)
-    os.makedirs(upload_path, exist_ok=True)
-
-    full_path = os.path.join(upload_path, filename)
-    try:
-        video_file.save(full_path)
-        return response(True, data=full_path)
-    except Exception as e:
-        return response(False, error="Fehler beim Speichern des Videos!")
 
 
 # Vote abgeben für ein Task-Ergebnis
