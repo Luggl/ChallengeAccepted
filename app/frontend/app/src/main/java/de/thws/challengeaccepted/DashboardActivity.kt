@@ -12,6 +12,10 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import de.thws.challengeaccepted.ui.FeedAdapter
+import de.thws.challengeaccepted.ui.viewmodels.FeedViewModel
 import de.thws.challengeaccepted.ui.viewmodels.UserViewModel
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -21,6 +25,7 @@ import java.util.Locale
 class DashboardActivity : AppCompatActivity() {
 
     private val userViewModel: UserViewModel by viewModels()
+    private val feedViewModel: FeedViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(window, false)
@@ -34,6 +39,9 @@ class DashboardActivity : AppCompatActivity() {
         val navAdd = findViewById<ImageView>(R.id.nav_add)
         val navProfile = findViewById<ImageView>(R.id.nav_profile)
         val calendarLayout = findViewById<LinearLayout>(R.id.calendar)
+        val recyclerView = findViewById<RecyclerView>(R.id.feedRecyclerView)
+        recyclerView.layoutManager = LinearLayoutManager(this)
+
 
         navGroup.setOnClickListener {
             val intent = Intent(this, GroupOverviewActivity::class.java)
@@ -55,8 +63,20 @@ class DashboardActivity : AppCompatActivity() {
         val token = prefs.getString("token", null)
 
         if (token != null) {
+            feedViewModel.fetchFeed()
+            feedViewModel.feed.observe(this) { beitragList ->
+                recyclerView.adapter = FeedAdapter(beitragList)
+            }
             // Kalender und User laden (Kalender-API verwendet Token!)
             userViewModel.fetchUserAndCalendar()
+            // -- USER anzeigen (Name + Streak) --
+            userViewModel.user.observe(this) { userObj ->
+                if (userObj != null) {
+                    tvGreeting.text = "Hi ${userObj.username}!"
+                    tvStreak.text = userObj.streak.toString()
+                }
+            }
+
             userViewModel.kalender.observe(this) { kalenderMap ->
                 calendarLayout.removeAllViews()
 

@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import de.thws.challengeaccepted.App
 import de.thws.challengeaccepted.data.entities.User
 import de.thws.challengeaccepted.data.repository.UserRepository
+import de.thws.challengeaccepted.models.UserApiModel
 import kotlinx.coroutines.launch
 
 class  UserViewModel(application: Application) : AndroidViewModel(application) {
@@ -36,14 +37,19 @@ class  UserViewModel(application: Application) : AndroidViewModel(application) {
     private val _kalender = MutableLiveData<Map<String, String>>()
     val kalender: LiveData<Map<String, String>> = _kalender
 
+    private val _user = MutableLiveData<UserApiModel?>()
+    val user: LiveData<UserApiModel?> = _user
+
     fun fetchUserAndCalendar() {
         viewModelScope.launch {
             try {
                 val response = api.getUser()
+                _user.value = response.user
                 _kalender.value = response.user.Kalender
             } catch (e: Exception) {
                 // Fehlerhandling (z.B. Log oder Toast)
-                _kalender.value = emptyMap() // oder Fehlerstatus setzen
+                _kalender.value = emptyMap()
+                _user.value = null // oder Fehlerstatus setzen
             }
         }
     }
