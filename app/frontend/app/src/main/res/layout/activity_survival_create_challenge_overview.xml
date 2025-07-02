@@ -61,38 +61,26 @@
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
 
-                <!-- Titel -->
-                <TextView
-                    android:id="@+id/titleKalender"
+                <!-- Startdatum Button -->
+                <Button
+                    android:id="@+id/btn_start_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
-                    android:text="Trainingszeitraum wählen:"
+                    android:background="@drawable/grey_background"
+                    android:text="Startdatum wählen"
                     android:textColor="@color/white"
-                    android:textSize="16sp" />
+                    android:padding="8dp" />
 
-                <!-- Kalender -->
-                <GridLayout
-                    android:id="@+id/kalenderGrid"
+                <!-- Anzeige Startdatum -->
+                <TextView
+                    android:id="@+id/tv_start_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/blue_frame"
-                    android:columnCount="7"
-                    android:rowCount="5"
-                    android:padding="8dp">
-                <TextView
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:layout_margin="6dp"
-                    android:background="@drawable/round_background"
-                    android:gravity="center"
-                    android:text="8"
-                    android:textSize="18sp"
+                    android:text="Noch kein Startdatum gewählt"
                     android:textColor="@color/white"
-                    />
-                </GridLayout>
-
-
+                    android:layout_marginBottom="16dp"
+                    android:textSize="16sp" />
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="24dp"/>
