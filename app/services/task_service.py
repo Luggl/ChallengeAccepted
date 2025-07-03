@@ -33,6 +33,7 @@ from datetime import datetime, time, timedelta
 
 from repositories.group_repository import find_group_by_id
 from repositories.membership_repository import find_memberships_by_user
+from repositories.task_repository import find_aufgabenerfuellung_by_challenge_and_date_and_user
 from services.schedule import schedule_deadline_job
 from utils.auth_utils import get_uuid_formated_id, get_uuid_formated_string
 from utils.media import safe_video_logic, generate_video_thumbnail
@@ -49,6 +50,8 @@ def get_task_logic(user_id):
     result = generate_survival_tasks_for_all_challenges()
     if not result["success"]:
         return result
+
+    user_id_uuid = get_uuid_formated_id(user_id)
 
     #Alle Memberships des Users holen
     memberships = find_memberships_by_user(get_uuid_formated_id(user_id))
@@ -76,7 +79,7 @@ def get_task_logic(user_id):
                     "status": "Fehler beim Laden der Gruppe aus der Membership!"
                 })
             continue
-        aufgabenerfuellung = find_aufgabenerfuellung_by_challenge_and_date(challenge.challenge_id, datum)
+        aufgabenerfuellung = find_aufgabenerfuellung_by_challenge_and_date_and_user(challenge.challenge_id, datum, user_id_uuid)
         if aufgabenerfuellung:
             aufgabenerfuellungen.append(serialize_aufgabenerfuellung(aufgabenerfuellung))
 
@@ -106,11 +109,14 @@ def complete_task_logic(erfuellung_id, user_id, description, video_file):
 
     # Videopfad in Aufgabenerfüllung speichern
     videopath = success["data"]
-    success = update_task_by_video_url(erfuellung_id_uuid, videopath)
+    success = update_task_by_video_url(erfuellung_id_uuid, videopath["url"])
 
     #thumbnail erzeugen und in Aufgabenerfüllung speichern
-    thumbnail_path = generate_video_thumbnail(videopath)
-    success = update_task_by_thumbnail(erfuellung_id_uuid, thumbnail_path)
+    thumbnailpath = generate_video_thumbnail(videopath["path"])
+    if not thumbnailpath["success"]:
+        return response(False, error="Thumbnail konnte nicht erzeugt werden")
+
+    success = update_task_by_thumbnail(erfuellung_id_uuid, thumbnailpath["data"]["path"])
     if not success:
         return response(False, error="Thumbnail_path konnte nicht aktualisiert werden")
 

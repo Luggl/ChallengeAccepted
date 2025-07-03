@@ -124,6 +124,15 @@ def find_aufgabenerfuellung_by_challenge_and_date(challenge_id, date):
             Aufgabe.datum == date
         ).first()
 
+def find_aufgabenerfuellung_by_challenge_and_date_and_user(challenge_id, date, user_id):
+    with SessionLocal() as session:
+        return session.query(Aufgabenerfuellung).options(joinedload(Aufgabenerfuellung.aufgabe)).join(Aufgabe,
+                                                                                                      Aufgabenerfuellung.aufgabe_id == Aufgabe.aufgabe_id).filter(
+            Aufgabe.challenge_id == challenge_id,
+            Aufgabe.datum == date,
+            Aufgabenerfuellung.user_id == user_id
+        ).first()
+
 def has_user_already_voted(user_id, beitrag_id):
     beitrag_vote =  find_beitrag_vote_by_user_beitrag(user_id, beitrag_id)
     if beitrag_vote:

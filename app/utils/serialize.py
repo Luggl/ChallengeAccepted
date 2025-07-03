@@ -20,8 +20,8 @@ def serialize_beitrag(beitrag, user_id):
         "erstellt_am": beitrag.erfuellung.erfuellungsdatum.isoformat() if beitrag.erfuellung.erfuellungsdatum else None,
         "user_id": get_uuid_formated_string(beitrag.erfuellung.user_id),
         "gruppe_id": get_uuid_formated_string(beitrag.erfuellung.gruppe_id),
-        "video_url": f"/media/{beitrag.erfuellung.video_url}" if beitrag.erfuellung.video_url else None,
-        "thumbnail_url": f"/media/{beitrag.erfuellung.thumbnail_path}" if beitrag.erfuellung.thumbnail_path else None,
+        "video_url": f"/{beitrag.erfuellung.video_url}" if beitrag.erfuellung.video_url else None,
+        "thumbnail_url": f"/{beitrag.erfuellung.thumbnail_path}" if beitrag.erfuellung.thumbnail_path else None,
         "user_vote": user_vote
     }
 
@@ -37,6 +37,7 @@ def serialize_gruppe(gruppe):
 def serialize_aufgabenerfuellung(aufgabenerfuellung):
     return{
         "aufgabe_id": get_uuid_formated_string(aufgabenerfuellung.aufgabe_id),
+        "erfuellung_id": get_uuid_formated_string(aufgabenerfuellung.erfuellung_id),
         "user_id": get_uuid_formated_string(aufgabenerfuellung.user_id),
         "gruppe_id": get_uuid_formated_string(aufgabenerfuellung.gruppe_id),
         "status": aufgabenerfuellung.status.name,
