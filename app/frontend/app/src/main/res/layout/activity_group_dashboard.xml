@@ -222,100 +222,12 @@
 
             </LinearLayout>
 
-
-            <!-- Video Placeholder (temporär als Bild) --> <!-- Video Card (mit ExoPlayer ersetzt VideoView) -->
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cv_video"
-                android:layout_width="4000dp"
-                android:layout_height="300dp"
-                android:layout_below="@id/ll_user_profiles"
-                android:layout_centerHorizontal="true"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
-
-                <ImageView
-                    android:id="@+id/video_placeholder"
-                    android:layout_width="wrap_content"
-                    android:layout_height="300dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/login_background_pic" />
-
-                <TextView
-                    android:id="@+id/activity"
-                    android:layout_width="300dp"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/ll_user_profiles"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginLeft="50dp"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/grey_background"
-                    android:text="    Liegestütze - 10 Stück"
-                    android:textColor="@color/white"
-                    android:textSize="24sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/description"
-                    android:layout_width="330dp"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/activity"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="250dp"
-                    android:background="@drawable/grey_background"
-                    android:text="Die heutigen Liegestütze waren deutlich angenehmer in der Ausführung!"
-                    android:textColor="@color/white"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
-
-                <ImageView
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_below="@id/description"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="50dp"
-                    android:background="@drawable/grey_background"
-                    android:src="@drawable/mute_icon" />
-
-                <ImageView
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_below="@id/description"
-                    android:layout_marginLeft="360dp"
-                    android:layout_marginTop="250dp"
-                    android:background="@drawable/grey_background"
-                    android:src="@drawable/comment_icon" />
-
-            </androidx.cardview.widget.CardView>
-
-            <!-- Bewertungsbuttons -->
-            <LinearLayout
-                android:id="@+id/ll_action_buttons"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewGroupFeed"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/cv_video"
-                android:orientation="horizontal"
-                android:weightSum="2">
+                android:layout_margin="16dp"/>
 
-                <Button
-                    android:id="@+id/btn_accepted"
-                    android:layout_width="wrap_content"
-                    android:layout_height="48dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/blue_frame"
-                    android:text="Accepted"
-                    android:textColor="@color/button_green" />
-
-                <Button
-                    android:id="@+id/btn_rejected"
-                    android:layout_width="wrap_content"
-                    android:layout_height="48dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/red_frame"
-                    android:text="Rejected"
-                    android:textColor="@color/button_red" />
-            </LinearLayout>
 
         </LinearLayout>
     </ScrollView>

@@ -11,10 +11,11 @@ import android.widget.Toast
 import android.widget.VideoView
 import androidx.recyclerview.widget.RecyclerView
 import de.thws.challengeaccepted.R
-import de.thws.challengeaccepted.models.Beitrag
+import de.thws.challengeaccepted.models.GroupFeedItem
 
-class FeedAdapter(private val feedList: List<Beitrag>) :
-    RecyclerView.Adapter<FeedAdapter.FeedViewHolder>() {
+class GroupFeedAdapter(
+    private var feedList: List<GroupFeedItem>
+) : RecyclerView.Adapter<GroupFeedAdapter.FeedViewHolder>() {
 
     class FeedViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val tvBeschreibung: TextView = view.findViewById(R.id.tvBeschreibung)
@@ -34,37 +35,27 @@ class FeedAdapter(private val feedList: List<Beitrag>) :
         val beitrag = feedList[position]
         holder.tvBeschreibung.text = beitrag.beschreibung
 
+        // Video oder Bild zeigen (wie im anderen Adapter)
         if (!beitrag.video_url.isNullOrBlank()) {
             holder.feedImage.visibility = View.GONE
             holder.feedVideo.visibility = View.VISIBLE
 
-            // -- WICHTIG: Video-URL ggf. mit Server-Adresse ergänzen --
             val videoUrl = if (beitrag.video_url.startsWith("/")) {
-                "http://192.168.178.37:5000${
-                    beitrag.video_url.replace(
-                        "\\",
-                        "/"
-                    )
-                }" // Passe die Base-URL an!
+                "http://192.168.178.37:5000${beitrag.video_url.replace("\\", "/")}"
             } else {
                 beitrag.video_url
             }
-
             holder.feedVideo.setVideoPath(videoUrl)
-            holder.feedVideo.seekTo(1) // Zeigt Vorschaubild
-
-            // Optional: MediaController für Play/Pause
+            holder.feedVideo.seekTo(1)
             val mediaController = MediaController(holder.itemView.context)
             mediaController.setAnchorView(holder.feedVideo)
             holder.feedVideo.setMediaController(mediaController)
-
         } else {
             holder.feedVideo.visibility = View.GONE
             holder.feedImage.visibility = View.VISIBLE
             holder.feedImage.setImageResource(R.drawable.login_background_pic)
         }
 
-        // Buttons: z.B. Listener setzen (hier nur Toast zum Test)
         holder.btnAccepted.setOnClickListener {
             Toast.makeText(holder.itemView.context, "Accepted geklickt!", Toast.LENGTH_SHORT).show()
         }
@@ -72,7 +63,11 @@ class FeedAdapter(private val feedList: List<Beitrag>) :
             Toast.makeText(holder.itemView.context, "Rejected geklickt!", Toast.LENGTH_SHORT).show()
         }
     }
-    override fun getItemCount(): Int {
-        return feedList.size
+
+    override fun getItemCount(): Int = feedList.size
+
+    fun updateData(newFeed: List<GroupFeedItem>) {
+        feedList = newFeed
+        notifyDataSetChanged()
     }
 }

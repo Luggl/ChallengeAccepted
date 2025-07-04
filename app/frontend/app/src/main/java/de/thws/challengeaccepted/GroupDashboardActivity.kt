@@ -10,11 +10,18 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import android.graphics.Color
-
-// Für Bilder von URLs (optional, falls du ein Bild hast und Glide nutzen willst)
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.activity.viewModels
 import com.bumptech.glide.Glide
+import de.thws.challengeaccepted.ui.FeedAdapter
+import de.thws.challengeaccepted.ui.GroupFeedAdapter
+import de.thws.challengeaccepted.ui.viewmodels.GroupFeedViewModel
 
 class GroupDashboardActivity : AppCompatActivity() {
+
+    private val groupFeedViewModel: GroupFeedViewModel by viewModels()
+    private lateinit var feedAdapter: FeedAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,44 +32,57 @@ class GroupDashboardActivity : AppCompatActivity() {
         val groupName = intent.getStringExtra("GROUP_NAME")
         val groupBeschreibung = intent.getStringExtra("GROUP_BESCHREIBUNG")
         val groupBild = intent.getStringExtra("GROUP_BILD")
+        val groupFeedViewModel: GroupFeedViewModel by viewModels()
+        lateinit var groupFeedAdapter: GroupFeedAdapter
+        groupFeedAdapter = GroupFeedAdapter(emptyList())
 
-        // Gruppenname setzen (passt die ID ggf. an dein Layout an)
+
+        // Gruppenname setzen
         val groupNameTextView = findViewById<TextView>(R.id.tvGroupNameDashboard)
         groupNameTextView?.text = groupName ?: "Kein Name"
 
-
-        // Gruppenbild anzeigen (optional)
+        // Gruppenbild anzeigen
         val groupImageView = findViewById<ImageView>(R.id.ivGroupImageDashboard)
         if (!groupBild.isNullOrEmpty() && groupImageView != null) {
-            // Falls Bild eine URL ist, lade es mit Glide (füge Glide als Dependency hinzu!)
             Glide.with(this).load(groupBild).into(groupImageView)
         } else {
-            // Setze ein Platzhalter-Bild, falls kein Bild vorhanden
             groupImageView?.setImageResource(R.drawable.group_profile_picture)
         }
 
-        // Navigation Groupstatus
+        // FEED: RecyclerView initialisieren
+        val feedRecycler = findViewById<RecyclerView>(R.id.recyclerViewGroupFeed)
+        feedRecycler.layoutManager = LinearLayoutManager(this)
+        feedRecycler.adapter = groupFeedAdapter
+
+        // Lade den Feed für die Gruppe
+        if (groupId != null) {
+            groupFeedViewModel.loadFeed(groupId)
+        }
+
+        // Feed-Daten beobachten und anzeigen
+        groupFeedViewModel.feed.observe(this) { beitragsListe ->
+            groupFeedAdapter.updateData(beitragsListe)
+        }
+
+        // ... der Rest deiner Navigation wie gehabt ...
         val navGroupstatus = findViewById<LinearLayout>(R.id.ll_groupstatus)
         navGroupstatus.setOnClickListener {
             val intent = Intent(this, GroupstatusActivity::class.java)
             startActivity(intent)
         }
 
-        // Navigation Challenge Overview
         val navChalleOv = findViewById<LinearLayout>(R.id.ll_challenge_overview)
         navChalleOv.setOnClickListener {
             val intent = Intent(this, SurvivalChallengeOverviewActivity::class.java)
             startActivity(intent)
         }
 
-        // Navigation Record Activity
         val navRecordAc = findViewById<TextView>(R.id.tv_remaining_time)
         navRecordAc.setOnClickListener {
             val intent = Intent(this, RecordActivity::class.java)
             startActivity(intent)
         }
 
-        // Bottom Navigation
         val navGroup = findViewById<ImageView>(R.id.nav_group)
         navGroup.setOnClickListener {
             val intent = Intent(this, GroupOverviewActivity::class.java)
