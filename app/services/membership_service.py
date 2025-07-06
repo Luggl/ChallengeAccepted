@@ -14,8 +14,8 @@ def remove_user_logic(group_id, target_user_uuid, requester_id):
     if not is_user_admin(group_id, requester_id):
         return response(False, error="Nur Admins können Mitglieder entfernen.")
 
-    success = delete_membership(group_id, target_user_uuid)
-    if not success:
+    delete_success = delete_membership(group_id, target_user_uuid)
+    if not delete_success:
         return response(False, error="Entfernen fehlgeschlagen oder nicht erlaubt.")
 
     return response(True, data="User wurde aus der Gruppe entfernt.")

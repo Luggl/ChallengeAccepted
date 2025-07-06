@@ -3,7 +3,7 @@ from app.database.models import (
     Survivalchallenge,
     StandardChallengeSportart,
     SurvivalChallengeSportart,
-    Schwierigkeit, AufgabeStatus
+    Schwierigkeit
 )
 from app.repositories.challenge_repository import (
     create_challenge,
@@ -234,8 +234,8 @@ def delete_challenge_logic(challenge_id, user_id):
     if not is_user_allowed_to_delete(challenge_id, user_id):
         return response(False, error="Keine Berechtigung, diese Challenge zu löschen.")
 
-    success = delete_challenge_by_id(challenge_id)
-    if not success:
+    delete_success = delete_challenge_by_id(challenge_id)
+    if not delete_success:
         return response(False, error="Challenge konnte nicht gelöscht werden oder existiert nicht.")
 
     return response(True, data="Challenge erfolgreich gelöscht.")
@@ -243,16 +243,25 @@ def delete_challenge_logic(challenge_id, user_id):
 
 def challenge_overview_logic(challenge_id, user_id):
     challenge = find_survival_challenge_by_id(challenge_id) or find_standard_challenge_by_id(challenge_id)
-
     if not challenge:
         return response(False, error="Challenge konnte nicht gefunden werden.")
 
-    #Hole die Teilnehmer
+
     teilnehmer = find_teilnehmer_and_user_by_challenge(challenge_id)
+    #Prüfen, ob User in Challenge (Sonst nicht erlaubt, die Informationen zur Challenge zu erhalten
+    usercheck = False
+    for t in teilnehmer:
+        if t.user_id == user_id:
+            usercheck = True
+
+    if not usercheck:
+        return response(False, error="Nur Challenge-Teilnehmer dürfen sich die Challenge ansehen")
 
     #Hole die aktuelle Aufgabe
     today = date_today()
     aufgabe = find_task_by_challenge_and_date(challenge_id, today)
+    if not aufgabe:
+        return response(False, error="Keine Aufgabe gefunden")
 
     overview_data ={
         "challenge_mode": challenge.typ,

@@ -146,9 +146,10 @@ def delete_group_logic(group_id, user_id):
     if not membership.isAdmin:
         return response(False, "User darf die Gruppe nicht löschen")
 
-    result = delete_group_by_id(group_id_bytes)
-    if not result:
+    delete_success = delete_group_by_id(group_id_bytes)
+    if not delete_success:
         return response(False, "Löschen nicht erlaubt oder fehlgeschlagen.")
+
     return response(True, "Gruppe erfolgreich gelöscht.")
 
 # Gruppenfeed abrufen
