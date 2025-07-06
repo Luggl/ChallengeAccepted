@@ -33,23 +33,28 @@ from utils.time import now_berlin, date_today
 # ---------- Standard-Challenge erstellen ----------
 def create_challenge_standard_logic(user_id, data, group_id):
     """Erstellt eine Standard-Challenge mit Dauer, Startdatum und Sportarten."""
+
+    # Validierung und Konvertierung der Gruppen-ID
     group_id_uuid = get_uuid_formated_id(group_id)
     if not group_id_uuid:
         return response(False, error="Ungültige Gruppen-ID")
 
+    # Validierung und Konvertierung der User-ID
     user_id_uuid = get_uuid_formated_id(user_id)
     if not user_id_uuid:
         return response(False, error="Ungültige User-ID")
 
-    # Nicht mehrere Challenges gleichzeitig erlaubt
+    # Es darf nur eine aktive Challenge pro Gruppe geben
     active_challenge_check = find_active_challenge_by_group(group_id_uuid)
     if active_challenge_check:
         return response(False, error="Nur eine aktive Challenge möglich!")
 
+    # Überprüfung auf vollständige Pflichtdaten
     required_fields = ["startdatum", "enddatum", "sportarten"]
     if not all(field in data for field in required_fields):
         return response(False, error="Pflichtfelder fehlen.")
 
+    # Konvertierung und Validierung der Datumsangaben
     try:
         startdatum = datetime.fromisoformat(data["startdatum"])
         enddatum = datetime.fromisoformat(data["enddatum"])
@@ -62,9 +67,11 @@ def create_challenge_standard_logic(user_id, data, group_id):
     except ValueError:
         return response(False, error="Ungültiges Datumsformat.")
 
+    # Überprüfung, ob das Enddatum nach dem Startdatum liegt
     if enddatum <= startdatum:
         return response(False, error="Enddatum muss nach Startdatum liegen.")
 
+    # Erstellung des Challenge-Objekts
     challenge = StandardChallenge(
         challenge_id=uuid.uuid4().bytes,
         gruppe_id=group_id_uuid,
@@ -75,8 +82,10 @@ def create_challenge_standard_logic(user_id, data, group_id):
         active=True
     )
 
+    # Speichern der Challenge in der Datenbank
     create_challenge(challenge)
 
+    # Verarbeitung der zugewiesenen Sportarten mit den jeweiligen Intensitäten
     for eintrag in data["sportarten"]:
         sportart_id_str = eintrag.get("sportart_id")
         start_int = eintrag.get("startintensität")
@@ -92,11 +101,12 @@ def create_challenge_standard_logic(user_id, data, group_id):
         except ValueError:
             return response(False, error="Ungültige Sportart-ID oder Intensitäten")
 
+        # Abruf der Sportart aus der Datenbank
         sportart = find_sportart_by_id(sportart_id_bytes)
-
         if not sportart:
             return response(False, error=f"Sportart mit ID {sportart_id_str} nicht gefunden")
 
+        # Verknüpfung der Sportart mit der Challenge
         standard_sportart_link = StandardChallengeSportart(
             challenge_id=challenge.challenge_id,
             sportart_id=sportart.sportart_id,
@@ -105,8 +115,8 @@ def create_challenge_standard_logic(user_id, data, group_id):
         )
         save_standard_challenge_sportart(standard_sportart_link)
 
+    # Anmeldung aller Gruppenmitglieder zur Challenge
     memberships = find_memberships_by_group(group_id_uuid)
-
     for m in memberships:
         challenge_participation = ChallengeParticipation(
             user_id=m.user_id,
@@ -115,14 +125,15 @@ def create_challenge_standard_logic(user_id, data, group_id):
         )
         save_challenge_participation(challenge_participation)
 
+    # Rückgabe der erfolgreich erstellten Challenge-Daten
     return response(True,
                     data={
-        "challenge_id": str(uuid.UUID(bytes=challenge.challenge_id)),
-        "typ": challenge.typ,
-        "startdatum": challenge.startdatum.isoformat(),
-        "enddatum": challenge.enddatum.isoformat()
-                        }
-                    )
+                        "challenge_id": str(uuid.UUID(bytes=challenge.challenge_id)),
+                        "typ": challenge.typ,
+                        "startdatum": challenge.startdatum.isoformat(),
+                        "enddatum": challenge.enddatum.isoformat()
+                    }
+                )
 
 
 # ---------- Survival-Challenge erstellen ----------
@@ -133,20 +144,21 @@ def create_challenge_survival_logic(user_id, data, group_id):
     if not group_id_uuid:
         return response(False, error="Ungültige Gruppen-ID")
 
+    # Sicherstellen, dass die Gruppe existiert
     result = find_group_by_id(group_id_uuid)
     if not result:
         return response(False, error="Gruppe wurde nicht gefunden")
 
-    # Nicht mehrere Challenges gleichzeitig erlaubt
     active_challenge_check = find_active_challenge_by_group(group_id_uuid)
     if active_challenge_check:
         return response(False, error="Nur eine aktive Challenge möglich!")
 
+    # Nur Startdatum und Sportarten sind erforderlich (kein Enddatum)
     required_fields = ["startdatum", "sportarten"]
     if not all(field in data for field in required_fields):
         return response(False, error="Pflichtfelder fehlen.")
 
-    # Sportarten-Einträge prüfen
+    # Validierung der Sportarten-Einträge inkl. Schwierigkeitsgrad
     for i, eintrag in enumerate(data["sportarten"]):
         if "sportart_id" not in eintrag or "schwierigkeitsgrad" not in eintrag:
             return response(False,
@@ -155,22 +167,23 @@ def create_challenge_survival_logic(user_id, data, group_id):
         sportart_uuid = get_uuid_formated_id(eintrag["sportart_id"])
         sportart = find_sportart_by_id(sportart_uuid)
         if not sportart:
-            return response(False, error=f"Sportart #{i + 1} mit ID {eintrag["sportart_id"]} existiert nicht.")
+            return response(False, error=f"Sportart #{i + 1} mit ID {eintrag['sportart_id']} existiert nicht.")
 
-    # Startdatum parsen
     try:
+        # Es wird nur ein Startdatum gesetzt, kein Enddatum
         startdatum = datetime.fromisoformat(data["startdatum"])
         startdatum = now_berlin().replace(
             year=startdatum.year, month=startdatum.month, day=startdatum.day
         )
     except ValueError:
         return response(False, error="Ungültiges Datumsformat für das Startdatum")
-    # User-ID in bytes umwandeln
+
     try:
         user_id_uuid = get_uuid_formated_id(user_id)
     except ValueError:
-        return response(False, error="Ungültige User-ID (UUID erwartet")
-    # Challenge-Objekt anlegen
+        return response(False, error="Ungültige User-ID (UUID erwartet)")
+
+    # Erstellung eines Challenge-Objekts vom Typ 'survival'
     challenge = Survivalchallenge(
         challenge_id=uuid.uuid4().bytes,
         startdatum=startdatum.date(),
@@ -182,7 +195,7 @@ def create_challenge_survival_logic(user_id, data, group_id):
 
     create_challenge(challenge)
 
-    # Für jede Sportart: speichern mit Schwierigkeitsgrad
+    # Sportarten mit Schwierigkeitsgrad verknüpfen
     for i, eintrag in enumerate(data["sportarten"]):
         sportart_id_str = eintrag["sportart_id"]
         schwierigkeitsgrad_raw = eintrag["schwierigkeitsgrad"]
@@ -192,8 +205,8 @@ def create_challenge_survival_logic(user_id, data, group_id):
         except ValueError:
             return response(False, error=f"Sportart-ID #{i + 1} ist ungültig: {sportart_id_str}")
 
-        # Schwierigkeitsgrad in Enum umwandeln
         try:
+            # Schwierigkeitsgrad wird in Enum umgewandelt
             schwierigkeitsgrad = Schwierigkeit(schwierigkeitsgrad_raw.lower())
         except ValueError:
             return response(False, error=f"Ungültiger Schwierigkeitsgrad bei Sportart #{i + 1}: {schwierigkeitsgrad_raw}")
@@ -202,6 +215,7 @@ def create_challenge_survival_logic(user_id, data, group_id):
         if not sportart:
             return response(False, error=f"Sportart nicht gefunden: {sportart_id_str}")
 
+        # Speichern der Verknüpfung Challenge und Sportart mit Schwierigkeitsgrad
         survival_link = SurvivalChallengeSportart(
             challenge_id=challenge.challenge_id,
             sportart_id=sportart.sportart_id,
@@ -210,7 +224,6 @@ def create_challenge_survival_logic(user_id, data, group_id):
         save_survival_challenge_sportart(survival_link)
 
     memberships = find_memberships_by_group(group_id_uuid)
-
     for m in memberships:
         challenge_participation = ChallengeParticipation(
             user_id=m.user_id,
@@ -219,14 +232,14 @@ def create_challenge_survival_logic(user_id, data, group_id):
         )
         save_challenge_participation(challenge_participation)
 
-
+    # Rückgabe enthält nur das Startdatum
     return response(True,
                     data={
-        "challenge_id": str(uuid.UUID(bytes=challenge.challenge_id)),
-        "typ": challenge.typ,
-        "startdatum": challenge.startdatum.isoformat()
-                        }
-                    )
+                        "challenge_id": str(uuid.UUID(bytes=challenge.challenge_id)),
+                        "typ": challenge.typ,
+                        "startdatum": challenge.startdatum.isoformat()
+                    }
+                )
 
 
 # ---------- Challenge löschen ----------
