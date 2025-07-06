@@ -5,7 +5,7 @@ from app.database.database import SessionLocal
 from app.database.models import Sportart, SportartIntervall, StatusUnit, Schwierigkeit
 
 def seed_sportarten():
-    with open(r"C:\Users\llang\PycharmProjects\ChallengeAccepted/gruppe-14---challenge-accepted/alle_sportarten_mit_faktor.json", "r", encoding="utf-8") as f:
+    with open(r"sqlite:////root/ChallengeAccepted/alle_sportarten_mit_faktor.json", "r", encoding="utf-8") as f:
         daten = json.load(f)
 
     with SessionLocal() as session:
