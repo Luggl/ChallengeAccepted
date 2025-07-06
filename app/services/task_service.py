@@ -156,16 +156,19 @@ def complete_task_logic(erfuellung_id, user_id, description, video_file):
 
 # Vote abgeben für ein Task-Ergebnis
 def vote_logic(user_id, beitrag_id, vote):
-    # Optional: prüfen, ob User schon abgestimmt hat
+
+    # Wenn bereits abgestimmt wurde, darf nicht nochmals abgestimmt werden
     beitrag_id_uuid = get_uuid_formated_id(beitrag_id)
     user_id_uuid = get_uuid_formated_id(user_id)
     if has_user_already_voted(user_id_uuid, beitrag_id_uuid):
         return response(False, error="Du hast bereits abgestimmt.")
 
     gruppe = find_gruppe_by_beitrag(find_beitrag_by_id(beitrag_id_uuid))
+    if not gruppe:
+        return response(False, error="Gruppe konnte nicht gefunden werden")
 
+    #UserVote in Enum umwandeln
     vote_value = Vote.akzeptiert if vote == "akzeptiert" else Vote.abgelehnt
-
 
     vote = BeitragVotes(
         beitrag_id=get_uuid_formated_id(beitrag_id),
