@@ -2,13 +2,13 @@ import uuid
 
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from services.task_service import generate_standard_tasks_for_challenge_logic
-from services.challenge_service import (
+from app.services.task_service import generate_standard_tasks_for_challenge_logic
+from app.services.challenge_service import (
     create_challenge_standard_logic,
     create_challenge_survival_logic,
     delete_challenge_logic, challenge_overview_logic
 )
-from utils.auth_utils import get_uuid_formated_id
+from app.utils.auth_utils import get_uuid_formated_id
 
 # Blueprint für die Challenge erstellen
 challenge_bp = Blueprint('challenge', __name__)

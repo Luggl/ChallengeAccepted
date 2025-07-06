@@ -4,9 +4,9 @@ from datetime import timedelta
 from sqlalchemy.exc import SQLAlchemyError
 
 from app.utils.time import now_berlin, date_today
-from repositories.membership_repository import find_membership, delete_membership, create_membership
-from utils.auth_utils import get_uuid_formated_id
-from utils.response import response
+from app.repositories.membership_repository import find_membership, delete_membership, create_membership
+from app.utils.auth_utils import get_uuid_formated_id
+from app.utils.response import response
 from app.database.models import Membership
 from app.repositories.group_repository import (
     SessionLocal,

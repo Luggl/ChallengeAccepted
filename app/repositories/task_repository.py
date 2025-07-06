@@ -1,10 +1,10 @@
 from sqlalchemy.orm import joinedload
 from app.database.database import SessionLocal
 from app.database.models import Aufgabe, AufgabeStatus, Aufgabenerfuellung, User
-from repositories.beitrag_repository import find_beitrag_vote_by_user_beitrag
-from repositories.challenge_repository import find_challenge_by_id
-from repositories.membership_repository import find_memberships_by_group
-from utils.time import date_today
+from app.repositories.beitrag_repository import find_beitrag_vote_by_user_beitrag
+from app.repositories.challenge_repository import find_challenge_by_id
+from app.repositories.membership_repository import find_memberships_by_group
+from app.utils.time import date_today
 
 
 def find_tasks_by_challenge_id(challenge_id):

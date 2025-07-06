@@ -1,7 +1,7 @@
 from app.utils.response import response
-from repositories.beitrag_repository import update_beitrag, find_beitrag_by_id
-from repositories.user_repository import get_user_feed
-from utils.auth_utils import get_uuid_formated_id
+from app.repositories.beitrag_repository import update_beitrag, find_beitrag_by_id
+from app.repositories.user_repository import get_user_feed
+from app.utils.auth_utils import get_uuid_formated_id
 
 
 # Feed abrufen (z.B. alle Gruppen-Posts des Users)

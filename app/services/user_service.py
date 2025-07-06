@@ -20,8 +20,8 @@ from app.repositories.user_repository import (
 
 import uuid
 from app.utils.auth_utils import get_uuid_formated_id
-from repositories.user_repository import find_user_activities_and_erfuellungen
-from utils.password import is_password_strong
+from app.repositories.user_repository import find_user_activities_and_erfuellungen
+from app.utils.password import is_password_strong
 
 ALLOWED_UPDATE_FIELDS = {"username", "email", "profilbild_url"}
 UPLOAD_ROOT = "media/profilbilder"
