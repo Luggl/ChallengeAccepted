@@ -36,8 +36,8 @@ def seed_sportarten():
 
         session.commit()
         print("✅ Alle Sportarten + Intervalle + Steigerungsfaktor erfolgreich gespeichert.")
-        for s in sportarten:
-            print(s)
+    for s in sportarten:
+        print(s)
 if __name__ == "__main__":
     app = create_app()
     with app.app_context():
