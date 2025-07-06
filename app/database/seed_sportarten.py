@@ -4,6 +4,8 @@ from app import create_app
 from app.database.database import SessionLocal
 from app.database.models import Sportart, SportartIntervall, StatusUnit, Schwierigkeit
 
+NAMESPACE = uuid.UUID("12345678-1234-5678-1234-567812345678")
+
 def seed_sportarten():
     with open(r"/root/ChallengeAccepted/alle_sportarten_mit_faktor.json", "r", encoding="utf-8") as f:
         daten = json.load(f)
@@ -11,13 +13,15 @@ def seed_sportarten():
     with SessionLocal() as session:
         for eintrag in daten:
             sportart = Sportart(
-                sportart_id=uuid.uuid4().bytes,
+                sportart_id=uuid.uuid5(NAMESPACE, eintrag["bezeichnung"]).bytes,
                 bezeichnung=eintrag["bezeichnung"],
                 unit=StatusUnit(eintrag["unit"]),
                 steigerungsfaktor=eintrag.get("steigerungsfaktor", 1.0)
             )
             session.add(sportart)
             session.flush()  # sportart_id für Intervall speichern
+
+            print(f"Sportart: {eintrag['bezeichnung']} | ID: {uuid.UUID(bytes=sportart.sportart_id)}")
 
             for schwierigkeit, (min_wert, max_wert) in eintrag["intervalle"].items():
                 intervall = SportartIntervall(
