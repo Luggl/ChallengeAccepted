@@ -54,7 +54,10 @@ def vote():
 
 
 @task_bp.route('/api/survivaltasks', methods=["GET"])
-def create_survivaltasks():
+def create_survivaltasks_manual():
+    """Diese Route ist nur zu Testzwecken vorhanden - Im Livebetrieb übernimmt der Scheduler den Job,
+    jeden Morgen um 07:00Uhr alle Tasks zu erzeugen."""
+
     result = generate_survival_tasks_for_all_challenges()
 
     if not result:

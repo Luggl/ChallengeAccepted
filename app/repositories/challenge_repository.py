@@ -2,7 +2,6 @@ from datetime import date
 from sqlalchemy.orm import joinedload
 from app.database.models import Challenge, StandardChallengeSportart, Sportart, SurvivalChallengeSportart, \
     StandardChallenge, Survivalchallenge
-from app import db
 from app.database.database import SessionLocal
 from app.database.models import ChallengeParticipation
 

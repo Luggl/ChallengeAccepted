@@ -1,15 +1,20 @@
+import atexit
+
 from apscheduler.schedulers.background import BackgroundScheduler
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager
 from datetime import timedelta
-from app.database.models import Aufgabe, SurvivalAufgabe, StandardAufgabe
+from services.schedule import run_daily_survival_task
 
 db = SQLAlchemy()
 jwt = JWTManager()  # JWTManager global verfügbar machen
 
-scheduler = BackgroundScheduler()       #Scheduler für den Background Check verantwortlich, ob Deadlines überschritten
+scheduler = BackgroundScheduler()       #Scheduler für den Background Check verantwortlich, ob Deadlines überschritten und zum Erzeugen der Survivaltasks daily
+scheduler.add_job(func=run_daily_survival_task(), trigger="cron", hour=7, minute=0) # Jeden Tag um 07:00 werden die Survival Tasks erzeugt
 scheduler.start()
+
+atexit.register(lambda: scheduler.shutdown()) # gägngige Praxis: Bei App-Ende wird der Scheduler deaktiviert
 
 #Für den Logout werden die erzeugten Tokens zur Auth. in eine Blacklist gespeichert!
 blacklisted_tokens = set()
