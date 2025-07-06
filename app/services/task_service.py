@@ -1,6 +1,3 @@
-import os
-
-from werkzeug.utils import secure_filename
 from app.utils.response import response
 from app.repositories.task_repository import (
     save_aufgabe,
@@ -10,7 +7,7 @@ from app.repositories.task_repository import (
     has_user_already_voted,
     create_user_vote,
     find_aufgabenerfuellung_by_user_id,
-    find_aufgabenerfuellung_by_challenge_and_date, update_task_by_video_url,
+    update_task_by_video_url,
     add_streak, update_task_by_thumbnail
 )
 from app.database.models import BeitragVotes, Beitrag, AufgabeTyp, StandardAufgabe, Vote
@@ -35,10 +32,11 @@ from repositories.group_repository import find_group_by_id
 from repositories.membership_repository import find_memberships_by_user
 from repositories.task_repository import find_aufgabenerfuellung_by_challenge_and_date_and_user
 from services.schedule import schedule_deadline_job
-from utils.auth_utils import get_uuid_formated_id, get_uuid_formated_string
+from utils.auth_utils import get_uuid_formated_id
 from utils.media import safe_video_logic, generate_video_thumbnail
 from utils.serialize import serialize_aufgabenerfuellung
 from utils.time import now_berlin, date_today
+from utils.scheduler_instance import scheduler
 from app.repositories.sportart_repository import find_sportart_by_id, find_intervall_by_sportart_and_schwierigkeit
 from app.database.models import SurvivalAufgabe
 
@@ -246,7 +244,7 @@ def generate_standard_tasks_for_challenge_logic(challenge_id: bytes):
         )
 
         save_aufgabe(aufgabe)
-        schedule_deadline_job(aufgabe)  # Hier wird der Hintergrundjob initialisiert, der den Status nach Deadline verändert
+        schedule_deadline_job(scheduler, aufgabe)  # Hier wird der Hintergrundjob initialisiert, der den Status nach Deadline verändert
 
 
     return response(True, data=f"{duration} Aufgaben erstellt")
@@ -330,6 +328,6 @@ def generate_survival_tasks_for_all_challenges():
         aufgabe_id = save_aufgabe(aufgabe)
         erfolge.append({"challenge_id": str(uuid.UUID(bytes=challenge.challenge_id)), "status": "erstellt", "task_id": str(uuid.UUID(bytes=aufgabe_id))})
 
-        schedule_deadline_job(aufgabe)  # Hier wird der Hintergrundjob initialisiert, der den Status nach Deadline verändert
+        schedule_deadline_job(scheduler, aufgabe)  # Hier wird der Hintergrundjob initialisiert, der den Status nach Deadline verändert
 
     return response(True, data=erfolge)

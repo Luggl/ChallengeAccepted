@@ -2,9 +2,7 @@ import os
 import subprocess
 import uuid
 from pathlib import Path, PurePosixPath
-
 from werkzeug.utils import secure_filename
-
 from utils.response import response
 
 if os.name == "nt": #Windows
@@ -19,7 +17,7 @@ def safe_video_logic(task_id, video_file):
     task_id_str = str(uuid.UUID(bytes=task_id))
 
     upload_path = UPLOAD_ROOT / task_id_str
-    upload_path.mkdir(parents=True, exist_ok=True)
+    upload_path.mkdir(parents=True, exist_ok=True)      #Upload_Path erzeugen, falls noch nicht existent
 
     full_path = upload_path / filename
     absolute_path = str(full_path.resolve())
@@ -34,12 +32,12 @@ def safe_video_logic(task_id, video_file):
 
 
 def generate_video_thumbnail(video_path):
-    video_path = Path(video_path)
+    video_path = Path(video_path)           #Path-String wird als Path-Objekt behandelt
     video_folder = video_path.parent
     thumbnail_filename = f"{uuid.uuid4()}.jpg"
     thumbnail_path = video_folder / thumbnail_filename
 
-    #Nimm Frame bei 00:00:01
+    #Nimm Frame bei 00:00:01 - Genutzt wird ffmpeg, welches auf das Video zugreift und einen Frame erzeugt
     command = [
         "ffmpeg",
         "-i", str(video_path),

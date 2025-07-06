@@ -1,10 +1,10 @@
-# um Videoformat per JSON über Flask zurückzugeben
-import uuid
-
 from app.utils.auth_utils import get_uuid_formated_string
 
 
 def serialize_beitrag(beitrag, user_id):
+    """Beitrag-Objekte über JSON Übertragbar gestalten
+    Durch den relativ komplexen Aufbau wird im Beitrag direkt beitrag_votes, aufgabenerfuellung, die aufgabe und die Sportart mitgeliefert"""
+
     user_vote = None
     for vote in beitrag.votes:
         if vote.user_id == user_id:
