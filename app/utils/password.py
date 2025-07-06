@@ -13,4 +13,4 @@ def is_password_strong(password):
     if not re.search(r"[!@#$%^&*(),.?\":{}|<>]", password):
         return False, "Das Passwort muss mindestens ein Sonderzeichen enthalten."
 
-    return True
+    return True, "Passwort ist stark genug"
