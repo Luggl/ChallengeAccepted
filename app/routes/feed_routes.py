@@ -13,7 +13,7 @@ def get_feed():
     result = get_feed_logic(current_user_id)
 
     if not result["success"]:
-        return jsonify({"error": result}), 400
+        return jsonify({"error": result["error"]}), 400
 
     return jsonify({"feed": result}), 200
 
@@ -27,6 +27,7 @@ def edit_post():
     result = update_post_logic(data, post_id, current_user_id)
 
     if not result["success"]:
-        return jsonify({"error": result}), 403
+        return jsonify({"error": result["error"]}), 403
 
     return jsonify({"message": result}), 200
+

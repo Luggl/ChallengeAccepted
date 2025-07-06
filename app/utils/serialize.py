@@ -1,23 +1,33 @@
-# um Videoformat per JSON über Flask zurückzugeben
-from repositories.task_repository import find_aufgabenerfuellung_by_id
+from app.utils.auth_utils import get_uuid_formated_string
 
 
-def serialize_beitrag(beitrag):
-    #Da die Aufgabenerfüllung alle relevanten Informationen hält, muss diese hier erstmal geladen werden
-    erfuellung = find_aufgabenerfuellung_by_id(beitrag.erfuellung.id)
+def serialize_beitrag(beitrag, user_id):
+    """Beitrag-Objekte über JSON Übertragbar gestalten
+    Durch den relativ komplexen Aufbau wird im Beitrag direkt beitrag_votes, aufgabenerfuellung, die aufgabe und die Sportart mitgeliefert"""
+
+    user_vote = None
+    for vote in beitrag.votes:
+        if vote.user_id == user_id:
+            user_vote = vote.vote.value
+            break
 
     return{
-        "beitrag_id": beitrag.beitrag_id.hex(),
+        "beitrag_id": get_uuid_formated_string(beitrag.beitrag_id),
+        "aufgabe_sportart": beitrag.erfuellung.aufgabe.sportart.bezeichnung,
+        "aufgabe_anzahl": beitrag.erfuellung.aufgabe.zielwert,
+        "aufgabe_unit": beitrag.erfuellung.aufgabe.unit.value,
         "beschreibung": beitrag.erfuellung.beschreibung if beitrag.erfuellung.beschreibung else None,
-        "erstellt_am": beitrag.erfuellung.datum.isoformat(),
-        "user_id": beitrag.erfuellung.user_id.hex(),
-        "gruppe_id": beitrag.erfuellung.gruppe_id.hex(),
-        "video_url": f"/media/{beitrag.erfuellung.video_path}" if beitrag.video_path else None
+        "erstellt_am": beitrag.erfuellung.erfuellungsdatum.isoformat() if beitrag.erfuellung.erfuellungsdatum else None,
+        "user_id": get_uuid_formated_string(beitrag.erfuellung.user_id),
+        "gruppe_id": get_uuid_formated_string(beitrag.erfuellung.gruppe_id),
+        "video_url": f"/{beitrag.erfuellung.video_url}" if beitrag.erfuellung.video_url else None,
+        "thumbnail_url": f"/{beitrag.erfuellung.thumbnail_path}" if beitrag.erfuellung.thumbnail_path else None,
+        "user_vote": user_vote
     }
 
 def serialize_gruppe(gruppe):
     return{
-        "gruppe_id": gruppe.gruppe_id.hex(),
+        "gruppe_id": get_uuid_formated_string(gruppe.gruppe_id),
         "gruppenname": gruppe.gruppenname,
         "beschreibung": gruppe.beschreibung,
         "gruppenbild": gruppe.gruppenbild,
@@ -26,9 +36,10 @@ def serialize_gruppe(gruppe):
 
 def serialize_aufgabenerfuellung(aufgabenerfuellung):
     return{
-        "aufgabe_id": aufgabenerfuellung.aufgabe_id.hex(),
-        "user_id": aufgabenerfuellung.user_id.hex(),
-        "gruppe_id": aufgabenerfuellung.gruppe_id.hex(),
+        "aufgabe_id": get_uuid_formated_string(aufgabenerfuellung.aufgabe_id),
+        "erfuellung_id": get_uuid_formated_string(aufgabenerfuellung.erfuellung_id),
+        "user_id": get_uuid_formated_string(aufgabenerfuellung.user_id),
+        "gruppe_id": get_uuid_formated_string(aufgabenerfuellung.gruppe_id),
         "status": aufgabenerfuellung.status.name,
         "beschreibung": aufgabenerfuellung.aufgabe.beschreibung,
         "zielwert": aufgabenerfuellung.aufgabe.zielwert,
@@ -50,7 +61,14 @@ def serialize_achievements(achievement):
 
 def serialize_membership(membership):
     return{
-        "user_id": membership.user_id.hex(),
+        "user_id": get_uuid_formated_string(membership.user_id),
         "gruppe_id": membership.gruppe_id.hex(),
         "isAdmin": membership.isAdmin,
+    }
+
+def serialize_user(user):
+    return{
+        "user_id": get_uuid_formated_string(user.user_id),
+        "username": user.username,
+        "email": user.email
     }

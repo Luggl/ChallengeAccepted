@@ -4,7 +4,7 @@ from sqlalchemy import Column, String, Integer, Boolean, Date, ForeignKey, Forei
 from sqlalchemy.dialects.mysql import DATETIME
 from sqlalchemy.dialects.sqlite import BLOB
 from sqlalchemy.orm import relationship, foreign, configure_mappers
-from .database import Base
+from app.database.database import Base
 from enum import Enum
 configure_mappers()
 
@@ -12,22 +12,6 @@ configure_mappers()
 class StatusUnit(Enum):
     anzahl="anzahl"
     dauer="dauer"
-
-class AchievementKategorie(Enum):
-    bonusaufgaben="Bonusaufgaben"
-    community="Community"
-    gruppenaktivitaet="Gruppenaktivität"
-    spezial="Spezial"
-    sportarten="Sportarten"
-    standard="Standard-Aufgaben"
-    streaks="Streaks"
-    survival="Survival-Aufgaben"
-    survivalChallenges="Survival Challenges"
-
-class AchievementStufe(Enum):
-    bronze="Bronze"
-    silber="Silber"
-    gold="Gold"
 
 class Schwierigkeit(Enum):
     easy="easy"
@@ -42,23 +26,11 @@ class AufgabeStatus(Enum):
 class AufgabeTyp(Enum):
     standard = "standard"
     survival = "survival"
-    bonus = "bonus"
 
 class Vote(Enum):
     akzeptiert = "akzeptiert"
     abgelehnt = "abgelehnt"
     offen = "offen"
-
-class UserAchievement(Base):
-    __tablename__="user_achievement"
-    user_id= Column(BLOB,ForeignKey("user.user_id"), primary_key=True)
-    achievement_id=Column(BLOB,ForeignKey("achievement.achievement_id"), primary_key=True)
-    erhalten=Column(Boolean, default=False)
-    erhaltenAm=Column(Date)
-
-    user=relationship("User", back_populates="achievement_links")
-    achievement=relationship("Achievement", back_populates="user_links")
-
 
 class User(Base):
     __tablename__ = "user"
@@ -67,14 +39,9 @@ class User(Base):
     username=Column(String, nullable=False, unique=True)
     email=Column(String, nullable=False, unique=True)
     passwordHash=Column(String)
-    profilbild=Column(String)
+    profilbild_url=Column(String)
     streak=Column(Integer, default=0)
 
-    achievement_links=relationship(
-        "UserAchievement",
-        back_populates="user",
-        cascade="all, delete-orphan"
-    )
     token=relationship(
         "ResetToken",
         back_populates="user",
@@ -85,19 +52,10 @@ class User(Base):
         back_populates="user",
         cascade="all, delete-orphan")
 
-class Achievement (Base):
-    __tablename__="achievement"
-    achievement_id=Column(BLOB, primary_key=True, default=lambda: uuid.uuid4().bytes)
-    kategorie=Column(SQLEnum(AchievementKategorie), nullable=False)
-    stufe=Column(SQLEnum(AchievementStufe), nullable=False)
-    titel=Column(String, nullable=False)
-    beschreibung= Column(String)
-
-    condition_type=Column(String, nullable=False) # Kondition z.B. standard_tasks_completed, streak_days, etc.
-    condition_value=Column(String, nullable=False) # Konditionswert z.B. 5, 10, 20
-
-    user_links=relationship("UserAchievement", back_populates="achievement")
-
+    challenge_links = relationship(
+        "ChallengeParticipation",
+        back_populates="user",
+        cascade="all, delete-orphan")
 
 class ResetToken(Base):
     __tablename__="resettoken"
@@ -116,6 +74,7 @@ class Membership(Base):
 
     user=relationship("User", back_populates="membership")
     gruppe=relationship("Gruppe", back_populates="memberships")
+    erstellt_challenges=relationship("Challenge", back_populates="ersteller", overlaps="gruppe,challenges")
 
 class Gruppe(Base):
     __tablename__="gruppe"
@@ -192,11 +151,10 @@ class Challenge(Base):
     gruppe=relationship("Gruppe", back_populates="challenges")
 
     ersteller_user_id = Column(BLOB)
-    ersteller_gruppe_id = Column(BLOB)
 
     __table_args__ = (
         ForeignKeyConstraint(
-            ["ersteller_user_id", "ersteller_gruppe_id"],
+            ["ersteller_user_id", "gruppe_id"],
             ["membership.user_id", "membership.gruppe_id"],
             ondelete="CASCADE"
         ),
@@ -206,12 +164,19 @@ class Challenge(Base):
         "Membership",
         primaryjoin=and_(
             foreign(ersteller_user_id)==Membership.user_id,
-            foreign(ersteller_gruppe_id)==Membership.gruppe_id
+            foreign(gruppe_id)==Membership.gruppe_id
         ),
+        back_populates="erstellt_challenges",
+        overlaps="gruppe,challenges",
         foreign_keys=[Membership.user_id, Membership.gruppe_id],
     )
 
-    __mapper_args_={
+    teilnehmer_links = relationship(
+        "ChallengeParticipation",
+        back_populates="challenge",
+        cascade="all")
+
+    __mapper_args__={
         "polymorphic_identity":"challenge",
         "polymorphic_on":typ
     }
@@ -225,10 +190,9 @@ class Challenge(Base):
 class StandardChallenge(Challenge):
     __tablename__ = "standard_challenge"
     challenge_id = Column(BLOB, ForeignKey("challenge.challenge_id", ondelete="CASCADE"),primary_key=True)
-    dauer=Column(Integer)
     enddatum = Column(Date)
 
-    __mapper_args_ = {
+    __mapper_args__ = {
         "polymorphic_identity":"standard"
     }
 
@@ -242,6 +206,31 @@ class Survivalchallenge(Challenge):
     }
 
     sportarten_links = relationship("SurvivalChallengeSportart", back_populates="challenge", cascade="all, delete-orphan")
+
+class ChallengeParticipation(Base):
+    __tablename__ = "challenge_participation"
+    user_id = Column(BLOB, ForeignKey("user.user_id"), primary_key=True)
+    challenge_id = Column(BLOB, ForeignKey("challenge.challenge_id", ondelete="CASCADE"), primary_key=True)
+
+    aktiv = Column(Boolean, default=True)
+    entfernt_datum = Column(DateTime, nullable=True)
+
+    __table_args__ = (
+        ForeignKeyConstraint(
+            ["user_id"],
+            ["user.user_id"],
+            ondelete="CASCADE",
+        ),
+        ForeignKeyConstraint(
+            ["challenge_id"],
+            ["challenge.challenge_id"],
+            ondelete="CASCADE"
+        ),
+    )
+
+    user = relationship("User", back_populates="challenge_links")
+    challenge = relationship("Challenge", back_populates="teilnehmer_links")
+
 
 class Aufgabe(Base):
     __tablename__="aufgabe"
@@ -266,7 +255,7 @@ class Aufgabe(Base):
 
     __mapper_args__ = {
             "polymorphic_on": typ,
-            # Für alle Unterklassen - Standard / Survival / Bonus
+            # Für alle Unterklassen - Standard / Survival
             "with_polymorphic": "*"  # erlaubt JOIN Abfragen über alle Unterklassen hinweg
         }
 
@@ -286,24 +275,14 @@ class SurvivalAufgabe(Aufgabe):
 
     __mapper_args__ = {"polymorphic_identity": AufgabeTyp.survival}
 
-class BonusAufgabe(Aufgabe):
-    __tablename__ ="bonus_aufgabe"
-
-    aufgabe_id = Column(BLOB, ForeignKey("aufgabe.aufgabe_id"),primary_key=True)
-    bonus_punkte=Column(Integer, default=0)
-    ist_freiwillig=Column(Boolean, default=True)
-
-    __mapper_args__ = {
-        "polymorphic_identity":AufgabeTyp.bonus
-    }
-
 class Aufgabenerfuellung (Base):
     __tablename__="aufgabenerfuellung"
 
     erfuellung_id=Column(BLOB, primary_key=True, default=lambda: uuid.uuid4().bytes)
     status=Column(SQLEnum(AufgabeStatus), nullable=False)
     video_url=Column(String)
-    datum=Column(Date)
+    thumbnail_path=Column(String)
+    erfuellungsdatum=Column(Date)
     beschreibung=Column(String)
     aufgabe_id= Column(BLOB, ForeignKey("aufgabe.aufgabe_id"))
     aufgabe=relationship("Aufgabe", back_populates="erfuellungen")

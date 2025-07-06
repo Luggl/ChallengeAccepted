@@ -6,7 +6,7 @@ from services.task_service import generate_standard_tasks_for_challenge_logic
 from services.challenge_service import (
     create_challenge_standard_logic,
     create_challenge_survival_logic,
-    delete_challenge_logic
+    delete_challenge_logic, challenge_overview_logic
 )
 from utils.auth_utils import get_uuid_formated_id
 
@@ -87,3 +87,22 @@ def delete_challenge():
         return jsonify({"error": result["error"]}), 400
 
     return jsonify({"message": "Challenge gelöscht"}), 200
+
+
+@challenge_bp.route("/api/challenge", methods=["GET"])
+@jwt_required()
+def challenge_overview():
+    challenge_id = get_uuid_formated_id(request.args.get("challenge_id"))
+    if not challenge_id:
+        return jsonify({"error": "Ungültige Challenge-ID"}), 400
+
+    user_id = get_uuid_formated_id(get_jwt_identity())
+    if not user_id:
+        return jsonify({"error": "Ungültige Benutzer-ID"}), 401
+
+    result = challenge_overview_logic(challenge_id, user_id)
+
+    if not result["success"]:
+        return jsonify({"error": result["error"]}), 400
+
+    return result

@@ -1,9 +1,7 @@
-# app/repositories/user_repository.py
-
-from app.database.models import User, Aufgabenerfuellung, Beitrag
-
+from sqlalchemy.orm import joinedload
+from app.database.models import User, Aufgabenerfuellung, Beitrag, Membership, Aufgabe
 from app.database.database import SessionLocal
-from utils.serialize import serialize_beitrag
+from app.utils.serialize import serialize_beitrag
 
 
 def find_user_by_email(email):
@@ -45,12 +43,31 @@ def update_user(user):
         session.commit()
     return user
 
-def find_user_activities(user):
+
+def find_user_activities_and_erfuellungen(user):
     with SessionLocal() as session:
-        return session.query(Aufgabenerfuellung).filter_by(user_id=user.user_id).first()
+        return session.query(Aufgabenerfuellung).options(joinedload(Aufgabenerfuellung.aufgabe)).filter_by(user_id=user.user_id).all()
 
 def get_user_feed(user_id):
     with SessionLocal() as session:
-        beitraege = session.query(Beitrag).filter_by(user_id=user_id).order_by(Beitrag.erstellDatum.desc()).all()
-        result = [serialize_beitrag(b) for b in beitraege]
+        #Gruppen des Users holen - dafür müssen die Memberships abgefragt werden
+        subquery = session.query(Membership.gruppe_id).filter(Membership.user_id == user_id).subquery()
+
+        #Die Beiträge setzen sich zusammen aus den Aufgabenerfüllungen, den Aufgaben, den Sportarten und den Votes
+        #Werden dann entsprechend der Gruppenzugehörigkeit des Users gefiltert
+        beitraege = session.query(Beitrag) \
+            .join(Beitrag.erfuellung) \
+            .join(Aufgabenerfuellung.aufgabe) \
+            .join(Aufgabe.sportart) \
+            .options(
+                joinedload(Beitrag.erfuellung) \
+                    .joinedload(Aufgabenerfuellung.aufgabe)\
+                    .joinedload(Aufgabe.sportart),
+                joinedload(Beitrag.votes)
+        ) \
+            .filter(Aufgabenerfuellung.gruppe_id.in_(subquery)) \
+            .order_by(Beitrag.erstellDatum.desc()) \
+            .all()
+
+        result = [serialize_beitrag(b, user_id) for b in beitraege]
         return result
