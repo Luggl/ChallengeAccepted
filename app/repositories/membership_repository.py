@@ -1,5 +1,3 @@
-# app/repositories/membership_repository.py
-
 from app.database.models import Membership
 from app.database.database import SessionLocal
 

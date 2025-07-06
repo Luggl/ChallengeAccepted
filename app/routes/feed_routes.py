@@ -30,3 +30,4 @@ def edit_post():
         return jsonify({"error": result["error"]}), 403
 
     return jsonify({"message": result}), 200
+

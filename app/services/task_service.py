@@ -1,6 +1,3 @@
-import os
-
-from werkzeug.utils import secure_filename
 from app.utils.response import response
 from app.repositories.task_repository import (
     save_aufgabe,
@@ -10,10 +7,10 @@ from app.repositories.task_repository import (
     has_user_already_voted,
     create_user_vote,
     find_aufgabenerfuellung_by_user_id,
-    find_aufgabenerfuellung_by_challenge_and_date, update_task_by_video_url,
-    add_streak
+    update_task_by_video_url,
+    add_streak, update_task_by_thumbnail
 )
-from app.database.models import BeitragVotes, Beitrag, AufgabeTyp, StandardAufgabe
+from app.database.models import BeitragVotes, Beitrag, AufgabeTyp, StandardAufgabe, Vote
 from repositories.beitrag_repository import (
     find_beitrag_by_id,
     find_gruppe_by_beitrag,
@@ -33,22 +30,27 @@ from datetime import datetime, time, timedelta
 
 from repositories.group_repository import find_group_by_id
 from repositories.membership_repository import find_memberships_by_user
+from repositories.task_repository import find_aufgabenerfuellung_by_challenge_and_date_and_user
 from services.schedule import schedule_deadline_job
 from utils.auth_utils import get_uuid_formated_id
+from utils.media import safe_video_logic, generate_video_thumbnail
 from utils.serialize import serialize_aufgabenerfuellung
 from utils.time import now_berlin, date_today
+from utils.scheduler_instance import scheduler
 from app.repositories.sportart_repository import find_sportart_by_id, find_intervall_by_sportart_and_schwierigkeit
 from app.database.models import SurvivalAufgabe
 
 
-UPLOAD_ROOT = "media/aufgabenerfuellung"
 
 # Alle Tasks für einen User abfragen
 def get_task_logic(user_id):
     # Survival Tasks erzeugen, falls neue Vorhanden!
+    # Dies ist nur zu Vorführzwecken implementiert - Live übernimmt der Daily Job diese Aufgabe
     result = generate_survival_tasks_for_all_challenges()
     if not result["success"]:
         return result
+
+    user_id_uuid = get_uuid_formated_id(user_id)
 
     #Alle Memberships des Users holen
     memberships = find_memberships_by_user(get_uuid_formated_id(user_id))
@@ -56,7 +58,7 @@ def get_task_logic(user_id):
     if not memberships:
         return response(False, error="User in keiner Gruppe!")
 
-    #Liste an Aufgabenerfüllungen erzeugen
+    #Liste an Aufgabenerfüllungen und inaktive Challenges erzeugen
     aufgabenerfuellungen = []
     inaktive_Challenges = []
     #Für alle Memberships die jeweiligen Tasks laden
@@ -76,7 +78,7 @@ def get_task_logic(user_id):
                     "status": "Fehler beim Laden der Gruppe aus der Membership!"
                 })
             continue
-        aufgabenerfuellung = find_aufgabenerfuellung_by_challenge_and_date(challenge.challenge_id, datum)
+        aufgabenerfuellung = find_aufgabenerfuellung_by_challenge_and_date_and_user(challenge.challenge_id, datum, user_id_uuid)
         if aufgabenerfuellung:
             aufgabenerfuellungen.append(serialize_aufgabenerfuellung(aufgabenerfuellung))
 
@@ -90,78 +92,89 @@ def get_task_logic(user_id):
 def complete_task_logic(erfuellung_id, user_id, description, video_file):
     user_id_uuid = get_uuid_formated_id(user_id)
     erfuellung_id_uuid = get_uuid_formated_id(erfuellung_id)
+
+    warnungen= []
     #Prüfen, ob User diese Task überhaupt hat
     usercheck = find_aufgabenerfuellung_by_user_id(user_id_uuid)
-
     if not any(e.erfuellung_id == erfuellung_id_uuid for e in usercheck):
         return response(False, error="User hält diese Aufgabe nicht!")
 
     if not video_file:
         return response(False, error="Video ist erforderlich!")
 
-    #Video speichern
-    success = safe_video_logic(erfuellung_id_uuid, video_file)
-    if not success["success"]:
-        return success
-
-    videopath = success["data"]
-    # Videopfad in Aufgabenerfüllung speichern
-    success = update_task_by_video_url(erfuellung_id_uuid, videopath)
-    #Aufgabenerfüllung Status updaten
-    success = mark_task_as_complete(erfuellung_id_uuid, description)
-    if not success:
-        return response(False, error="Aufgabe nicht gefunden oder konnte nicht abgeschlossen werden.")
-
     # Check ob Beitrag bereits vorhanden!
     beitrag_check = find_beitrag_by_erfuellung_id(erfuellung_id_uuid)
     if beitrag_check:
         return response(False, error="Beitrag bereits vorhanden!")
+
+    #Video speichern
+    safe_video_success = safe_video_logic(erfuellung_id_uuid, video_file)
+    if not safe_video_success["success"]:
+        return safe_video_success
+
+    # Videopfad in Aufgabenerfüllung speichern
+    videopath = safe_video_success["data"]
+
+    safe_video_path_success = update_task_by_video_url(erfuellung_id_uuid, videopath["url"])
+    if not safe_video_path_success["success"]:
+        warnungen.append("Thumbnailpfad konnte nicht korrekt erstellt werden")
+
+    #thumbnail erzeugen und in Aufgabenerfüllung speichern
+    thumbnailpath = generate_video_thumbnail(videopath["path"])
+    if not thumbnailpath["success"]:
+        warnungen.append("Thumbnail konnte nicht erzeugt werden")
+    else:
+        update_task_thumbnail_success = update_task_by_thumbnail(erfuellung_id_uuid, thumbnailpath["data"]["path"])
+        if not update_task_thumbnail_success:
+            warnungen.append("Thumbnailpfad konnte nicht gespeichert werden")
+
+    #Aufgabenerfüllung Status updaten
+    status_update_success = mark_task_as_complete(erfuellung_id_uuid, description)
+    if not status_update_success:
+        return response(False, error="Aufgabe nicht gefunden oder konnte nicht abgeschlossen werden.")
+
     #Beitrag erstellen
     beitrag = Beitrag(
         erstellDatum=date_today(),
         erfuellung_id=erfuellung_id_uuid
     )
 
-    success = create_beitrag(beitrag)
-    if not success:
+    create_beitrag_success = create_beitrag(beitrag)
+    if not create_beitrag_success:
         return response(False, error="Beitrag konnte nicht erstellt werden")
 
     # Streak wird nach Abschluss entsprechend erhöht
-    success = add_streak(user_id_uuid)
-    if not success:
-        return response(False, error="Streak konnte nicht erfolgreich erhöht werden!")
+    add_streak_success = add_streak(user_id_uuid)
+    if not add_streak_success:
+        warnungen.append("Streak konnte nicht korrekt geupdated werden")
 
+    if warnungen:
+        return response(True, data="Aufgabe abgeschlossen, aber mit Warnungen", error=warnungen)
     return response(True, data="Aufgabe als erledigt markiert und Beitrag erstellt.")
 
-def safe_video_logic(task_id, video_file):
-    filename = secure_filename(f"{uuid.uuid4()}.mp4")
-    task_id_str = str(uuid.UUID(bytes=task_id))
-    upload_path = os.path.join(UPLOAD_ROOT, task_id_str)
-    os.makedirs(upload_path, exist_ok=True)
-
-    full_path = os.path.join(upload_path, filename)
-    try:
-        video_file.save(full_path)
-        return response(True, data=full_path)
-    except Exception as e:
-        return response(False, error="Fehler beim Speichern des Videos!")
 
 
 # Vote abgeben für ein Task-Ergebnis
 def vote_logic(user_id, beitrag_id, vote):
-    # Optional: prüfen, ob User schon abgestimmt hat
+
+    # Wenn bereits abgestimmt wurde, darf nicht nochmals abgestimmt werden
     beitrag_id_uuid = get_uuid_formated_id(beitrag_id)
     user_id_uuid = get_uuid_formated_id(user_id)
     if has_user_already_voted(user_id_uuid, beitrag_id_uuid):
         return response(False, error="Du hast bereits abgestimmt.")
 
-    gruppe_id = find_gruppe_by_beitrag(find_beitrag_by_id(beitrag_id))
+    gruppe = find_gruppe_by_beitrag(find_beitrag_by_id(beitrag_id_uuid))
+    if not gruppe:
+        return response(False, error="Gruppe konnte nicht gefunden werden")
+
+    #UserVote in Enum umwandeln
+    vote_value = Vote.akzeptiert if vote == "akzeptiert" else Vote.abgelehnt
 
     vote = BeitragVotes(
-        beitrag_id=beitrag_id,
-        user_id=user_id,
-        vote=vote,
-        gruppe_id=gruppe_id,
+        beitrag_id=get_uuid_formated_id(beitrag_id),
+        user_id=get_uuid_formated_id(user_id),
+        vote=vote_value,
+        gruppe_id=gruppe.gruppe_id,
     )
 
     result = create_user_vote(vote)
@@ -242,7 +255,7 @@ def generate_standard_tasks_for_challenge_logic(challenge_id: bytes):
         )
 
         save_aufgabe(aufgabe)
-        schedule_deadline_job(aufgabe)  # Hier wird der Hintergrundjob initialisiert, der den Status nach Deadline verändert
+        schedule_deadline_job(scheduler, aufgabe)  # Hier wird der Hintergrundjob initialisiert, der den Status nach Deadline verändert
 
 
     return response(True, data=f"{duration} Aufgaben erstellt")
@@ -326,6 +339,6 @@ def generate_survival_tasks_for_all_challenges():
         aufgabe_id = save_aufgabe(aufgabe)
         erfolge.append({"challenge_id": str(uuid.UUID(bytes=challenge.challenge_id)), "status": "erstellt", "task_id": str(uuid.UUID(bytes=aufgabe_id))})
 
-        schedule_deadline_job(aufgabe)  # Hier wird der Hintergrundjob initialisiert, der den Status nach Deadline verändert
+        schedule_deadline_job(scheduler, aufgabe)  # Hier wird der Hintergrundjob initialisiert, der den Status nach Deadline verändert
 
     return response(True, data=erfolge)

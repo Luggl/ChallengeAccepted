@@ -11,18 +11,23 @@ from app.repositories.challenge_repository import (
     save_standard_challenge_sportart,
     save_survival_challenge_sportart,
     is_user_allowed_to_delete,
-    find_active_challenge_by_group
+    find_active_challenge_by_group, find_teilnehmer_and_user_by_challenge, save_challenge_participation
 )
 from app.repositories.sportart_repository import find_sportart_by_id
 from app.utils.response import response
 from datetime import datetime
 import uuid
 
-from repositories.challenge_repository import find_standard_challenge_by_id, find_survival_challenge_by_id
+from app.database.models import ChallengeParticipation
+from repositories.challenge_repository import find_standard_challenge_by_id, find_survival_challenge_by_id, \
+    get_dead_teilnehmer
 from repositories.group_repository import find_group_by_id
 from repositories.membership_repository import find_memberships_by_group
-from utils.auth_utils import get_uuid_formated_id
-from utils.time import now_berlin
+from repositories.task_repository import find_task_by_challenge_and_date, \
+    find_aufgabenerfuellung_by_aufgabe_and_user_and_group
+from utils.auth_utils import get_uuid_formated_id, get_uuid_formated_string
+from utils.serialize import serialize_user
+from utils.time import now_berlin, date_today
 
 
 # ---------- Standard-Challenge erstellen ----------
@@ -66,7 +71,8 @@ def create_challenge_standard_logic(user_id, data, group_id):
         ersteller_user_id=user_id_uuid,
         startdatum=startdatum.date(),
         enddatum=enddatum.date(),
-        typ="standard"
+        typ="standard",
+        active=True
     )
 
     create_challenge(challenge)
@@ -98,6 +104,16 @@ def create_challenge_standard_logic(user_id, data, group_id):
             zielintensitaet=ziel_int
         )
         save_standard_challenge_sportart(standard_sportart_link)
+
+    memberships = find_memberships_by_group(group_id_uuid)
+
+    for m in memberships:
+        challenge_participation = ChallengeParticipation(
+            user_id=m.user_id,
+            challenge_id=challenge.challenge_id,
+            aktiv=True,
+        )
+        save_challenge_participation(challenge_participation)
 
     return response(True,
                     data={
@@ -193,6 +209,16 @@ def create_challenge_survival_logic(user_id, data, group_id):
         )
         save_survival_challenge_sportart(survival_link)
 
+    memberships = find_memberships_by_group(group_id_uuid)
+
+    for m in memberships:
+        challenge_participation = ChallengeParticipation(
+            user_id=m.user_id,
+            challenge_id=challenge.challenge_id,
+            aktiv=True,
+        )
+        save_challenge_participation(challenge_participation)
+
 
     return response(True,
                     data={
@@ -208,8 +234,8 @@ def delete_challenge_logic(challenge_id, user_id):
     if not is_user_allowed_to_delete(challenge_id, user_id):
         return response(False, error="Keine Berechtigung, diese Challenge zu löschen.")
 
-    success = delete_challenge_by_id(challenge_id)
-    if not success:
+    delete_success = delete_challenge_by_id(challenge_id)
+    if not delete_success:
         return response(False, error="Challenge konnte nicht gelöscht werden oder existiert nicht.")
 
     return response(True, data="Challenge erfolgreich gelöscht.")
@@ -217,8 +243,51 @@ def delete_challenge_logic(challenge_id, user_id):
 
 def challenge_overview_logic(challenge_id, user_id):
     challenge = find_survival_challenge_by_id(challenge_id) or find_standard_challenge_by_id(challenge_id)
-
     if not challenge:
         return response(False, error="Challenge konnte nicht gefunden werden.")
 
-    membership = find_memberships_by_group(challenge.gruppe_id)
+
+    teilnehmer = find_teilnehmer_and_user_by_challenge(challenge_id)
+    #Prüfen, ob User in Challenge (Sonst nicht erlaubt, die Informationen zur Challenge zu erhalten
+    usercheck = False
+    for t in teilnehmer:
+        if t.user_id == user_id:
+            usercheck = True
+
+    if not usercheck:
+        return response(False, error="Nur Challenge-Teilnehmer dürfen sich die Challenge ansehen")
+
+    #Hole die aktuelle Aufgabe
+    today = date_today()
+    aufgabe = find_task_by_challenge_and_date(challenge_id, today)
+    if not aufgabe:
+        return response(False, error="Keine Aufgabe gefunden")
+
+    overview_data ={
+        "challenge_mode": challenge.typ,
+        "challenge_days": (today - challenge.startdatum).days + 1,
+        "players": [],
+        "current_task_time_left": aufgabe.deadline,
+        "task_completed_by": [],
+        "dead_users": [],
+    }
+
+    #Spieler-Daten + Abgeschlossene Aufgabenerfüllungen sammeln
+    for t in teilnehmer:
+        erfuellung = find_aufgabenerfuellung_by_aufgabe_and_user_and_group(aufgabe.aufgabe_id, t.user_id, challenge.gruppe_id)
+
+        overview_data["players"].append({
+            "user_id": get_uuid_formated_string(t.user_id),
+            "username": t.user.username,
+            "profilbild_url": t.user.profilbild_url,
+            "status": erfuellung.status.value
+        })
+
+        if erfuellung.status.value == "abgeschlossen":
+            overview_data["task_completed_by"].append(serialize_user(t.user))
+
+    if challenge.typ == "survival":
+        overview_data["dead_users"] = get_dead_teilnehmer(challenge.challenge_id)
+
+    return response(True, data=overview_data)
+

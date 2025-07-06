@@ -1,18 +1,23 @@
 from app.database.database import SessionLocal
-from app.database.models import BeitragVotes, Beitrag
+from app.database.models import BeitragVotes, Beitrag, Gruppe, Aufgabenerfuellung
 
 
 def find_beitrag_by_id(beitrag_id):
     with SessionLocal() as session:
-        return session.query(Beitrag).filter(beitrag_id=beitrag_id).first()
+        return session.query(Beitrag).filter(Beitrag.beitrag_id==beitrag_id).first()
 
 def find_gruppe_by_beitrag(beitrag):
-    return beitrag.gruppe_id
+    with SessionLocal() as session:
+        erfuellung = session.query(Aufgabenerfuellung).filter_by(erfuellung_id=beitrag.erfuellung_id).first()
+        if not erfuellung:
+            return None
+        gruppe = session.query(Gruppe).filter_by(gruppe_id=erfuellung.gruppe_id).first()
+        return gruppe
 
 def find_beitrag_vote_by_user_beitrag(user_id, beitrag_id):
     with SessionLocal() as session:
-        return session.query(BeitragVotes).filter(beitrag_id=beitrag_id,
-                                                  user_id=user_id).first()
+        return session.query(BeitragVotes).filter(BeitragVotes.beitrag_id==beitrag_id,
+                                                  BeitragVotes.user_id==user_id).first()
 
 def update_beitrag(beitrag_id, beschreibung):
     with SessionLocal() as session:
