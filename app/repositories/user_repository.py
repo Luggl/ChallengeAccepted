@@ -1,8 +1,5 @@
-# app/repositories/user_repository.py
 from sqlalchemy.orm import joinedload
-
 from app.database.models import User, Aufgabenerfuellung, Beitrag, Membership, Aufgabe
-
 from app.database.database import SessionLocal
 from app.utils.serialize import serialize_beitrag
 
@@ -46,9 +43,6 @@ def update_user(user):
         session.commit()
     return user
 
-def find_user_activities(user):
-    with SessionLocal() as session:
-        return session.query(Aufgabenerfuellung).filter_by(user_id=user.user_id).all()
 
 def find_user_activities_and_erfuellungen(user):
     with SessionLocal() as session:
@@ -56,9 +50,11 @@ def find_user_activities_and_erfuellungen(user):
 
 def get_user_feed(user_id):
     with SessionLocal() as session:
-
+        #Gruppen des Users holen - dafür müssen die Memberships abgefragt werden
         subquery = session.query(Membership.gruppe_id).filter(Membership.user_id == user_id).subquery()
 
+        #Die Beiträge setzen sich zusammen aus den Aufgabenerfüllungen, den Aufgaben, den Sportarten und den Votes
+        #Werden dann entsprechend der Gruppenzugehörigkeit des Users gefiltert
         beitraege = session.query(Beitrag) \
             .join(Beitrag.erfuellung) \
             .join(Aufgabenerfuellung.aufgabe) \

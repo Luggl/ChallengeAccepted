@@ -23,7 +23,7 @@ from repositories.challenge_repository import find_standard_challenge_by_id, fin
     get_dead_teilnehmer
 from repositories.group_repository import find_group_by_id
 from repositories.membership_repository import find_memberships_by_group
-from repositories.task_repository import find_task_by_challenge_and_date, find_aufgabenerfuellung_by_challenge_and_date, \
+from repositories.task_repository import find_task_by_challenge_and_date, \
     find_aufgabenerfuellung_by_aufgabe_and_user_and_group
 from utils.auth_utils import get_uuid_formated_id, get_uuid_formated_string
 from utils.serialize import serialize_user

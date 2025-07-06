@@ -13,22 +13,6 @@ class StatusUnit(Enum):
     anzahl="anzahl"
     dauer="dauer"
 
-class AchievementKategorie(Enum):
-    bonusaufgaben="Bonusaufgaben"
-    community="Community"
-    gruppenaktivitaet="Gruppenaktivität"
-    spezial="Spezial"
-    sportarten="Sportarten"
-    standard="Standard-Aufgaben"
-    streaks="Streaks"
-    survival="Survival-Aufgaben"
-    survivalChallenges="Survival Challenges"
-
-class AchievementStufe(Enum):
-    bronze="Bronze"
-    silber="Silber"
-    gold="Gold"
-
 class Schwierigkeit(Enum):
     easy="easy"
     medium="medium"
@@ -42,23 +26,11 @@ class AufgabeStatus(Enum):
 class AufgabeTyp(Enum):
     standard = "standard"
     survival = "survival"
-    bonus = "bonus"
 
 class Vote(Enum):
     akzeptiert = "akzeptiert"
     abgelehnt = "abgelehnt"
     offen = "offen"
-
-class UserAchievement(Base):
-    __tablename__="user_achievement"
-    user_id= Column(BLOB,ForeignKey("user.user_id"), primary_key=True)
-    achievement_id=Column(BLOB,ForeignKey("achievement.achievement_id"), primary_key=True)
-    erhalten=Column(Boolean, default=False)
-    erhaltenAm=Column(Date)
-
-    user=relationship("User", back_populates="achievement_links")
-    achievement=relationship("Achievement", back_populates="user_links")
-
 
 class User(Base):
     __tablename__ = "user"
@@ -70,11 +42,6 @@ class User(Base):
     profilbild_url=Column(String)
     streak=Column(Integer, default=0)
 
-    achievement_links=relationship(
-        "UserAchievement",
-        back_populates="user",
-        cascade="all, delete-orphan"
-    )
     token=relationship(
         "ResetToken",
         back_populates="user",
@@ -89,20 +56,6 @@ class User(Base):
         "ChallengeParticipation",
         back_populates="user",
         cascade="all, delete-orphan")
-
-class Achievement (Base):
-    __tablename__="achievement"
-    achievement_id=Column(BLOB, primary_key=True, default=lambda: uuid.uuid4().bytes)
-    kategorie=Column(SQLEnum(AchievementKategorie), nullable=False)
-    stufe=Column(SQLEnum(AchievementStufe), nullable=False)
-    titel=Column(String, nullable=False)
-    beschreibung= Column(String)
-
-    condition_type=Column(String, nullable=False) # Kondition z.B. standard_tasks_completed, streak_days, etc.
-    condition_value=Column(String, nullable=False) # Konditionswert z.B. 5, 10, 20
-
-    user_links=relationship("UserAchievement", back_populates="achievement")
-
 
 class ResetToken(Base):
     __tablename__="resettoken"
@@ -302,7 +255,7 @@ class Aufgabe(Base):
 
     __mapper_args__ = {
             "polymorphic_on": typ,
-            # Für alle Unterklassen - Standard / Survival / Bonus
+            # Für alle Unterklassen - Standard / Survival
             "with_polymorphic": "*"  # erlaubt JOIN Abfragen über alle Unterklassen hinweg
         }
 
@@ -321,17 +274,6 @@ class SurvivalAufgabe(Aufgabe):
     tag_index = Column(Integer)
 
     __mapper_args__ = {"polymorphic_identity": AufgabeTyp.survival}
-
-class BonusAufgabe(Aufgabe):
-    __tablename__ ="bonus_aufgabe"
-
-    aufgabe_id = Column(BLOB, ForeignKey("aufgabe.aufgabe_id"),primary_key=True)
-    bonus_punkte=Column(Integer, default=0)
-    ist_freiwillig=Column(Boolean, default=True)
-
-    __mapper_args__ = {
-        "polymorphic_identity":AufgabeTyp.bonus
-    }
 
 class Aufgabenerfuellung (Base):
     __tablename__="aufgabenerfuellung"

@@ -5,19 +5,6 @@ from app.database.models import Challenge, StandardChallengeSportart, Sportart, 
 from app.database.database import SessionLocal
 from app.database.models import ChallengeParticipation
 
-
-#def find_sportart_by_id(sportart_id):
-#    """Finde eine Sportart anhand der ID (BLOB/UUID.bytes)."""
-#    with SessionLocal() as session:
-#       return session.query(Sportart).filter_by(sportart_id=sportart_id).first()
-
-
-
-def find_sportart_by_id(sportart_id):
-    with SessionLocal() as session:
-        result = session.query(Sportart).filter_by(sportart_id=sportart_id).first()
-        return result
-
 def find_active_challenge_by_group(gruppe_id):
     with SessionLocal() as session:
         return session.query(Challenge).filter(Challenge.gruppe_id==gruppe_id,

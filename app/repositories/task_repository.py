@@ -8,11 +8,6 @@ from repositories.membership_repository import find_memberships_by_group
 from utils.time import date_today
 
 
-def find_task_by_id(aufgabe_id):
-    """Finde eine Aufgabe anhand der ID."""
-    with SessionLocal() as session:
-        return session.query(Aufgabe).filter_by(aufgabe_id=aufgabe_id).first()
-
 def find_tasks_by_challenge_id(challenge_id):
     """Finde alle Aufgaben, die zu einer Challenge gehören."""
     with SessionLocal() as session:
@@ -36,10 +31,6 @@ def find_aufgabenerfuellung_by_aufgabe_and_user_and_group(aufgabe_id, user_id, g
             return None
         return aufgabenerfuellug
 
-
-def find_all_tasks_by_user(user_id):
-    with SessionLocal() as session:
-        return session.query(Aufgabe).filter_by(user_id=user_id).all()
 
 def find_task_by_challenge_and_date_and_typ(challenge_id, datum, typ):
     """Finde Aufgabe zu Challenge, Datum und Typ."""
@@ -74,28 +65,6 @@ def save_aufgabe(aufgabe):
         session.flush()
         return aufgabe.aufgabe_id
 
-def delete_task_by_id(aufgabe_id):
-    """Lösche eine Aufgabe anhand ihrer ID."""
-    with SessionLocal() as session:
-        aufgabe = session.query(Aufgabe).filter_by(aufgabe_id=aufgabe_id).first()
-        if aufgabe:
-            session.delete(aufgabe)
-            session.commit()
-            return True
-        return False
-
-def get_all_tasks():
-    """Gibt alle Aufgaben zurück."""
-    with SessionLocal() as session:
-        return session.query(Aufgabe).all()
-
-def count_survival_tasks_for_challenge(challenge_id):
-    """Zählt alle Survival-Aufgaben einer Challenge."""
-    with SessionLocal() as session:
-        return session.query(func.count(Aufgabe.aufgabe_id)).filter_by(
-            challenge_id=challenge_id,
-            typ="survival"
-        ).scalar()
 
 def update_task_by_video_url(erfuellung_id, videopath):
     with SessionLocal() as session:
@@ -117,13 +86,6 @@ def mark_task_as_complete(erfuellung_id, description):
         if not aufgabenerfuellung:
             return None
         return aufgabenerfuellung
-
-def find_aufgabenerfuellung_by_challenge_and_date(challenge_id, date):
-    with SessionLocal() as session:
-        return session.query(Aufgabenerfuellung).options(joinedload(Aufgabenerfuellung.aufgabe)).join(Aufgabe, Aufgabenerfuellung.aufgabe_id == Aufgabe.aufgabe_id).filter(
-            Aufgabe.challenge_id == challenge_id,
-            Aufgabe.datum == date
-        ).first()
 
 def find_aufgabenerfuellung_by_challenge_and_date_and_user(challenge_id, date, user_id):
     with SessionLocal() as session:
@@ -149,10 +111,6 @@ def create_user_vote(beitrag_votes):
             return True
     except Exception:
         return False
-
-def find_aufgabenerfuellung_by_id(erfuellung_id):
-    with SessionLocal() as session:
-        return session.query(Aufgabenerfuellung).filter(Aufgabenerfuellung.erfuellung_id == erfuellung_id).first()
 
 def add_streak(user_id):
     with SessionLocal() as session:
