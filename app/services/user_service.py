@@ -21,6 +21,7 @@ from app.repositories.user_repository import (
 import uuid
 from app.utils.auth_utils import get_uuid_formated_id
 from repositories.user_repository import find_user_activities_and_erfuellungen
+from utils.password import is_password_strong
 
 ALLOWED_UPDATE_FIELDS = {"username", "email", "profilbild_url"}
 UPLOAD_ROOT = "media/profilbilder"
@@ -38,7 +39,10 @@ def register_user_logic(username, email, password):
     if existing_username:
         return response(False, error="Username ist bereits vergeben.")
 
-    # Hier fehlt noch die Logik zum Passwort
+    #Prüfung ob Passwort den Mindestanforderungen entspricht
+    password_check, password_message = is_password_strong(password)
+    if not password_check:
+        return response(False, error=password_message)
 
     # Passwort hashen für sichere Speicherung
     hashed_pw = generate_password_hash(password)
