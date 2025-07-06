@@ -1,6 +1,5 @@
 import datetime
 import uuid
-from datetime import date, timedelta
 import random
 
 from flask_sqlalchemy.session import Session

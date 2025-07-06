@@ -1,5 +1,4 @@
 from app.database.models import Sportart, SportartIntervall
-from app import db
 from app.database.database import SessionLocal
 
 

@@ -1,9 +1,12 @@
 from datetime import date
+
 from sqlalchemy.orm import joinedload
-from app.database.models import Challenge, StandardChallengeSportart, Sportart, SurvivalChallengeSportart, \
-    StandardChallenge, Survivalchallenge
+
 from app.database.database import SessionLocal
+from app.database.models import Challenge, StandardChallengeSportart, SurvivalChallengeSportart, \
+    StandardChallenge, Survivalchallenge
 from app.database.models import ChallengeParticipation
+
 
 def find_active_challenge_by_group(gruppe_id):
     with SessionLocal() as session:

@@ -1,4 +1,3 @@
-from sqlalchemy import func
 from sqlalchemy.orm import joinedload
 from app.database.database import SessionLocal
 from app.database.models import Aufgabe, AufgabeStatus, Aufgabenerfuellung, User
