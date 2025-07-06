@@ -27,8 +27,8 @@ def update_post_logic(data, beitrag_id, user_id):
     if ersteller is not user_id:
         return response(False, error="User nicht berechtigt!")
 
-    success = update_beitrag(beitrag_id_uuid, new_beschreibung)
-    if not success:
+    update_success = update_beitrag(beitrag_id_uuid, new_beschreibung)
+    if not update_success:
         return response(False, error="Bearbeitung fehlgeschlagen.")
 
     return response(True, data="Post wurde aktualisiert.")

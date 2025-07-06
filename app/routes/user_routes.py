@@ -23,7 +23,7 @@ def register_user():
     email = data.get("email")
     password = data.get("password")
 
-    # Pflichtfelder prüfen - ob Vorhanden oder leer
+    # Pflichtfelder prüfen - ob gar nicht Vorhanden oder leer
     if username is None or not username.strip() \
     or email is None or not email.strip() \
     or password is None or not password.strip():
