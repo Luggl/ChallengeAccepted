@@ -45,6 +45,7 @@ from app.database.models import SurvivalAufgabe
 # Alle Tasks für einen User abfragen
 def get_task_logic(user_id):
     # Survival Tasks erzeugen, falls neue Vorhanden!
+    # Dies ist nur zu Vorführzwecken implementiert - Live übernimmt der Daily Job diese Aufgabe
     result = generate_survival_tasks_for_all_challenges()
     if not result["success"]:
         return result
@@ -57,7 +58,7 @@ def get_task_logic(user_id):
     if not memberships:
         return response(False, error="User in keiner Gruppe!")
 
-    #Liste an Aufgabenerfüllungen erzeugen
+    #Liste an Aufgabenerfüllungen und inaktive Challenges erzeugen
     aufgabenerfuellungen = []
     inaktive_Challenges = []
     #Für alle Memberships die jeweiligen Tasks laden
@@ -92,6 +93,7 @@ def complete_task_logic(erfuellung_id, user_id, description, video_file):
     user_id_uuid = get_uuid_formated_id(user_id)
     erfuellung_id_uuid = get_uuid_formated_id(erfuellung_id)
 
+    warnungen= []
     #Prüfen, ob User diese Task überhaupt hat
     usercheck = find_aufgabenerfuellung_by_user_id(user_id_uuid)
     if not any(e.erfuellung_id == erfuellung_id_uuid for e in usercheck):
@@ -100,48 +102,54 @@ def complete_task_logic(erfuellung_id, user_id, description, video_file):
     if not video_file:
         return response(False, error="Video ist erforderlich!")
 
-    #Video speichern
-    success = safe_video_logic(erfuellung_id_uuid, video_file)
-    if not success["success"]:
-        return success
-
-    # Videopfad in Aufgabenerfüllung speichern
-    videopath = success["data"]
-    success = update_task_by_video_url(erfuellung_id_uuid, videopath["url"])
-
-    #thumbnail erzeugen und in Aufgabenerfüllung speichern
-    thumbnailpath = generate_video_thumbnail(videopath["path"])
-    if not thumbnailpath["success"]:
-        return response(False, error="Thumbnail konnte nicht erzeugt werden")
-
-    success = update_task_by_thumbnail(erfuellung_id_uuid, thumbnailpath["data"]["path"])
-    if not success:
-        return response(False, error="Thumbnail_path konnte nicht aktualisiert werden")
-
-    #Aufgabenerfüllung Status updaten
-    success = mark_task_as_complete(erfuellung_id_uuid, description)
-    if not success:
-        return response(False, error="Aufgabe nicht gefunden oder konnte nicht abgeschlossen werden.")
-
     # Check ob Beitrag bereits vorhanden!
     beitrag_check = find_beitrag_by_erfuellung_id(erfuellung_id_uuid)
     if beitrag_check:
         return response(False, error="Beitrag bereits vorhanden!")
+
+    #Video speichern
+    safe_video_success = safe_video_logic(erfuellung_id_uuid, video_file)
+    if not safe_video_success["success"]:
+        return safe_video_success
+
+    # Videopfad in Aufgabenerfüllung speichern
+    videopath = safe_video_success["data"]
+
+    safe_video_path_success = update_task_by_video_url(erfuellung_id_uuid, videopath["url"])
+    if not safe_video_path_success["success"]:
+        warnungen.append("Thumbnailpfad konnte nicht korrekt erstellt werden")
+
+    #thumbnail erzeugen und in Aufgabenerfüllung speichern
+    thumbnailpath = generate_video_thumbnail(videopath["path"])
+    if not thumbnailpath["success"]:
+        warnungen.append("Thumbnail konnte nicht erzeugt werden")
+    else:
+        update_task_thumbnail_success = update_task_by_thumbnail(erfuellung_id_uuid, thumbnailpath["data"]["path"])
+        if not update_task_thumbnail_success:
+            warnungen.append("Thumbnailpfad konnte nicht gespeichert werden")
+
+    #Aufgabenerfüllung Status updaten
+    status_update_success = mark_task_as_complete(erfuellung_id_uuid, description)
+    if not status_update_success:
+        return response(False, error="Aufgabe nicht gefunden oder konnte nicht abgeschlossen werden.")
+
     #Beitrag erstellen
     beitrag = Beitrag(
         erstellDatum=date_today(),
         erfuellung_id=erfuellung_id_uuid
     )
 
-    success = create_beitrag(beitrag)
-    if not success:
+    create_beitrag_success = create_beitrag(beitrag)
+    if not create_beitrag_success:
         return response(False, error="Beitrag konnte nicht erstellt werden")
 
     # Streak wird nach Abschluss entsprechend erhöht
-    success = add_streak(user_id_uuid)
-    if not success:
-        return response(False, error="Streak konnte nicht erfolgreich erhöht werden!")
+    add_streak_success = add_streak(user_id_uuid)
+    if not add_streak_success:
+        warnungen.append("Streak konnte nicht korrekt geupdated werden")
 
+    if warnungen:
+        return response(True, data="Aufgabe abgeschlossen, aber mit Warnungen", error=warnungen)
     return response(True, data="Aufgabe als erledigt markiert und Beitrag erstellt.")
 
 

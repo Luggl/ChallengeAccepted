@@ -53,7 +53,6 @@ def register_user_logic(username, email, password):
         username=username,
         email=email,
         passwordHash=hashed_pw
-        # Weitere Felder wie Profilbild oder Rolle später ergänzen
     )
 
     # User speichern
@@ -105,7 +104,7 @@ def forgot_password_logic(email):
     )
     save_token(token)
 
-    # Mail senden Dummy
+    # Mail senden Dummy -- Mailserver noch nicht umgesetzt
     send_password_reset_mail(user.email, token_str)
 
     return response(True, data="Falls diese E-Mail existiert, wurde ein Link gesendet.")
