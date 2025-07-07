@@ -14,6 +14,8 @@ import de.thws.challengeaccepted.models.RegisterRequest
 import de.thws.challengeaccepted.network.ApiClient
 import de.thws.challengeaccepted.network.UserService
 import kotlinx.coroutines.launch
+import org.json.JSONObject
+import retrofit2.HttpException
 
 class RegisterActivity : AppCompatActivity() {
 
@@ -30,12 +32,12 @@ class RegisterActivity : AppCompatActivity() {
         val alreadyAccount = findViewById<TextView>(R.id.text_already_account)
 
         registerButton.setOnClickListener {
-            val user = username.text.toString()
-            val mail = email.text.toString()
+            val user = username.text.toString().trim()
+            val mail = email.text.toString().trim()
             val pw = password.text.toString()
             val rpw = repeatPassword.text.toString()
 
-            // Felder validieren
+            // Frontend-Validierung auf das Nötigste reduzieren
             if (user.isEmpty() || mail.isEmpty() || pw.isEmpty() || rpw.isEmpty()) {
                 Toast.makeText(this, "Bitte alle Felder ausfüllen!", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
@@ -48,6 +50,10 @@ class RegisterActivity : AppCompatActivity() {
                 Toast.makeText(this, "Passwörter stimmen nicht überein!", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
+
+            // Die Prüfung der Passwortstärke (isPasswordValid) wird entfernt.
+            // Das Backend ist jetzt die alleinige Quelle der Wahrheit für diese Logik.
+
             // Jetzt API-Aufruf
             registerUser(user, mail, pw)
         }
@@ -58,27 +64,48 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
+
     private fun registerUser(username: String, email: String, password: String) {
         val service = ApiClient.retrofit.create(UserService::class.java)
         val request = RegisterRequest(username, email, password)
 
         lifecycleScope.launch {
             try {
-                service.registerUser(request) // suspend! Kein Rückgabewert nötig.
+                service.registerUser(request)
                 Toast.makeText(
                     this@RegisterActivity,
-                    "Registrierung erfolgreich!",
+                    "Registrierung erfolgreich! ✅",
                     Toast.LENGTH_SHORT
                 ).show()
-                // Optional: Direkt zum Login weiterleiten
+
                 val intent = Intent(this@RegisterActivity, LoginActivity::class.java)
                 startActivity(intent)
                 finish()
+
             } catch (e: Exception) {
+                // NEU: Genaue Fehlerbehandlung basierend auf der Server-Antwort
+                val errorMessage = when (e) {
+                    is HttpException -> {
+                        // Versuch, die Fehlermeldung aus dem JSON-Body zu extrahieren
+                        val errorBody = e.response()?.errorBody()?.string()
+                        try {
+                            val json = JSONObject(errorBody)
+                            json.getString("error") // Extrahiert z.B. "Username ist bereits vergeben."
+                        } catch (_: Exception) {
+                            // Fallback, wenn das Parsen fehlschlägt
+                            "Ein unerwarteter Fehler ist aufgetreten."
+                        }
+                    }
+                    else -> {
+                        // Fallback für Netzwerkprobleme etc.
+                        "Keine Verbindung zum Server möglich."
+                    }
+                }
+
                 Toast.makeText(
                     this@RegisterActivity,
-                    "Registrierung fehlgeschlagen: ${e.message}",
-                    Toast.LENGTH_SHORT
+                    errorMessage,
+                    Toast.LENGTH_LONG // Länger anzeigen, damit der Nutzer es lesen kann
                 ).show()
             }
         }

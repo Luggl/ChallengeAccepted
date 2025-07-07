@@ -7,6 +7,7 @@ import de.thws.challengeaccepted.models.PasswordResetConfirmResponse
 import de.thws.challengeaccepted.models.PasswordResetRequest
 import de.thws.challengeaccepted.models.PasswordResetResponse
 import de.thws.challengeaccepted.models.RegisterRequest
+import de.thws.challengeaccepted.models.RegistrationResponse
 import de.thws.challengeaccepted.models.UserApiModel
 import de.thws.challengeaccepted.models.UserApiResponse
 import retrofit2.Call
@@ -21,7 +22,7 @@ import retrofit2.http.Path
 interface UserService {
     //registerUser
     @POST("user")
-    suspend fun registerUser(@Body registerRequest: RegisterRequest): Void
+    suspend fun registerUser(@Body registerRequest: RegisterRequest): RegistrationResponse
 
     //loginUser
     @POST("login")
