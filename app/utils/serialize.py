@@ -62,8 +62,10 @@ def serialize_achievements(achievement):
 def serialize_membership(membership):
     return{
         "user_id": get_uuid_formated_string(membership.user_id),
+        "username": membership.user.username,
+        "profilbild_url": membership.user.profilbild_url,
         "gruppe_id": membership.gruppe_id.hex(),
-        "isAdmin": membership.isAdmin,
+        "isAdmin": membership.isAdmin
     }
 
 def serialize_user(user):
