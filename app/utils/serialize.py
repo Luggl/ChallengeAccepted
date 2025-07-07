@@ -72,3 +72,11 @@ def serialize_user(user):
         "username": user.username,
         "email": user.email
     }
+
+def serialize_challenge(challenge):
+    return{
+        "challenge_id": get_uuid_formated_string(challenge.challenge_id),
+        "typ": challenge.typ,
+        "startdatum": challenge.startdatum,
+        "ersteller_user_id": get_uuid_formated_string(challenge.ersteller_user_id)
+    }

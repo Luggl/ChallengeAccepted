@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from services.membership_service import remove_user_logic, get_membership_overview_logic
+from app.services.membership_service import remove_user_logic, get_membership_overview_logic
 
 
 # Blueprint für Mitglieder-Verwaltung

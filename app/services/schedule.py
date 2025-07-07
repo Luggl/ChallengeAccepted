@@ -1,5 +1,5 @@
 from apscheduler.triggers.date import DateTrigger
-from repositories.task_repository import handle_abgelaufene_aufgabe
+from app.repositories.task_repository import handle_abgelaufene_aufgabe
 
 
 def schedule_deadline_job(scheduler, aufgabe):

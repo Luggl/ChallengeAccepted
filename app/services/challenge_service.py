@@ -19,15 +19,15 @@ from datetime import datetime
 import uuid
 
 from app.database.models import ChallengeParticipation
-from repositories.challenge_repository import find_standard_challenge_by_id, find_survival_challenge_by_id, \
+from app.repositories.challenge_repository import find_standard_challenge_by_id, find_survival_challenge_by_id, \
     get_dead_teilnehmer
-from repositories.group_repository import find_group_by_id
-from repositories.membership_repository import find_memberships_by_group
-from repositories.task_repository import find_task_by_challenge_and_date, \
+from app.repositories.group_repository import find_group_by_id
+from app.repositories.membership_repository import find_memberships_by_group
+from app.repositories.task_repository import find_task_by_challenge_and_date, \
     find_aufgabenerfuellung_by_aufgabe_and_user_and_group
-from utils.auth_utils import get_uuid_formated_id, get_uuid_formated_string
-from utils.serialize import serialize_user
-from utils.time import now_berlin, date_today
+from app.utils.auth_utils import get_uuid_formated_id, get_uuid_formated_string
+from app.utils.serialize import serialize_user
+from app.utils.time import now_berlin, date_today
 
 
 # ---------- Standard-Challenge erstellen ----------

@@ -4,9 +4,9 @@ from app.repositories.membership_repository import (
     find_memberships_by_user
 )
 from app.utils.response import response
-from repositories.group_repository import find_group_by_id
-from utils.auth_utils import get_uuid_formated_id
-from utils.serialize import serialize_gruppe
+from app.repositories.group_repository import find_group_by_id
+from app.utils.auth_utils import get_uuid_formated_id
+from app.utils.serialize import serialize_gruppe
 
 
 # User aus Gruppe entfernen

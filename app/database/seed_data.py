@@ -1,11 +1,9 @@
 import datetime
 import uuid
-from datetime import date, timedelta
 import random
 
 from flask_sqlalchemy.session import Session
 from werkzeug.security import generate_password_hash
-
 from app.database.database import SessionLocal
 from app.database.models import User, Gruppe, Membership
 
