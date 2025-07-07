@@ -36,6 +36,7 @@ class CreateChallengeModeActivity : AppCompatActivity() {
         //Views aus dem XML holen
         val navBack = findViewById<ImageView>(R.id.btn_back)
         val confirmButton=findViewById<ImageButton>(R.id.btn_confirm_selection)
+        val groupId = intent.getStringExtra("groupId") ?: ""
         flStandard=findViewById(R.id.fl_standard)
         flSurvival=findViewById(R.id.fl_survival)
         tvStandard = findViewById(R.id.tv_standard)
@@ -73,6 +74,7 @@ class CreateChallengeModeActivity : AppCompatActivity() {
             }
 
             if (intent != null) {
+                intent.putExtra("groupId", groupId)
                 startActivity(intent)
             } else {
                 Toast.makeText(this, "Ungültiger Modus", Toast.LENGTH_SHORT).show()

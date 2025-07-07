@@ -110,6 +110,7 @@ class GroupDashboardActivity : AppCompatActivity() {
             dialogBuilder.setNegativeButton("Challenge erstellen") { _, _ ->
                 Toast.makeText(this, "Challenge-Erstellung startet...", Toast.LENGTH_SHORT).show()
                 val intent = Intent(this, CreateChallengeModeActivity::class.java)
+                intent.putExtra("groupId", groupId)
                 startActivity(intent)
             }
 

@@ -32,7 +32,7 @@ class StandardActivitiesActivity : AppCompatActivity() {
         }
         //Gridlayout einrichten und prüfen, ob es geladen wurde
         val gridExercises = findViewById<GridLayout>(R.id.grid_exercises)
-
+        val groupId = intent.getStringExtra("groupId")
         //einzelene Grid-Elemente klickbar machen
         for (i in 0 until gridExercises.childCount){
             val child=gridExercises.getChildAt(i) as? LinearLayout ?:continue
@@ -69,6 +69,7 @@ class StandardActivitiesActivity : AppCompatActivity() {
 
             val intent = Intent(this, StandardIntensityActivity::class.java)
             intent.putStringArrayListExtra("selectedExercises", ArrayList(selectedExercises))
+            intent.putExtra("groupId", groupId)
             startActivity(intent)
         }
 
