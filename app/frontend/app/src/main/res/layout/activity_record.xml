@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinator"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black"
-    tools:context=".DashboardActivity">
+    android:fitsSystemWindows="true"
+    tools:context=".GroupOverviewActivity">
 
+    <!-- Header mit Titel -->
     <LinearLayout
-        android:layout_width="300dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
         android:background="@drawable/grey_background"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:padding="8dp">
+        android:padding="16dp">
 
-        <!-- Gruppenname -->
         <TextView
+            android:id="@+id/header_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingStart="8dp"
-            android:text="Kämpfernatur\nAkrivität aufnehmen"
+            android:gravity="center"
+            android:text="Kämpfernatur\nAktivität aufnehmen"
             android:textColor="@color/white"
             android:textSize="25sp"
             android:textStyle="bold" />
@@ -36,28 +36,27 @@
         android:layout_height="50dp"
         android:layout_margin="30dp"
         android:background="@drawable/grey_background"
+        android:contentDescription="@string/desc_check_cancel"
         android:padding="8dp"
         android:scaleType="center"
         android:src="@drawable/x_icon"
-        tools:ignore="UseAppTint"
-        android:contentDescription="@string/desc_check_cancel"
-        />
+        tools:ignore="UseAppTint" />
 
+    <!-- Kamera-View -->
     <androidx.cardview.widget.CardView
-        android:id="@+id/cv_video"
-        android:layout_width="4000dp"
-        android:layout_height="300dp"
-        android:layout_below="@id/btn_cancel"
-        android:layout_centerHorizontal="true"
+        android:id="@+id/cw_video"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="130dp"
+        android:layout_marginBottom="200dp"
         app:cardCornerRadius="12dp"
         app:cardElevation="4dp">
 
-        <ImageView
-            android:id="@+id/video_placeholder"
-            android:layout_width="wrap_content"
-            android:layout_height="400dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/survival_mode_pic" />
+        <androidx.camera.view.PreviewView
+            android:id="@+id/cv_video"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleX="-1" />
 
         <TextView
             android:id="@+id/activity"
@@ -73,43 +72,65 @@
             android:textStyle="bold" />
     </androidx.cardview.widget.CardView>
 
-    <ImageButton
-        android:id="@+id/btnPlay"
-        android:layout_width="90dp"
-        android:layout_height="90dp"
-        android:layout_below="@id/cv_video"
-        android:layout_gravity="center"
-        android:layout_marginLeft="150dp"
-        android:layout_marginTop="150dp"
-        android:background="@drawable/round_background"
-        android:contentDescription="Play"
-        android:padding="16dp"
-        android:scaleType="centerInside"
-        android:src="@drawable/play_icon" />
+    <LinearLayout
+        android:id="@+id/ll_record"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="90dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/btn_switch_camera"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_below="@id/cw_video"
+            android:layout_margin="16dp"
+            android:background="@drawable/round_background"
+            android:contentDescription="Kamera wechseln"
+            android:padding="12dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/switch_camera_icon" />
 
 
-    <!-- Check Button -->
-    <ImageButton
-        android:id="@+id/btn_confirm_selection"
-        android:layout_width="80dp"
-        android:layout_height="50dp"
-        android:layout_below="@id/cv_video"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="200dp"
-        android:layout_marginRight="16dp"
-        android:background="@drawable/green_button"
-        android:src="@drawable/check_icon"
-        android:contentDescription="@string/desc_check_confirm" />
+        <ImageButton
+            android:id="@+id/btnPlay"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            android:layout_below="@id/cw_video"
+            android:layout_marginHorizontal="50dp"
+            android:background="@drawable/round_background"
+            android:contentDescription="Play"
+            android:padding="16dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/play_icon" />
+
+
+        <!-- Check Button -->
+        <ImageButton
+            android:id="@+id/btn_confirm_selection"
+            android:layout_width="80dp"
+            android:layout_height="50dp"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="16dp"
+            android:background="@drawable/green_button"
+            android:contentDescription="@string/desc_check_confirm"
+            android:src="@drawable/check_icon" />
+
+    </LinearLayout>
 
 
     <!-- Bottom Navigation -->
     <LinearLayout
-        android:id="@+id/ll_bottom_navigation"
+        android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_alignParentBottom="true"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
         android:background="@color/grey_300"
         android:orientation="horizontal"
+        android:paddingTop="0dp"
+        android:paddingBottom="0dp"
         android:weightSum="4">
 
         <!-- Community Icon -->
@@ -177,4 +198,4 @@
         </LinearLayout>
 
     </LinearLayout>
-</RelativeLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -46,6 +46,7 @@ kapt {
         arg("room.schemaLocation", "$projectDir/schemas")
     }
 }
+val camerax_version = "1.3.0"
 
 dependencies {
     implementation ("androidx.room:room-runtime:2.6.1")
@@ -68,7 +69,13 @@ dependencies {
     implementation(libs.androidx.cardview)
     implementation(libs.androidx.media3.exoplayer)
     implementation(libs.androidx.media3.ui)
-
+    implementation("androidx.camera:camera-core:$camerax_version")
+    implementation("androidx.camera:camera-camera2:$camerax_version")
+    implementation("androidx.camera:camera-lifecycle:$camerax_version")
+    implementation("androidx.camera:camera-video:$camerax_version")
+    implementation("androidx.camera:camera-view:$camerax_version") // wichtig für PreviewView!
+    implementation("androidx.camera:camera-extensions:$camerax_version")
+    implementation("androidx.coordinatorlayout:coordinatorlayout:1.2.0")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

@@ -1,20 +1,51 @@
 package de.thws.challengeaccepted
 
 import android.content.Intent
+import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.Bundle
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import android.widget.VideoView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
 
 class PostEditActivity : AppCompatActivity() {
+
+
+    fun Int.dpToPx(): Int =
+        (this * Resources.getSystem().displayMetrics.density).toInt()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_post_edit)
+
+        // Randloses Layout aktivieren
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+
+
+        val bottomNav = findViewById<View>(R.id.bottom_navigation)
+
+        // NAVIGATIONSBALKEN UNTEN BEHANDELN
+        ViewCompat.setOnApplyWindowInsetsListener(bottomNav) { view, insets ->
+            val systemInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+
+            // Padding NUR unten – oben fest (z. B. 8dp), unten dynamisch
+            view.setPadding(
+                view.paddingLeft,
+                8.dpToPx(),
+                view.paddingRight,
+                8.dpToPx(),
+            )
+            insets
+        }
 
         // Abbruch
         val navCanc = findViewById<ImageView>(R.id.btn_cancel)
@@ -47,6 +78,21 @@ class PostEditActivity : AppCompatActivity() {
 
             alertDialog.show()
         }
+
+        val videoUriString = intent.getStringExtra("video_uri")
+        if (videoUriString != null) {
+            val videoView = findViewById<VideoView>(R.id.video_preview)
+            val uri = Uri.parse(videoUriString)
+
+            videoView.setVideoURI(uri)
+            videoView.setOnPreparedListener { mp ->
+                mp.isLooping = true // optional
+                videoView.start()
+            }
+        } else {
+            Toast.makeText(this, "Kein Video gefunden", Toast.LENGTH_SHORT).show()
+        }
+
 
 
         // Aktivität fertigstellen

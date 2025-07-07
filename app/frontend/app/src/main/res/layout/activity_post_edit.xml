@@ -52,12 +52,14 @@
         app:cardCornerRadius="12dp"
         app:cardElevation="4dp">
 
-        <ImageView
-            android:id="@+id/video_placeholder"
-            android:layout_width="wrap_content"
-            android:layout_height="400dp"
+        <VideoView
+            android:id="@+id/video_preview"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_gravity="center"
             android:scaleType="centerCrop"
-            android:src="@drawable/survival_mode_pic" />
+            android:background="@drawable/grey_background"
+            />
 
         <TextView
             android:id="@+id/activity"
@@ -95,10 +97,9 @@
         android:id="@+id/btn_confirm_selection"
         android:layout_width="80dp"
         android:layout_height="50dp"
-        android:layout_below="@id/cv_video"
+        android:layout_below="@id/et_group_description"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="200dp"
-        android:layout_marginRight="16dp"
+        android:layout_margin="16dp"
         android:background="@drawable/green_button"
         android:src="@drawable/check_icon"
         android:contentDescription="@string/desc_check_confirm"
@@ -107,7 +108,7 @@
 
     <!-- Bottom Navigation -->
     <LinearLayout
-        android:id="@+id/ll_bottom_navigation"
+        android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_alignParentBottom="true"

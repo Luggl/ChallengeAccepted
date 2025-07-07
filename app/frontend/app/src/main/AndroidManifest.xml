@@ -4,6 +4,8 @@
     package="de.thws.challengeaccepted"
     tools:targetApi="31">
 
+
+    <uses-permission android:name="android.permission.INTERNET" />
     <application
         android:name=".App"
         android:allowBackup="true"
@@ -68,6 +70,12 @@
         <activity android:name=".PostEditActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
 
     </application>
-    <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- Aufnahme -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
+    <uses-feature android:name="android.hardware.camera.any" />
+    <uses-feature android:name="android.hardware.camera.front" android:required="false" />
 
 </manifest>
