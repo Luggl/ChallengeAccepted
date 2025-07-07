@@ -7,8 +7,12 @@ import android.widget.*
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
+import de.thws.challengeaccepted.data.database.AppDatabase
+import de.thws.challengeaccepted.data.repository.ChallengeRepository
 import de.thws.challengeaccepted.models.SurvivalChallengeRequest
+import de.thws.challengeaccepted.network.ApiClient
 import de.thws.challengeaccepted.ui.viewmodels.CreateChallengeViewModel
+import de.thws.challengeaccepted.ui.viewmodels.CreateChallengeViewModelFactory
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -20,7 +24,16 @@ class SurvivalCreateChallengeOverviewActivity : AppCompatActivity() {
 
     private var startDate: Calendar? = null
 
-    private val createChallengeViewModel: CreateChallengeViewModel by viewModels()
+    private val createChallengeViewModel: CreateChallengeViewModel by viewModels{
+        val db = AppDatabase.getDatabase(applicationContext)
+        val service = ApiClient.getRetrofit(applicationContext).create(de.thws.challengeaccepted.network.ChallengeService::class.java)
+        val repo = ChallengeRepository(
+            service,
+            db.challengeDao(),
+            db.aufgabeDao()
+        )
+        CreateChallengeViewModelFactory(repo)
+    }
     private lateinit var intensityMap: HashMap<String, String>
     private var groupId: String = ""
 
