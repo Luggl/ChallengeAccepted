@@ -1,6 +1,6 @@
 from sqlalchemy.orm import joinedload
 from app.database.database import SessionLocal
-from app.database.models import Aufgabe, AufgabeStatus, Aufgabenerfuellung, User
+from app.database.models import Aufgabe, AufgabeStatus, Aufgabenerfuellung, User, Beitrag, BeitragVotes
 from app.repositories.beitrag_repository import find_beitrag_vote_by_user_beitrag
 from app.repositories.challenge_repository import find_challenge_by_id
 from app.repositories.membership_repository import find_memberships_by_group
@@ -129,6 +129,8 @@ def delete_streak(user_id):
         session.commit()
         return user
 
+
+
 def handle_abgelaufene_aufgabe(aufgabe_id):
     with SessionLocal() as session:
         aufgabe = session.query(Aufgabe).get(aufgabe_id)
@@ -138,9 +140,26 @@ def handle_abgelaufene_aufgabe(aufgabe_id):
         erfuellungen = session.query(Aufgabenerfuellung).filter_by(aufgabe_id=aufgabe_id).all()
 
         for erfuellung in erfuellungen:
+            # Falls die Aufgabe nicht abgeschlossen wurde, Stats auf "nicht gemacht" und Streak zurücksetzen
             if erfuellung.status != AufgabeStatus.abgeschlossen:
                 erfuellung.status = AufgabeStatus.nicht_gemacht
                 delete_streak(erfuellung.user_id)
+                continue
+
+            beitrag = session.query(Beitrag).filter_by(erfuellung_id=erfuellung.erfuellung_id).first()
+            if not beitrag:
+                continue # Kein Beitrag = Keine Votes = keinen Status zu verändern
+
+            #alle votes zum Beitrag holen
+            votes= session.query(BeitragVotes).filter_by(beitrag_id=beitrag.beitrag_id).all()
+            accepted = sum(1 for v in votes if v.vote == "accepted")
+            rejected = sum(1 for v in votes if v.vote == "rejected")
+
+            # Entscheidung der Mehrheit
+            if rejected > accepted:
+                erfuellung.status = AufgabeStatus.nicht_gemacht     #Hier werden zukünftig weitere Stats eingeführt wie "abgelehnt" "bestätigt" etc.
+                delete_streak(erfuellung.user_id)
+
 
         session.commit()
 

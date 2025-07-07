@@ -15,12 +15,12 @@ from app.repositories.user_repository import (
     delete_user_by_id,
     find_user_by_id,
     update_user,
-    find_user_by_username
+    find_user_by_username,
+    find_user_activities_and_erfuellungen
 )
 
 import uuid
 from app.utils.auth_utils import get_uuid_formated_id
-from app.repositories.user_repository import find_user_activities_and_erfuellungen
 from app.utils.password import is_password_strong
 
 ALLOWED_UPDATE_FIELDS = {"username", "email", "profilbild_url"}

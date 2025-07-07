@@ -4,7 +4,8 @@ from datetime import timedelta
 from sqlalchemy.exc import SQLAlchemyError
 
 from app.utils.time import now_berlin, date_today
-from app.repositories.membership_repository import find_membership, delete_membership, create_membership
+from app.repositories.challenge_repository import find_active_challenge_by_group
+from app.repositories.membership_repository import find_membership, delete_membership, create_membership, find_memberships_by_group
 from app.utils.auth_utils import get_uuid_formated_id
 from app.utils.response import response
 from app.database.models import Membership
@@ -17,6 +18,8 @@ from app.repositories.group_repository import (
     delete_group_by_id,
     get_group_feed_by_group_id
 )
+from app.utils.serialize import serialize_gruppe, serialize_challenge, serialize_membership
+
 
 # Gruppe erstellen
 def create_group_logic(name, beschreibung, gruppenbild, created_by):
@@ -162,12 +165,28 @@ def get_group_feed_logic(group_id, user_id):
 
     membership = find_membership(user_id_uuid, group_id_uuid)
     if not membership:
-        return response(False, "User ist kein Gruppenmitglied!")
+        return response(False, error="User ist kein Gruppenmitglied!")
 
+    group = find_group_by_id(group_id_uuid)
+    if not group:
+        return response(False, error="Gruppe nicht gefunden")
+
+
+    #Rückgabe setzt sich zusammen aus Informationen des Feeds, der Challenge und der Gruppe
     feed = get_group_feed_by_group_id(group_id_uuid, user_id_uuid)
-    if not feed:
-        return response(False, "Zugriff verweigert oder keine Daten.")
-    return response(True, feed)
+    challenge = find_active_challenge_by_group(group_id_uuid)
+    all_members = find_memberships_by_group(group_id_uuid)
+    members = []
+    for m in all_members:
+        members.append(serialize_membership(m))
+
+    group_info = {
+        "group": serialize_gruppe(group),
+        "challenge": serialize_challenge(challenge),
+        "members": members,
+        "feed": feed
+    }
+    return response(True, group_info)
 
 
 def leave_group_logic(user_id, group_id):

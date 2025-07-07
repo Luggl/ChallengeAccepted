@@ -15,7 +15,7 @@ from app.repositories.beitrag_repository import (
     find_beitrag_by_id,
     find_gruppe_by_beitrag,
     create_beitrag,
-    find_beitrag_by_erfuellung_id
+    find_beitrag_by_erfuellung_id, is_user_beitrag_ersteller
 )
 from app.repositories.challenge_repository import (
     find_standard_challenge_by_id,
@@ -157,9 +157,14 @@ def complete_task_logic(erfuellung_id, user_id, description, video_file):
 # Vote abgeben für ein Task-Ergebnis
 def vote_logic(user_id, beitrag_id, vote):
 
-    # Wenn bereits abgestimmt wurde, darf nicht nochmals abgestimmt werden
     beitrag_id_uuid = get_uuid_formated_id(beitrag_id)
     user_id_uuid = get_uuid_formated_id(user_id)
+
+    #User dürfen den eigenen Beitrag nicht voten
+    if is_user_beitrag_ersteller(user_id_uuid, beitrag_id_uuid):
+        return response(False, error="User darf den eigenen Beitrag nicht voten")
+
+    # Wenn bereits abgestimmt wurde, darf nicht nochmals abgestimmt werden
     if has_user_already_voted(user_id_uuid, beitrag_id_uuid):
         return response(False, error="Du hast bereits abgestimmt.")
 
