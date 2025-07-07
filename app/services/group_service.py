@@ -182,7 +182,7 @@ def get_group_feed_logic(group_id, user_id):
 
     group_info = {
         "group": serialize_gruppe(group),
-        "challenge": serialize_challenge(challenge),
+        "challenge": serialize_challenge(challenge) if challenge else None,
         "members": members,
         "feed": feed
     }
