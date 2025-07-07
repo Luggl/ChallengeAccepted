@@ -54,7 +54,7 @@ class LoginActivity : AppCompatActivity() {
                 if (response.access_token != null && response.user != null) {
                     // User lokal speichern
                     val userEntity = response.user.toRoomUser()
-                    App.database.userDao().insertUser(userEntity)
+                    App.database.userDao().insertUsers(userEntity)
                     val prefs = getSharedPreferences("app", MODE_PRIVATE)
                     prefs.edit().putString("token", response.access_token).apply()
                     prefs.edit().putString("USER_ID", userEntity.userId).apply()

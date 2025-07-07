@@ -6,12 +6,16 @@ import de.thws.challengeaccepted.models.GroupOverviewResponse
 import de.thws.challengeaccepted.models.GroupResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
-import retrofit2.http.Path
-import retrofit2.http.Header
+import retrofit2.http.Query
 import retrofit2.http.POST
+import de.thws.challengeaccepted.models.*
 
 
 interface GroupService {
+
+    // KORRIGIERT: Der Rückgabetyp ist jetzt die neue Top-Level-Klasse
+    @GET("groupfeed")
+    suspend fun getGroupFeed(@Query("group_id") groupId: String): GroupFeedApiResponse
 
     @POST("group")
     suspend fun createGroup(@Body request: GroupCreateRequest): CreateGroupResponse
@@ -19,4 +23,3 @@ interface GroupService {
     @GET("groups")
     suspend fun getGroupOverview(): GroupOverviewResponse
 }
-

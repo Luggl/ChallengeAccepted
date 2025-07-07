@@ -5,38 +5,52 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import de.thws.challengeaccepted.R
-import de.thws.challengeaccepted.models.GroupResponse
+import de.thws.challengeaccepted.data.entities.Gruppe
 
 class GroupAdapter(
-    private val groups: List<GroupResponse>,
-    private val onClick: (GroupResponse) -> Unit
-) : RecyclerView.Adapter<GroupAdapter.GroupViewHolder>() {
+    private val onClick: (Gruppe) -> Unit
+) : ListAdapter<Gruppe, GroupAdapter.GroupViewHolder>(GroupDiffCallback) {
 
     class GroupViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val name: TextView = view.findViewById(R.id.tvGroupName)
-        val image: ImageView = view.findViewById(R.id.ivGroupImage)
+        private val name: TextView = view.findViewById(R.id.tvGroupName)
+        private val image: ImageView = view.findViewById(R.id.ivGroupImage)
+
+        fun bind(gruppe: Gruppe, onClick: (Gruppe) -> Unit) {
+            name.text = gruppe.gruppenname
+
+            if (!gruppe.gruppenbild.isNullOrEmpty()) {
+                Glide.with(image.context).load(gruppe.gruppenbild).into(image)
+            } else {
+                image.setImageResource(R.drawable.group_profile_picture) // Fallback-Bild
+            }
+            itemView.setOnClickListener { onClick(gruppe) }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GroupViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_group, parent, false)
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.item_group, parent, false)
         return GroupViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: GroupViewHolder, position: Int) {
-        val group = groups[position]
-        holder.name.text = group.gruppenname // <-- angepasst!
+        val gruppe = getItem(position)
+        holder.bind(gruppe, onClick)
+    }
+}
 
-        // Beispiel für ein Gruppenbild (optional):
-        // if (!group.gruppenbild.isNullOrEmpty()) {
-        //     Glide.with(holder.image.context).load(group.gruppenbild).into(holder.image)
-        // } else {
-        //     holder.image.setImageResource(R.drawable.default_group_icon)
-        // }
-
-        holder.itemView.setOnClickListener { onClick(group) }
+// Dieser "DiffCallback" berechnet die Unterschiede in der Liste und sorgt für flüssige Animationen.
+object GroupDiffCallback : DiffUtil.ItemCallback<Gruppe>() {
+    override fun areItemsTheSame(oldItem: Gruppe, newItem: Gruppe): Boolean {
+        return oldItem.gruppeId == newItem.gruppeId
     }
 
-    override fun getItemCount(): Int = groups.size
+    override fun areContentsTheSame(oldItem: Gruppe, newItem: Gruppe): Boolean {
+        return oldItem == newItem
+    }
 }

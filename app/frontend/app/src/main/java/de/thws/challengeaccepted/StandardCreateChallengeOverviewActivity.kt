@@ -7,9 +7,14 @@ import android.widget.*
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
+import de.thws.challengeaccepted.data.database.AppDatabase
+import de.thws.challengeaccepted.data.repository.ChallengeRepository
 import de.thws.challengeaccepted.models.StandardChallengeRequest
 import de.thws.challengeaccepted.models.SportartIntensity
+import de.thws.challengeaccepted.network.ApiClient
+import de.thws.challengeaccepted.network.ChallengeService
 import de.thws.challengeaccepted.ui.viewmodels.CreateChallengeViewModel
+import de.thws.challengeaccepted.ui.viewmodels.CreateChallengeViewModelFactory
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -24,8 +29,12 @@ class StandardCreateChallengeOverviewActivity : AppCompatActivity() {
     private var startDate: Calendar? = null
     private var endDate: Calendar? = null
 
-    // ViewModel
-    private val createChallengeViewModel: CreateChallengeViewModel by viewModels()
+    private val createChallengeViewModel: CreateChallengeViewModel by viewModels {
+        val db = AppDatabase.getDatabase(applicationContext)
+        val service = ApiClient.getRetrofit(applicationContext).create(ChallengeService::class.java)
+        val repository = ChallengeRepository(service, db.challengeDao(), db.aufgabeDao())
+        CreateChallengeViewModelFactory(repository)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(window, false)
@@ -49,7 +58,6 @@ class StandardCreateChallengeOverviewActivity : AppCompatActivity() {
             return
         }
 
-        // --- HIER Tabelle anzeigen ---
         fillTable(intensityMap)
 
         // DatePicker für Startdatum
@@ -58,9 +66,7 @@ class StandardCreateChallengeOverviewActivity : AppCompatActivity() {
             val datePicker = DatePickerDialog(
                 this,
                 { _, year, month, dayOfMonth ->
-                    startDate = Calendar.getInstance().apply {
-                        set(year, month, dayOfMonth)
-                    }
+                    startDate = Calendar.getInstance().apply { set(year, month, dayOfMonth) }
                     tvStartDate.text = "Start: ${formatDate(startDate!!)}"
                 },
                 calendar.get(Calendar.YEAR),
@@ -81,9 +87,7 @@ class StandardCreateChallengeOverviewActivity : AppCompatActivity() {
             val datePicker = DatePickerDialog(
                 this,
                 { _, year, month, dayOfMonth ->
-                    val selectedEnd = Calendar.getInstance().apply {
-                        set(year, month, dayOfMonth)
-                    }
+                    val selectedEnd = Calendar.getInstance().apply { set(year, month, dayOfMonth) }
                     if (selectedEnd.before(startDate)) {
                         tvEndDate.text = "Enddatum darf nicht vor Startdatum liegen!"
                     } else {
@@ -131,16 +135,13 @@ class StandardCreateChallengeOverviewActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            val startDateIso = formatIsoDate(startDate!!)
-            val endDateIso = formatIsoDate(endDate!!)
-
             val request = StandardChallengeRequest(
-                startdatum = startDateIso,
-                enddatum = endDateIso,
+                startdatum = formatIsoDate(startDate!!),
+                enddatum = formatIsoDate(endDate!!),
                 sportarten = sportarten
             )
 
-            createChallengeViewModel.createChallenge(incomingGroupId, request)
+            createChallengeViewModel.createStandardChallenge(incomingGroupId, request)
         }
 
         // Response beobachten
@@ -157,75 +158,56 @@ class StandardCreateChallengeOverviewActivity : AppCompatActivity() {
                 }
             }
         }
+
+        // NEU: Navigation initialisieren
+        setupNavigation()
     }
 
+    // --- Die restlichen Hilfsfunktionen bleiben unverändert ---
     private fun fillTable(data: Map<String, Pair<Int, Int>>) {
-        // Vorher aufräumen, falls schon Zeilen da sind (außer Header!)
         if (tableLayout.childCount > 1) {
             tableLayout.removeViews(1, tableLayout.childCount - 1)
         }
-
-        val sportartOrder = listOf(
-            "Push-Ups", "Sit-Ups", "Lunges", "Plank", "Squats", "Burpees"
-        )
-
-        // KORREKTE TYPISIERUNG!
+        val sportartOrder = listOf("Push-Ups", "Sit-Ups", "Lunges", "Plank", "Squats", "Burpees")
         val sortedData: List<Pair<String, Pair<Int, Int>>> =
             sportartOrder.mapNotNull { name ->
                 data[name]?.let { pair -> name to pair }
             } + data.filterKeys { it !in sportartOrder }.map { it.key to it.value }
-
         for ((exercise, pair) in sortedData) {
             val (start, end) = pair
-
-            // Nur anzeigen, wenn Werte gesetzt wurden
             if (start == 0 && end == 0) continue
-
-            val color = android.graphics.Color.WHITE // Design anpassen!
+            val color = android.graphics.Color.WHITE
             val startText = if (exercise == "Plank") formatSeconds(start) else "$start"
             val endText = if (exercise == "Plank") formatSeconds(end) else "$end"
-
             val row = TableRow(this)
-
-            val exerciseView = TextView(this).apply {
-                text = exercise
-                setTextColor(color)
-                setPadding(8, 8, 8, 8)
-            }
-
-            val startView = TextView(this).apply {
-                text = startText
-                setTextColor(color)
-                setPadding(8, 8, 8, 8)
-            }
-
-            val endView = TextView(this).apply {
-                text = endText
-                setTextColor(color)
-                setPadding(8, 8, 8, 8)
-            }
-
+            val exerciseView = TextView(this).apply { text = exercise; setTextColor(color); setPadding(8, 8, 8, 8) }
+            val startView = TextView(this).apply { text = startText; setTextColor(color); setPadding(8, 8, 8, 8) }
+            val endView = TextView(this).apply { text = endText; setTextColor(color); setPadding(8, 8, 8, 8) }
             row.addView(exerciseView)
             row.addView(startView)
             row.addView(endView)
-
             tableLayout.addView(row)
         }
     }
 
-    private fun formatSeconds(seconds: Int): String {
-        val minutes = seconds / 60
-        val secs = seconds % 60
-        return String.format("%d:%02d", minutes, secs)
+    // NEU: Methode für die Navigation
+    private fun setupNavigation() {
+        findViewById<ImageView>(R.id.nav_group).setOnClickListener {
+            startActivity(Intent(this, GroupOverviewActivity::class.java))
+        }
+        findViewById<ImageView>(R.id.nav_home).setOnClickListener {
+            startActivity(Intent(this, DashboardActivity::class.java))
+        }
+        findViewById<ImageView>(R.id.nav_add).setOnClickListener {
+            // Bleibt hier, da es die "Add"-Activity ist, oder navigiert zu CreateChallengeModeActivity
+            startActivity(Intent(this, CreateChallengeModeActivity::class.java))
+        }
+        findViewById<ImageView>(R.id.nav_profile).setOnClickListener {
+            startActivity(Intent(this, ProfileActivity::class.java))
+        }
     }
 
-    private fun formatDate(calendar: Calendar): String {
-        val sdf = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
-        return sdf.format(calendar.time)
-    }
-
-    private fun formatIsoDate(calendar: Calendar): String {
-        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        return sdf.format(calendar.time)
-    }
+    private fun formatSeconds(seconds: Int) = String.format("%d:%02d", seconds / 60, seconds % 60)
+    private fun formatDate(calendar: Calendar) = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format(calendar.time)
+    private fun formatIsoDate(calendar: Calendar) = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(calendar.time)
 }

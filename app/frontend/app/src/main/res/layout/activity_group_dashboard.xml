@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black"
-    tools:context=".DashboardActivity">
+    tools:context=".GroupDashboardActivity">
 
     <!-- Scrollbarer Inhalt -->
     <ScrollView
@@ -17,106 +16,71 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingBottom="16dp">
 
+            <!-- Gruppen-Header -->
             <LinearLayout
                 android:id="@+id/ll_groupstatus"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_margin="16dp"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="16dp"
                 android:background="@drawable/grey_background"
                 android:gravity="center_vertical"
-                android:orientation="vertical"
+                android:orientation="horizontal"
                 android:padding="8dp">
 
-                <LinearLayout
+                <ImageView
+                    android:id="@+id/ivGroupImageDashboard"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:background="@drawable/round_background"
+                    android:clipToOutline="true"
+                    android:scaleType="centerCrop"
+                    tools:src="@drawable/group_profile_picture" />
+
+                <TextView
+                    android:id="@+id/tvGroupNameDashboard"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/grey_background"
-                    android:orientation="horizontal">
-
-                    <!-- Gruppenbild -->
-                    <ImageView
-                        android:id="@+id/ivGroupImageDashboard"
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:background="@drawable/round_background"
-                        android:clipToOutline="true"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/group_profile_picture" />
-
-
-                    <TextView
-                        android:id="@+id/tvGroupNameDashboard"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="40dp"
-                        android:paddingVertical="10dp"
-                        android:text="Kämpfernatur"
-                        android:textColor="@color/white"
-                        android:textSize="30dp" />
-                </LinearLayout>
+                    android:layout_marginStart="24dp"
+                    android:textColor="@color/white"
+                    android:textSize="28sp"
+                    tools:text="Kämpfernatur" />
             </LinearLayout>
 
-            <!-- Hier kommen die Tagesanzeigen -->
-            <LinearLayout
-                android:id="@+id/ll_challenge_overview"
+            <!-- Container für die Challenge-Logik -->
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="16dp"
-                android:background="@drawable/grey_background"
-                android:gravity="center_vertical"
-                android:orientation="vertical"
-                android:padding="8dp"
-                tools:ignore="DuplicateIds">
+                android:layout_margin="16dp">
 
+                <!-- 1. Ansicht: Aktive Challenge (standardmäßig unsichtbar) -->
                 <LinearLayout
+                    android:id="@+id/challenge_card_active"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_margin="16dp"
-                    android:layout_marginBottom="8dp"
                     android:background="@drawable/grey_background"
-                    android:backgroundTint="@color/black"
                     android:orientation="vertical"
-                    android:padding="12dp">
+                    android:padding="16dp"
+                    android:visibility="gone"
+                    tools:visibility="visible">
 
-                    <!-- Erste Zeile: Challenge läuft seit + Icon -->
+                    <TextView
+                        android:id="@+id/tv_challenge_laufzeit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        tools:text="Challenge läuft seit 5 Tagen" />
+
                     <LinearLayout
+                        android:id="@+id/ll_dead_members"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="4dp"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="150dp"
-                            android:layout_height="wrap_content"
-                            android:text="Challenge läuft seit "
-                            android:textColor="@color/white"
-                            android:textSize="16sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:layout_width="150dp"
-                            android:layout_height="wrap_content"
-                            android:text="5 Tagen"
-                            android:textColor="#00d5cf"
-                            android:textSize="16sp"
-                            android:textStyle="bold" />
-
-                        <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:layout_marginStart="8dp"
-                            android:src="@drawable/challenge_plan_icon" />
-                    </LinearLayout>
-
-                    <!-- Zweite Zeile: Dead: + Bilder -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
@@ -128,111 +92,59 @@
                             android:textColor="@color/white"
                             android:textSize="16sp"
                             android:textStyle="bold" />
-
-                        <!-- Avatare -->
-                        <ImageView
-                            android:layout_width="32dp"
-                            android:layout_height="32dp"
-                            android:layout_marginEnd="6dp"
-                            android:background="@drawable/bright_grey_frame"
-                            android:clipToOutline="true"
-                            android:scaleType="centerCrop"
-                            android:src="@drawable/profile_picture" />
-
-                        <ImageView
-                            android:layout_width="32dp"
-                            android:layout_height="32dp"
-                            android:layout_marginEnd="6dp"
-                            android:background="@drawable/bright_grey_frame"
-                            android:clipToOutline="true"
-                            android:scaleType="centerCrop"
-                            android:src="@drawable/profile_picture" />
-
-                        <ImageView
-                            android:layout_width="32dp"
-                            android:layout_height="32dp"
-                            android:layout_marginEnd="6dp"
-                            android:background="@drawable/bright_grey_frame"
-                            android:clipToOutline="true"
-                            android:scaleType="centerCrop"
-                            android:src="@drawable/profile_picture" />
-
-                        <ImageView
-                            android:layout_width="32dp"
-                            android:layout_height="32dp"
-                            android:background="@drawable/red_frame"
-                            android:clipToOutline="true"
-                            android:scaleType="centerCrop"
-                            android:src="@drawable/profile_picture" />
+                        <!-- Die Icons für tote Member werden dynamisch hinzugefügt -->
                     </LinearLayout>
-                </LinearLayout>
-
-                <TextView
-                    android:id="@+id/tv_remaining_time"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="12dp"
-                    android:layout_marginEnd="16dp"
-                    android:background="@drawable/red_frame"
-                    android:gravity="center"
-                    android:padding="12dp"
-                    android:text="Verbleibende Zeit für die Aufgabe: 5h"
-                    android:textColor="#FF0000"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
-
-            <!-- User Profiles Section -->
-            <LinearLayout
-                android:id="@+id/ll_user_profiles"
-                android:layout_width="450dp"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/ll_challenge_overview"
-                android:layout_marginTop="10dp"
-                android:orientation="horizontal">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@drawable/grey_background"
-                    android:gravity="center"
-                    android:orientation="horizontal"
-                    android:padding="8dp">
-
-                    <ImageView
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:background="@drawable/round_background"
-                        android:clipToOutline="true"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/profile_picture" />
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:id="@+id/tv_remaining_time"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:text="Mara"
-                        android:textColor="@color/white"
-                        android:textSize="14sp" />
-
+                        android:layout_marginTop="12dp"
+                        android:background="@drawable/red_frame"
+                        android:gravity="center"
+                        android:padding="12dp"
+                        android:textColor="#FF0000"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        tools:text="Verbleibende Zeit für die Aufgabe: 5h" />
                 </LinearLayout>
 
-            </LinearLayout>
+                <!-- 2. Ansicht: Button zum Erstellen (standardmäßig sichtbar) -->
+                <Button
+                    android:id="@+id/btn_create_challenge"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/blue_frame"
+                    android:paddingVertical="16dp"
+                    android:text="NEUE CHALLENGE ERSTELLEN"
+                    android:textColor="@color/white"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+
+            </FrameLayout>
+
+            <!-- Gruppen-Feed -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="16dp"
+                android:text="Gruppen-Feed"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerViewGroupFeed"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="16dp"/>
-
+                android:layout_marginTop="8dp"
+                android:nestedScrollingEnabled="false" />
 
         </LinearLayout>
     </ScrollView>
 
-    <!-- Bottom Navigation -->
+    <!-- Bottom Navigation (JETZT KORREKT GEFÜLLT) -->
     <LinearLayout
         android:id="@+id/ll_bottom_navigation"
         android:layout_width="match_parent"

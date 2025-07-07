@@ -1,28 +1,43 @@
 package de.thws.challengeaccepted.ui.viewmodels
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import de.thws.challengeaccepted.data.repository.FeedRepository
-import de.thws.challengeaccepted.models.GroupFeedItem
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
+import de.thws.challengeaccepted.data.entities.BeitragEntity
+import de.thws.challengeaccepted.data.entities.Challenge
 import de.thws.challengeaccepted.data.repository.GroupFeedRepository
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
-class GroupFeedViewModel(application: Application) : AndroidViewModel(application) {
-    private val repository = GroupFeedRepository(application)
+class GroupFeedViewModel(private val repository: GroupFeedRepository) : ViewModel() {
 
-    private val _feed = MutableLiveData<List<GroupFeedItem>>()
-    val feed: LiveData<List<GroupFeedItem>> = _feed
+    private val _groupId = MutableStateFlow<String?>(null)
 
-    fun loadFeed(groupId: String) {
+    // Flow für den Feed
+    val feed: StateFlow<List<BeitragEntity>> = _groupId.filterNotNull().flatMapLatest { id ->
+        repository.getFeedForGroup(id)
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    // Flow für die aktive Challenge
+    val activeChallenge: StateFlow<Challenge?> = _groupId.filterNotNull().flatMapLatest { id ->
+        repository.getActiveChallenge(id)
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
+
+    // Startet das Laden aller Daten für die angegebene Gruppen-ID
+    fun loadDashboardData(groupId: String) {
+        if (_groupId.value == groupId) return // Nicht erneut laden, wenn schon aktiv
+        _groupId.value = groupId
         viewModelScope.launch {
-            try {
-                _feed.value = repository.getGroupFeed(groupId)
-            } catch (e: Exception) {
-                _feed.value = emptyList()
-            }
+            repository.refreshAllDashboardData(groupId)
         }
+    }
+}
+
+// Die zugehörige Factory
+class GroupFeedViewModelFactory(private val repository: GroupFeedRepository) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(GroupFeedViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return GroupFeedViewModel(repository) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }

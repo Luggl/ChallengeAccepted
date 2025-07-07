@@ -1,27 +1,42 @@
 package de.thws.challengeaccepted
 
 import android.content.Intent
+import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.view.View
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import android.graphics.Color
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.activity.viewModels
 import com.bumptech.glide.Glide
-import de.thws.challengeaccepted.ui.FeedAdapter
+import de.thws.challengeaccepted.data.database.AppDatabase
+import de.thws.challengeaccepted.data.repository.GroupFeedRepository
+import de.thws.challengeaccepted.network.ApiClient
+import de.thws.challengeaccepted.network.GroupFeedService
 import de.thws.challengeaccepted.ui.GroupFeedAdapter
-import de.thws.challengeaccepted.ui.viewmodels.GroupFeedViewModel
+import de.thws.challengeaccepted.ui.viewmodels.*
+import kotlinx.coroutines.launch
+import java.util.concurrent.TimeUnit
 
 class GroupDashboardActivity : AppCompatActivity() {
 
-    private val groupFeedViewModel: GroupFeedViewModel by viewModels()
-    private lateinit var feedAdapter: FeedAdapter
+    // KORREKT: Nur noch ein ViewModel für diesen Bildschirm
+    private val viewModel: GroupFeedViewModel by viewModels {
+        val db = AppDatabase.getDatabase(applicationContext)
+        val service = ApiClient.getRetrofit(applicationContext).create(GroupFeedService::class.java)
+        val repository = GroupFeedRepository(service, db.gruppeDao(), db.challengeDao(), db.membershipDao(), db.beitragDao())
+        GroupFeedViewModelFactory(repository)
+    }
+
+    private lateinit var groupFeedAdapter: GroupFeedAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,108 +45,115 @@ class GroupDashboardActivity : AppCompatActivity() {
         // Übergebene Daten holen
         val groupId = intent.getStringExtra("GROUP_ID")
         val groupName = intent.getStringExtra("GROUP_NAME")
-        val groupBeschreibung = intent.getStringExtra("GROUP_BESCHREIBUNG")
         val groupBild = intent.getStringExtra("GROUP_BILD")
-        val groupFeedViewModel: GroupFeedViewModel by viewModels()
-        lateinit var groupFeedAdapter: GroupFeedAdapter
-        groupFeedAdapter = GroupFeedAdapter(emptyList())
 
-
-        // Gruppenname setzen
+        // Views initialisieren
         val groupNameTextView = findViewById<TextView>(R.id.tvGroupNameDashboard)
-        groupNameTextView?.text = groupName ?: "Kein Name"
-
-        // Gruppenbild anzeigen
         val groupImageView = findViewById<ImageView>(R.id.ivGroupImageDashboard)
-        if (!groupBild.isNullOrEmpty() && groupImageView != null) {
+        val feedRecycler = findViewById<RecyclerView>(R.id.recyclerViewGroupFeed)
+        val challengeCardActive = findViewById<View>(R.id.challenge_card_active)
+        val btnCreateChallenge = findViewById<Button>(R.id.btn_create_challenge)
+        val challengeLaufzeit = findViewById<TextView>(R.id.tv_challenge_laufzeit)
+
+        // Header mit Gruppendaten füllen
+        groupNameTextView.text = groupName ?: "Gruppe"
+        if (!groupBild.isNullOrEmpty()) {
             Glide.with(this).load(groupBild).into(groupImageView)
         } else {
-            groupImageView?.setImageResource(R.drawable.group_profile_picture)
+            groupImageView.setImageResource(R.drawable.group_profile_picture)
         }
 
-        // FEED: RecyclerView initialisieren
-        val feedRecycler = findViewById<RecyclerView>(R.id.recyclerViewGroupFeed)
+        // Adapter einrichten
+        groupFeedAdapter = GroupFeedAdapter()
         feedRecycler.layoutManager = LinearLayoutManager(this)
         feedRecycler.adapter = groupFeedAdapter
 
-        // Lade den Feed für die Gruppe
-        if (groupId != null) {
-            groupFeedViewModel.loadFeed(groupId)
+        if (groupId == null) {
+            Toast.makeText(this, "Fehler: Gruppen-ID fehlt", Toast.LENGTH_LONG).show()
+            finish()
+            return
         }
 
-        // Feed-Daten beobachten und anzeigen
-        groupFeedViewModel.feed.observe(this) { beitragsListe ->
-            groupFeedAdapter.updateData(beitragsListe)
+        // --- Daten Laden & UI Beobachten ---
+        viewModel.loadDashboardData(groupId)
+
+        // Aktive Challenge beobachten
+        lifecycleScope.launch {
+            viewModel.activeChallenge.collect { challenge ->
+                if (challenge != null && challenge.active) {
+                    challengeCardActive.visibility = View.VISIBLE
+                    btnCreateChallenge.visibility = View.GONE
+                    val daysSinceStart = TimeUnit.MILLISECONDS.toDays(System.currentTimeMillis() - challenge.startdatum).coerceAtLeast(0)
+                    challengeLaufzeit.text = "Challenge läuft seit $daysSinceStart Tagen"
+                } else {
+                    challengeCardActive.visibility = View.GONE
+                    btnCreateChallenge.visibility = View.VISIBLE
+                }
+            }
         }
 
-        // ... der Rest deiner Navigation wie gehabt ...
-        val navGroupstatus = findViewById<LinearLayout>(R.id.ll_groupstatus)
-        navGroupstatus.setOnClickListener {
+        // Feed beobachten
+        lifecycleScope.launch {
+            viewModel.feed.collect { beitragsListe ->
+                groupFeedAdapter.submitList(beitragsListe)
+            }
+        }
+
+        // Navigation und Buttons einrichten
+        setupNavigation(groupId)
+    }
+    private fun setupNavigation(groupId: String) {
+        findViewById<Button>(R.id.btn_create_challenge).setOnClickListener {
+            val intent = Intent(this, CreateChallengeModeActivity::class.java)
+            intent.putExtra("groupId", groupId)
+            startActivity(intent)
+        }
+
+        findViewById<LinearLayout>(R.id.ll_groupstatus).setOnClickListener {
             val intent = Intent(this, GroupstatusActivity::class.java)
+            intent.putExtra("GROUP_ID", groupId)
             startActivity(intent)
         }
 
-        val navChalleOv = findViewById<LinearLayout>(R.id.ll_challenge_overview)
-        navChalleOv.setOnClickListener {
-            val intent = Intent(this, SurvivalChallengeOverviewActivity::class.java)
-            startActivity(intent)
+        findViewById<ImageView>(R.id.nav_group).setOnClickListener {
+            startActivity(Intent(this, GroupOverviewActivity::class.java))
         }
-
-        val navRecordAc = findViewById<TextView>(R.id.tv_remaining_time)
-        navRecordAc.setOnClickListener {
-            val intent = Intent(this, RecordActivity::class.java)
-            startActivity(intent)
+        findViewById<ImageView>(R.id.nav_home).setOnClickListener {
+            startActivity(Intent(this, DashboardActivity::class.java))
         }
-
-        val navGroup = findViewById<ImageView>(R.id.nav_group)
-        navGroup.setOnClickListener {
-            val intent = Intent(this, GroupOverviewActivity::class.java)
-            startActivity(intent)
+        findViewById<ImageView>(R.id.nav_profile).setOnClickListener {
+            startActivity(Intent(this, ProfileActivity::class.java))
         }
-
-        val navHome = findViewById<ImageView>(R.id.nav_home)
-        navHome.setOnClickListener {
-            val intent = Intent(this, DashboardActivity::class.java)
-            startActivity(intent)
+        findViewById<ImageView>(R.id.nav_add).setOnClickListener {
+            showAddActionDialog(groupId)
         }
+    }
 
-        val navAdd = findViewById<ImageView>(R.id.nav_add)
-        navAdd.setOnClickListener {
-            val dialogBuilder = AlertDialog.Builder(this)
-            dialogBuilder.setTitle("Was möchtest du tun?")
-            dialogBuilder.setMessage("Wähle eine Aktion:")
-
-            dialogBuilder.setPositiveButton("Aufgabe erledigen") { _, _ ->
+    private fun showAddActionDialog(groupId: String) {
+        val dialogBuilder = AlertDialog.Builder(this)
+        dialogBuilder.setTitle("Was möchtest du tun?")
+            .setMessage("Wähle eine Aktion:")
+            .setPositiveButton("Aufgabe erledigen") { _, _ ->
                 Toast.makeText(this, "Aufgaben-Erledigungs-Flow startet...", Toast.LENGTH_SHORT).show()
                 val intent = Intent(this, RecordActivity::class.java)
                 startActivity(intent)
             }
-
-            dialogBuilder.setNegativeButton("Challenge erstellen") { _, _ ->
+            .setNegativeButton("Challenge erstellen") { _, _ ->
                 Toast.makeText(this, "Challenge-Erstellung startet...", Toast.LENGTH_SHORT).show()
                 val intent = Intent(this, CreateChallengeModeActivity::class.java)
                 intent.putExtra("groupId", groupId)
                 startActivity(intent)
             }
 
-            val alertDialog = dialogBuilder.create()
-            alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.BLACK))
-
-            alertDialog.setOnShowListener {
-                val titleId = resources.getIdentifier("alertTitle", "id", "android")
-                alertDialog.findViewById<TextView>(titleId)?.setTextColor(getColor(R.color.white))
-                alertDialog.findViewById<TextView>(android.R.id.message)?.setTextColor(getColor(R.color.white))
-                alertDialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(getColor(R.color.white))
-                alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(getColor(R.color.white))
-            }
-
-            alertDialog.show()
+        val alertDialog = dialogBuilder.create()
+        alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.BLACK))
+        alertDialog.setOnShowListener {
+            val titleId = resources.getIdentifier("alertTitle", "id", "android")
+            alertDialog.findViewById<TextView>(titleId)?.setTextColor(Color.WHITE)
+            alertDialog.findViewById<TextView>(android.R.id.message)?.setTextColor(Color.WHITE)
+            alertDialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(Color.WHITE)
+            alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(Color.WHITE)
         }
-
-        val navProfile = findViewById<ImageView>(R.id.nav_profile)
-        navProfile.setOnClickListener {
-            val intent = Intent(this, ProfileActivity::class.java)
-            startActivity(intent)
-        }
+        alertDialog.show()
     }
 }

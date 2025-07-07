@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:padding="8dp"
+    android:background="@drawable/grey_background"
+    android:layout_margin="4dp">
+
+    <ImageView
+        android:id="@+id/ivMemberImage"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/round_background"
+        android:clipToOutline="true"
+        android:scaleType="centerCrop"
+        tools:src="@drawable/group_profile_picture" />
+
+    <TextView
+        android:id="@+id/tvMemberName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        tools:text="Ben" />
+
+</LinearLayout>
