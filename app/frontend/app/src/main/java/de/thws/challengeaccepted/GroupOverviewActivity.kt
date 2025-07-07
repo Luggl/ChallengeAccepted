@@ -20,23 +20,24 @@ import kotlinx.coroutines.launch
 
 class GroupOverviewActivity : AppCompatActivity() {
 
-    // GEÄNDERT: Das ViewModel wird jetzt über die Factory erstellt
     private val groupViewModel: GroupViewModel by viewModels {
-        // 1. Hole die Abhängigkeiten, die das Repository braucht
         val database = AppDatabase.getDatabase(applicationContext)
         val groupService = ApiClient.getRetrofit(applicationContext).create(GroupService::class.java)
-
-        // 2. Erstelle das Repository
-        val repository = GroupRepository(groupService, database.gruppeDao())
-
-        // 3. Erstelle die Factory und übergib ihr das Repository
+        val repository = GroupRepository(
+            groupService,
+            database.gruppeDao(),
+            database.challengeDao(),
+            database.beitragDao(),
+            database.membershipDao(),
+            database.userDao()
+        )
         GroupViewModelFactory(repository)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_group_overview)
-
+        groupViewModel.loadGroupOverview()
         val recycler = findViewById<RecyclerView>(R.id.recyclerViewGroups)
         val tvGroupCount = findViewById<TextView>(R.id.tv_group_count)
 

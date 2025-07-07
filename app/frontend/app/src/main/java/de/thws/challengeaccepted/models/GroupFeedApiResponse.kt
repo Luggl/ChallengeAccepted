@@ -46,10 +46,12 @@ data class ApiMemberInfo(
     @SerializedName("gruppe_id")
     val gruppeId: String,
     val isAdmin: Boolean,
+    @SerializedName("profilbild_url")
+    val profilbildUrl: String?,
     @SerializedName("user_id")
-    val userId: String
+    val userId: String,
+    val username: String
 )
-
 data class ApiFeedItem(
     val beitrag_id: String,
     val beschreibung: String,

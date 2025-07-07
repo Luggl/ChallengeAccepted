@@ -6,53 +6,38 @@ import de.thws.challengeaccepted.data.dao.MembershipDao
 import de.thws.challengeaccepted.data.dao.UserDao
 import de.thws.challengeaccepted.data.entities.Gruppe
 import de.thws.challengeaccepted.data.entities.User
-import de.thws.challengeaccepted.data.repository.GroupDashboardRepository
+import de.thws.challengeaccepted.data.repository.GroupRepository
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
-class GroupstatusViewModel(
-    private val repository: GroupDashboardRepository,
-    private val gruppeDao: GruppeDao,
-    private val membershipDao: MembershipDao,
-    private val userDao: UserDao
+class GroupStatusViewModel(
+    private val repository: GroupRepository
 ) : ViewModel() {
 
     private val _groupId = MutableStateFlow<String?>(null)
 
-    val groupDetails: StateFlow<Gruppe?> = _groupId.filterNotNull().flatMapLatest {
-        gruppeDao.getGruppeByIdAsFlow(it)
+    val groupDetails: StateFlow<Gruppe?> = _groupId.filterNotNull().flatMapLatest { id ->
+        repository.getGroupDetails(id)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 
-    val members: StateFlow<List<User>> = _groupId.filterNotNull().flatMapLatest {
-        membershipDao.getMembershipsForGroupAsFlow(it).flatMapLatest { memberships ->
-            val userIds = memberships.map { m -> m.userId }
-            if (userIds.isNotEmpty()) {
-                userDao.getUsersByIdsAsFlow(userIds)
-            } else {
-                flowOf(emptyList())
-            }
-        }
+    val members: StateFlow<List<User>> = _groupId.filterNotNull().flatMapLatest { id ->
+        repository.getMembersForGroup(id)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     fun loadGroupDetails(groupId: String) {
         if (_groupId.value == groupId) return
         _groupId.value = groupId
         viewModelScope.launch {
-            repository.refreshDashboardData(groupId)
+            repository.refreshGroupData(groupId)
         }
     }
 }
 
-class GroupstatusViewModelFactory(
-    private val repository: GroupDashboardRepository,
-    private val gruppeDao: GruppeDao,
-    private val membershipDao: MembershipDao,
-    private val userDao: UserDao
-) : ViewModelProvider.Factory {
+class GroupStatusViewModelFactory(private val repository: GroupRepository) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(GroupstatusViewModel::class.java)) {
+        if (modelClass.isAssignableFrom(GroupStatusViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return GroupstatusViewModel(repository, gruppeDao, membershipDao, userDao) as T
+            return GroupStatusViewModel(repository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

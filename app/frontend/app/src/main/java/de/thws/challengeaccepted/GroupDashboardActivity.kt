@@ -18,9 +18,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import de.thws.challengeaccepted.data.database.AppDatabase
-import de.thws.challengeaccepted.data.repository.GroupFeedRepository
+import de.thws.challengeaccepted.data.repository.GroupRepository
 import de.thws.challengeaccepted.network.ApiClient
-import de.thws.challengeaccepted.network.GroupFeedService
+import de.thws.challengeaccepted.network.GroupService
 import de.thws.challengeaccepted.ui.GroupFeedAdapter
 import de.thws.challengeaccepted.ui.viewmodels.*
 import kotlinx.coroutines.launch
@@ -28,12 +28,18 @@ import java.util.concurrent.TimeUnit
 
 class GroupDashboardActivity : AppCompatActivity() {
 
-    // KORREKT: Nur noch ein ViewModel für diesen Bildschirm
-    private val viewModel: GroupFeedViewModel by viewModels {
+    private val groupViewModel: GroupViewModel by viewModels {
         val db = AppDatabase.getDatabase(applicationContext)
-        val service = ApiClient.getRetrofit(applicationContext).create(GroupFeedService::class.java)
-        val repository = GroupFeedRepository(service, db.gruppeDao(), db.challengeDao(), db.membershipDao(), db.beitragDao())
-        GroupFeedViewModelFactory(repository)
+        val service = ApiClient.getRetrofit(applicationContext).create(GroupService::class.java)
+        val repository = GroupRepository(
+            service,
+            db.gruppeDao(),
+            db.challengeDao(),
+            db.beitragDao(),
+            db.membershipDao(),
+            db.userDao()
+        )
+        GroupViewModelFactory(repository)
     }
 
     private lateinit var groupFeedAdapter: GroupFeedAdapter
@@ -42,10 +48,12 @@ class GroupDashboardActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_group_dashboard)
 
-        // Übergebene Daten holen
         val groupId = intent.getStringExtra("GROUP_ID")
-        val groupName = intent.getStringExtra("GROUP_NAME")
-        val groupBild = intent.getStringExtra("GROUP_BILD")
+        if (groupId == null) {
+            Toast.makeText(this, "Fehler: Gruppen-ID fehlt", Toast.LENGTH_LONG).show()
+            finish()
+            return
+        }
 
         // Views initialisieren
         val groupNameTextView = findViewById<TextView>(R.id.tvGroupNameDashboard)
@@ -55,31 +63,31 @@ class GroupDashboardActivity : AppCompatActivity() {
         val btnCreateChallenge = findViewById<Button>(R.id.btn_create_challenge)
         val challengeLaufzeit = findViewById<TextView>(R.id.tv_challenge_laufzeit)
 
-        // Header mit Gruppendaten füllen
-        groupNameTextView.text = groupName ?: "Gruppe"
-        if (!groupBild.isNullOrEmpty()) {
-            Glide.with(this).load(groupBild).into(groupImageView)
-        } else {
-            groupImageView.setImageResource(R.drawable.group_profile_picture)
-        }
-
         // Adapter einrichten
         groupFeedAdapter = GroupFeedAdapter()
         feedRecycler.layoutManager = LinearLayoutManager(this)
         feedRecycler.adapter = groupFeedAdapter
 
-        if (groupId == null) {
-            Toast.makeText(this, "Fehler: Gruppen-ID fehlt", Toast.LENGTH_LONG).show()
-            finish()
-            return
-        }
-
         // --- Daten Laden & UI Beobachten ---
-        viewModel.loadDashboardData(groupId)
+        groupViewModel.loadGroupData(groupId)
+
+        // Gruppendetails beobachten (Header!)
+        lifecycleScope.launch {
+            groupViewModel.groupDetails.collect { gruppe ->
+                gruppe?.let {
+                    groupNameTextView.text = it.gruppenname
+                    if (!it.gruppenbild.isNullOrEmpty()) {
+                        Glide.with(this@GroupDashboardActivity).load(it.gruppenbild).into(groupImageView)
+                    } else {
+                        groupImageView.setImageResource(R.drawable.group_profile_picture)
+                    }
+                }
+            }
+        }
 
         // Aktive Challenge beobachten
         lifecycleScope.launch {
-            viewModel.activeChallenge.collect { challenge ->
+            groupViewModel.activeChallenge.collect { challenge ->
                 if (challenge != null && challenge.active) {
                     challengeCardActive.visibility = View.VISIBLE
                     btnCreateChallenge.visibility = View.GONE
@@ -94,14 +102,14 @@ class GroupDashboardActivity : AppCompatActivity() {
 
         // Feed beobachten
         lifecycleScope.launch {
-            viewModel.feed.collect { beitragsListe ->
+            groupViewModel.feed.collect { beitragsListe ->
                 groupFeedAdapter.submitList(beitragsListe)
             }
         }
 
-        // Navigation und Buttons einrichten
         setupNavigation(groupId)
     }
+
     private fun setupNavigation(groupId: String) {
         findViewById<Button>(R.id.btn_create_challenge).setOnClickListener {
             val intent = Intent(this, CreateChallengeModeActivity::class.java)

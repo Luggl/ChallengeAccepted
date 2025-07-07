@@ -3,38 +3,57 @@ package de.thws.challengeaccepted.ui.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import de.thws.challengeaccepted.data.entities.BeitragEntity
+import de.thws.challengeaccepted.data.entities.Challenge
 import de.thws.challengeaccepted.data.entities.Gruppe
+import de.thws.challengeaccepted.data.entities.User
 import de.thws.challengeaccepted.data.repository.GroupRepository
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class GroupViewModel(private val repository: GroupRepository) : ViewModel() {
 
-    // Hält die aktuelle Liste der Gruppen bereit für die UI.
-    val gruppen: StateFlow<List<Gruppe>> = repository.gruppen
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = emptyList()
-        )
+    private val _groupId = MutableStateFlow<String?>(null)
 
-    init {
-        // Beim ersten Starten des ViewModels die Daten vom Server holen.
-        refresh()
-    }
+    val feed: StateFlow<List<BeitragEntity>> = _groupId.filterNotNull().flatMapLatest { id ->
+        repository.getFeedForGroup(id)
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-    // Kann von der UI aufgerufen werden, z.B. für "Swipe-to-Refresh".
-    fun refresh() {
+    val activeChallenge: StateFlow<Challenge?> = _groupId.filterNotNull().flatMapLatest { id ->
+        repository.getActiveChallenge(id)
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
+
+    val groupDetails: StateFlow<Gruppe?> = _groupId.filterNotNull().flatMapLatest { id ->
+        repository.getGroupDetails(id)
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
+
+    val members: StateFlow<List<User>> = _groupId.filterNotNull().flatMapLatest { id ->
+        repository.getMembersForGroup(id)
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    val gruppen: StateFlow<List<Gruppe>> = repository.getAllGroups()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    fun loadGroupData(groupId: String) {
+        if (_groupId.value == groupId) return
+        _groupId.value = groupId
         viewModelScope.launch {
-            repository.refreshGruppen()
+            repository.refreshGroupData(groupId)
+        }
+    }
+    fun loadGroupOverview() {
+        viewModelScope.launch {
+            repository.refreshGroupOverview() // Holt und speichert ALLE Gruppen!
         }
     }
 }
 
-// DIESE FACTORY IST NÖTIG, damit das ViewModel mit dem Repository erstellt werden kann.
-// Füge diese Klasse in dieselbe Datei "GroupViewModel.kt" ein.
+// Factory
 class GroupViewModelFactory(private val repository: GroupRepository) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(GroupViewModel::class.java)) {

@@ -14,22 +14,28 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import de.thws.challengeaccepted.data.database.AppDatabase
-import de.thws.challengeaccepted.data.repository.GroupDashboardRepository
+import de.thws.challengeaccepted.data.repository.GroupRepository
 import de.thws.challengeaccepted.network.ApiClient
 import de.thws.challengeaccepted.network.GroupService
 import de.thws.challengeaccepted.ui.adapter.MemberGridAdapter
-import de.thws.challengeaccepted.ui.viewmodels.GroupstatusViewModel
-import de.thws.challengeaccepted.ui.viewmodels.GroupstatusViewModelFactory
+import de.thws.challengeaccepted.ui.viewmodels.GroupStatusViewModel
+import de.thws.challengeaccepted.ui.viewmodels.GroupStatusViewModelFactory
 import kotlinx.coroutines.launch
 
 class GroupstatusActivity : AppCompatActivity() {
 
-    // KORREKT: ViewModel wird mit der Factory korrekt initialisiert
-    private val viewModel: GroupstatusViewModel by viewModels {
+    private val viewModel: GroupStatusViewModel by viewModels {
         val db = AppDatabase.getDatabase(applicationContext)
         val service = ApiClient.getRetrofit(applicationContext).create(GroupService::class.java)
-        val repo = GroupDashboardRepository(service, db.gruppeDao(), db.challengeDao(), db.membershipDao())
-        GroupstatusViewModelFactory(repo, db.gruppeDao(), db.membershipDao(), db.userDao())
+        val repo = GroupRepository(
+            service,
+            db.gruppeDao(),
+            db.challengeDao(),
+            db.beitragDao(),
+            db.membershipDao(),
+            db.userDao()
+        )
+        GroupStatusViewModelFactory(repo)
     }
 
     private lateinit var memberAdapter: MemberGridAdapter
@@ -53,7 +59,7 @@ class GroupstatusActivity : AppCompatActivity() {
 
         // Adapter und RecyclerView für die Mitgliederliste einrichten
         memberAdapter = MemberGridAdapter()
-        memberRecyclerView.layoutManager = GridLayoutManager(this, 2) // 2 Spalten für das Gitter
+        memberRecyclerView.layoutManager = GridLayoutManager(this, 2)
         memberRecyclerView.adapter = memberAdapter
 
         // Daten laden
@@ -67,7 +73,6 @@ class GroupstatusActivity : AppCompatActivity() {
     }
 
     private fun observeViewModel(groupName: TextView, groupBanner: ImageView, groupDescription: TextView) {
-        // Beobachtet die Gruppendetails (Name, Bild, Beschreibung)
         lifecycleScope.launch {
             viewModel.groupDetails.collect { gruppe ->
                 gruppe?.let {
@@ -76,13 +81,12 @@ class GroupstatusActivity : AppCompatActivity() {
                     if (!it.gruppenbild.isNullOrEmpty()) {
                         Glide.with(this@GroupstatusActivity).load(it.gruppenbild).into(groupBanner)
                     } else {
-                        groupBanner.setImageResource(R.drawable.group_profile_picture) // Fallback-Bild
+                        groupBanner.setImageResource(R.drawable.group_profile_picture)
                     }
                 }
             }
         }
 
-        // Beobachtet die Mitgliederliste
         lifecycleScope.launch {
             viewModel.members.collect { memberList ->
                 memberAdapter.submitList(memberList)
@@ -91,25 +95,17 @@ class GroupstatusActivity : AppCompatActivity() {
     }
 
     private fun setupNavigationAndButtons(groupId: String) {
-        // Zurück-Button
         findViewById<ImageView>(R.id.btn_back).setOnClickListener {
             finish()
         }
-
-        // Freunde einladen Button
         findViewById<Button>(R.id.btn_invite_friends).setOnClickListener {
-            // Hier Logik für Einladungslink implementieren
             Toast.makeText(this, "Freunde einladen...", Toast.LENGTH_SHORT).show()
         }
-
-        // Challenge Overview Button
         findViewById<Button>(R.id.btn_challenge_overview).setOnClickListener {
             val intent = Intent(this, GroupDashboardActivity::class.java)
             intent.putExtra("GROUP_ID", groupId)
             startActivity(intent)
         }
-
-        // Gruppe verlassen Button
         findViewById<Button>(R.id.btn_leave_group).setOnClickListener {
             showLeaveGroupDialog()
         }
@@ -134,7 +130,6 @@ class GroupstatusActivity : AppCompatActivity() {
             .setTitle("Gruppe verlassen")
             .setMessage("Möchtest du diese Gruppe wirklich verlassen?")
             .setPositiveButton("Verlassen") { _, _ ->
-                // Hier Logik zum Verlassen der Gruppe implementieren (API-Call etc.)
                 Toast.makeText(this, "Gruppe wird verlassen...", Toast.LENGTH_SHORT).show()
             }
             .setNegativeButton("Abbrechen", null)
