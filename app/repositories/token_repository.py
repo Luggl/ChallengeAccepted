@@ -2,7 +2,6 @@ from sqlalchemy.orm import joinedload
 
 from app.database.database import SessionLocal
 from app.database.models import ResetToken
-from app.utils.time import now_berlin
 
 def find_token_by_string(token_str):
     """Finde einen ResetToken anhand des Tokens und lade den User direkt mit."""

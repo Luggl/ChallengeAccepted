@@ -11,13 +11,13 @@ from app.repositories.task_repository import (
     add_streak, update_task_by_thumbnail
 )
 from app.database.models import BeitragVotes, Beitrag, AufgabeTyp, StandardAufgabe, Vote
-from repositories.beitrag_repository import (
+from app.repositories.beitrag_repository import (
     find_beitrag_by_id,
     find_gruppe_by_beitrag,
     create_beitrag,
     find_beitrag_by_erfuellung_id, is_user_beitrag_ersteller
 )
-from repositories.challenge_repository import (
+from app.repositories.challenge_repository import (
     find_standard_challenge_by_id,
     find_standard_challenge_sportarten_by_challenge_id,
     find_all_survival_challenges,
@@ -28,15 +28,15 @@ import random
 from collections import defaultdict
 from datetime import datetime, time, timedelta
 
-from repositories.group_repository import find_group_by_id
-from repositories.membership_repository import find_memberships_by_user
-from repositories.task_repository import find_aufgabenerfuellung_by_challenge_and_date_and_user
-from services.schedule import schedule_deadline_job
-from utils.auth_utils import get_uuid_formated_id
-from utils.media import safe_video_logic, generate_video_thumbnail
-from utils.serialize import serialize_aufgabenerfuellung
-from utils.time import now_berlin, date_today
-from utils.scheduler_instance import scheduler
+from app.repositories.group_repository import find_group_by_id
+from app.repositories.membership_repository import find_memberships_by_user
+from app.repositories.task_repository import find_aufgabenerfuellung_by_challenge_and_date_and_user
+from app.services.schedule import schedule_deadline_job
+from app.utils.auth_utils import get_uuid_formated_id
+from app.utils.media import safe_video_logic, generate_video_thumbnail
+from app.utils.serialize import serialize_aufgabenerfuellung
+from app.utils.time import now_berlin, date_today
+from app.utils.scheduler_instance import scheduler
 from app.repositories.sportart_repository import find_sportart_by_id, find_intervall_by_sportart_and_schwierigkeit
 from app.database.models import SurvivalAufgabe
 

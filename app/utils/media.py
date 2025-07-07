@@ -3,7 +3,7 @@ import subprocess
 import uuid
 from pathlib import Path, PurePosixPath
 from werkzeug.utils import secure_filename
-from utils.response import response
+from app.utils.response import response
 
 if os.name == "nt": #Windows
     BASE_DIR = Path(__file__).resolve().parent

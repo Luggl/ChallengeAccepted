@@ -6,8 +6,9 @@ from sqlalchemy.dialects.sqlite import BLOB
 from sqlalchemy.orm import relationship, foreign, configure_mappers
 from app.database.database import Base
 from enum import Enum
-configure_mappers()
 
+
+configure_mappers()
 
 class StatusUnit(Enum):
     anzahl="anzahl"

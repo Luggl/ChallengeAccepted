@@ -8,7 +8,6 @@ from app.services.group_service import (
     get_group_feed_logic,
     leave_group_logic
 )
-from utils.auth_utils import get_uuid_formated_id
 
 # Blueprint für alle Gruppenfunktionen
 group_bp = Blueprint('group', __name__)

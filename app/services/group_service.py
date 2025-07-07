@@ -5,7 +5,7 @@ from sqlalchemy.exc import SQLAlchemyError
 
 from app.utils.time import now_berlin, date_today
 from app.repositories.challenge_repository import find_active_challenge_by_group
-from app.repositories.membership_repository import find_membership, delete_membership, create_membership
+from app.repositories.membership_repository import find_membership, delete_membership, create_membership, find_memberships_by_group
 from app.utils.auth_utils import get_uuid_formated_id
 from app.utils.response import response
 from app.database.models import Membership
@@ -18,9 +18,7 @@ from app.repositories.group_repository import (
     delete_group_by_id,
     get_group_feed_by_group_id
 )
-from app.utils.serialize import serialize_gruppe, serialize_challenge
-from repositories.membership_repository import find_memberships_by_group
-from utils.serialize import serialize_membership
+from app.utils.serialize import serialize_gruppe, serialize_challenge, serialize_membership
 
 
 # Gruppe erstellen

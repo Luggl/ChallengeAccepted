@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from services.task_service import get_task_logic, complete_task_logic, vote_logic, generate_survival_tasks_for_all_challenges
+from app.services.task_service import get_task_logic, complete_task_logic, vote_logic, generate_survival_tasks_for_all_challenges
 
 # Blueprint für alle Aufgaben-Routen
 task_bp = Blueprint("task", __name__)
