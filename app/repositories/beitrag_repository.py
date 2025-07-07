@@ -36,3 +36,12 @@ def create_beitrag(beitrag):
         session.add(beitrag)
         session.commit()
         return beitrag
+
+def is_user_beitrag_ersteller(user_id, beitrag_id):
+    with SessionLocal() as session:
+        beitrag = session.query(Beitrag).get(beitrag_id)
+        aufgabenerfuellung = session.query(Aufgabenerfuellung).get(beitrag.erfuellung_id)
+        if aufgabenerfuellung.user_id == user_id:
+            return True
+        else:
+            return False
