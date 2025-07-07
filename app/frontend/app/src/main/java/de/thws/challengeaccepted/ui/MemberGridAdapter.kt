@@ -11,7 +11,7 @@ import com.bumptech.glide.Glide
 import de.thws.challengeaccepted.R
 import de.thws.challengeaccepted.data.entities.User
 
-class MemberAdapter : ListAdapter<User, MemberAdapter.MemberViewHolder>(MemberDiffCallback) {
+class MemberGridAdapter : ListAdapter<User, MemberGridAdapter.MemberViewHolder>(MemberDiffCallback) {
 
     class MemberViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val name: TextView = view.findViewById(R.id.tvMemberName)
@@ -22,14 +22,14 @@ class MemberAdapter : ListAdapter<User, MemberAdapter.MemberViewHolder>(MemberDi
             if (!user.profilbild.isNullOrEmpty()) {
                 Glide.with(image.context).load(user.profilbild).into(image)
             } else {
-                image.setImageResource(R.drawable.profile_picture) // Fallback
+                image.setImageResource(R.drawable.profile_picture)
             }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MemberViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_member, parent, false)
+            .inflate(R.layout.item_member_grid, parent, false)
         return MemberViewHolder(view)
     }
 
