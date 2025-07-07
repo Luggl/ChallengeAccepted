@@ -1,4 +1,5 @@
 package de.thws.challengeaccepted
+
 import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageButton
@@ -8,10 +9,9 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 
-
 class SurvivalIntensityActivity : AppCompatActivity() {
 
-    //Views
+    // Views
     private lateinit var tvExerciseName: TextView
     private lateinit var ivExerciseIcon: ImageView
     private lateinit var tvEasy: TextView
@@ -20,13 +20,15 @@ class SurvivalIntensityActivity : AppCompatActivity() {
     private lateinit var btnBack: ImageView
     private lateinit var btnConfirm: ImageButton
 
-    //Aktueller Zustand
-    private var selectedLevel: String="easy"
-    private var currentIndex=0
+    // Zustand
+    private var selectedLevel: String = "easy"
+    private var currentIndex = 0
     private lateinit var exercises: List<String>
-    private val intensityMap= mutableMapOf<String, String>()
+    private val intensityMap = mutableMapOf<String, String>()
 
-    // Zentrale Icon-Zuweisung
+    private var groupId: String = ""
+
+    // Icon-Zuweisung
     private val exerciseIcons = mapOf(
         "Push-Ups" to R.drawable.pushups_icon,
         "Sit-Ups" to R.drawable.situps_icon,
@@ -36,36 +38,36 @@ class SurvivalIntensityActivity : AppCompatActivity() {
         "Burpees" to R.drawable.burpees_icon
     )
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_survival_intensity)
 
-        //Views referenzieren
-        tvExerciseName=findViewById(R.id.tv_exercise_name)
-        ivExerciseIcon=findViewById(R.id.iv_exercise_icon)
+        // groupId aus vorherigem Intent holen
+        groupId = intent.getStringExtra("groupId") ?: ""
+
+        // Views referenzieren
+        tvExerciseName = findViewById(R.id.tv_exercise_name)
+        ivExerciseIcon = findViewById(R.id.iv_exercise_icon)
         tvEasy = findViewById(R.id.tv_easy)
         tvMedium = findViewById(R.id.tv_medium)
         tvHard = findViewById(R.id.tv_hard)
         btnBack = findViewById(R.id.btn_back)
         btnConfirm = findViewById(R.id.btn_confirm_selection)
 
-        //Auswahl initial setzen
-        //updateSelectionUI()
-
-        //ausgewählte Übungen aus vorherigen Seite holen
-        exercises=intent.getStringArrayListExtra("selectedExercises")?: arrayListOf()
-        if (exercises.isEmpty()){
-            Toast.makeText(this,"Keine Übungen ausgewählt",Toast.LENGTH_SHORT).show()
+        // Übungen aus vorherigem Intent holen
+        exercises = intent.getStringArrayListExtra("selectedExercises") ?: arrayListOf()
+        if (exercises.isEmpty()) {
+            Toast.makeText(this, "Keine Übungen ausgewählt", Toast.LENGTH_SHORT).show()
             finish()
             return
         }
-        //Erste Übung anzeigen
+
+        // Erste Übung anzeigen
         showExercise()
         updateSelectionUI()
 
-        //klicklistener für die Auswahl
+        // Klicklistener für Auswahl
         tvEasy.setOnClickListener {
             selectedLevel = "easy"
             updateSelectionUI()
@@ -78,9 +80,11 @@ class SurvivalIntensityActivity : AppCompatActivity() {
             selectedLevel = "hard"
             updateSelectionUI()
         }
+
         btnBack.setOnClickListener {
             if (currentIndex == 0) {
                 val intent = Intent(this, SurvivalActivitiesActivity::class.java)
+                intent.putExtra("groupId", groupId)
                 startActivity(intent)
                 finish()
             } else {
@@ -90,49 +94,56 @@ class SurvivalIntensityActivity : AppCompatActivity() {
                 updateSelectionUI()
             }
         }
-        // Bestätigungs-Button: Auswahl verwenden
-        btnConfirm.setOnClickListener {
-            val currentExercise=exercises[currentIndex]
-            intensityMap[currentExercise]=selectedLevel
 
-            if (currentIndex<exercises.size-1){
+        btnConfirm.setOnClickListener {
+            val currentExercise = exercises[currentIndex]
+            intensityMap[currentExercise] = selectedLevel
+
+            if (currentIndex < exercises.size - 1) {
                 currentIndex++
-                selectedLevel="easy"
+                selectedLevel = intensityMap[exercises[currentIndex]] ?: "easy"
                 showExercise()
                 updateSelectionUI()
-            }else{
-                //alle Übungen abgeschlossen -> weitergeben
+            } else {
+                // Fertig! -> weitergeben an nächste Activity
                 Toast.makeText(this, "Fertig! Ausgewählt: $intensityMap", Toast.LENGTH_SHORT).show()
-                val intent=Intent(this, SurvivalCreateChallengeOverviewActivity::class.java)
+                val intent = Intent(this, SurvivalCreateChallengeOverviewActivity::class.java)
                 intent.putExtra("intensities", HashMap(intensityMap))
+                intent.putExtra("groupId", groupId)
                 startActivity(intent)
                 finish()
             }
         }
+
         // Bottom Navigation
         val navGroup = findViewById<ImageView>(R.id.nav_group)
         navGroup.setOnClickListener {
             val intent = Intent(this, GroupOverviewActivity::class.java)
+            intent.putExtra("groupId", groupId)
             startActivity(intent)
         }
 
         val navHome = findViewById<ImageView>(R.id.nav_home)
         navHome.setOnClickListener {
             val intent = Intent(this, DashboardActivity::class.java)
+            intent.putExtra("groupId", groupId)
             startActivity(intent)
         }
 
         val navProfile = findViewById<ImageView>(R.id.nav_profile)
         navProfile.setOnClickListener {
-            startActivity(Intent(this, ProfileActivity::class.java))
+            val intent = Intent(this, ProfileActivity::class.java)
+            intent.putExtra("groupId", groupId)
+            startActivity(intent)
         }
     }
-    private fun showExercise(){
-        val exercise=exercises[currentIndex]
-        tvExerciseName.text=exercise
-        ivExerciseIcon.setImageResource(exerciseIcons[exercise]?: R.drawable.default_icon)
+
+    private fun showExercise() {
+        val exercise = exercises[currentIndex]
+        tvExerciseName.text = exercise
+        ivExerciseIcon.setImageResource(exerciseIcons[exercise] ?: R.drawable.default_icon)
     }
-    // UI-Aktualisierung: Rahmen setzen je nach Auswahl
+
     private fun updateSelectionUI() {
         val selectedDrawable = R.drawable.blue_frame
         val defaultDrawable = R.drawable.bright_grey_frame

@@ -9,6 +9,8 @@ import androidx.lifecycle.viewModelScope
 import de.thws.challengeaccepted.models.ChallengeCreateResponse
 import kotlinx.coroutines.launch
 import de.thws.challengeaccepted.data.repository.ChallengeRepository
+import de.thws.challengeaccepted.models.SurvivalChallengeRequest
+import de.thws.challengeaccepted.network.ChallengeService
 
 
 class CreateChallengeViewModel(application: Application) : AndroidViewModel(application) {
@@ -22,6 +24,16 @@ class CreateChallengeViewModel(application: Application) : AndroidViewModel(appl
             try {
                 val res = repo.createStandardChallenge(groupId, req)
                 _challengeResult.postValue(Result.success(res))
+            } catch (e: Exception) {
+                _challengeResult.postValue(Result.failure(e))
+            }
+        }
+    }
+    fun createSurvivalChallenge(groupId: String, request: SurvivalChallengeRequest) {
+        viewModelScope.launch {
+            try {
+                val response = repo.createSurvivalChallenge(groupId, request)
+                _challengeResult.postValue(Result.success(response))
             } catch (e: Exception) {
                 _challengeResult.postValue(Result.failure(e))
             }
