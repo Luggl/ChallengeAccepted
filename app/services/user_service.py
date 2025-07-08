@@ -234,11 +234,10 @@ def save_profilbild(user_id, profilbild):
         os.makedirs(UPLOAD_ROOT, exist_ok=True)
 
         full_path = UPLOAD_ROOT / filename
-        absolute_path = str(full_path.resolve())
 
         profilbild.save(full_path)
 
-        SERVER_URL = "http://138.199.220.111"
+        SERVER_URL = "http://138.199.220.111/media"
 
         relative_url = "/" + str(PurePosixPath(full_path.relative_to(BASE_DIR)))
         absolute_url = SERVER_URL + relative_url
