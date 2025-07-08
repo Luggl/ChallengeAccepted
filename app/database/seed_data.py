@@ -4,8 +4,8 @@ import random
 
 from flask_sqlalchemy.session import Session
 from werkzeug.security import generate_password_hash
-from app.database.database import SessionLocal
-from app.database.models import User, Gruppe, Membership
+from database.database import SessionLocal
+from database.models import User, Gruppe, Membership
 
 
 def gen_uuid():
