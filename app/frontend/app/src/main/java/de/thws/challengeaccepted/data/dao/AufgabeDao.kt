@@ -15,4 +15,7 @@ interface AufgabeDao {
     // Gibt alle Aufgaben für eine Challenge als Flow zurück
     @Query("SELECT * FROM aufgaben WHERE challengeId = :challengeId")
     fun getAufgabenForChallengeAsFlow(challengeId: String): Flow<List<Aufgabe>>
+
+    @Query("DELETE FROM aufgaben")
+    suspend fun clearAll()
 }

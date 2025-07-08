@@ -25,4 +25,7 @@ interface UserDao {
 
     @Query("SELECT * FROM users WHERE userId IN (:userIds)")
     fun getUsersByIdsAsFlow(userIds: List<String>): Flow<List<User>>
+
+    @Query("DELETE FROM users")
+    suspend fun clearAll()
 }

@@ -82,7 +82,7 @@ class RecordActivity : AppCompatActivity() {
         if (allPermissionsGranted()) {
             startCamera()
         } else {
-            val REQUIRED_PERMISSIONS = null
+//            val REQUIRED_PERMISSIONS = null
             requestPermissions.launch(REQUIRED_PERMISSIONS)
         }
 

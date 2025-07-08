@@ -62,7 +62,7 @@ class GroupDashboardActivity : AppCompatActivity() {
         val challengeCardActive = findViewById<View>(R.id.challenge_card_active)
         val btnCreateChallenge = findViewById<Button>(R.id.btn_create_challenge)
         val challengeLaufzeit = findViewById<TextView>(R.id.tv_challenge_laufzeit)
-
+        val deadMembersLayout = findViewById<LinearLayout>(R.id.ll_dead_members)
         // Adapter einrichten
         groupFeedAdapter = GroupFeedAdapter()
         feedRecycler.layoutManager = LinearLayoutManager(this)
@@ -91,6 +91,13 @@ class GroupDashboardActivity : AppCompatActivity() {
                 if (challenge != null && challenge.active) {
                     challengeCardActive.visibility = View.VISIBLE
                     btnCreateChallenge.visibility = View.GONE
+
+                    if (challenge.typ == "survival") {
+                        deadMembersLayout.visibility = View.VISIBLE
+                    } else {
+                        deadMembersLayout.visibility = View.GONE
+                    }
+
                     val daysSinceStart = TimeUnit.MILLISECONDS.toDays(System.currentTimeMillis() - challenge.startdatum).coerceAtLeast(0)
                     challengeLaufzeit.text = "Challenge läuft seit $daysSinceStart Tagen"
                 } else {

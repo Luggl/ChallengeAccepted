@@ -41,10 +41,19 @@ abstract class AppDatabase : RoomDatabase() {
                     context.applicationContext,
                     AppDatabase::class.java,
                     "challenge_accepted_database" // Name der Datenbank-Datei
-                ).build()
+                ).fallbackToDestructiveMigration() .build()
                 INSTANCE = instance
                 instance
             }
         }
     }
+    suspend fun clearAllData() {
+        beitragDao().clearAll()     // Beiträge referenzieren Aufgaben, Gruppen etc.
+        aufgabeDao().clearAll()     // Aufgaben referenzieren Challenges
+        challengeDao().clearAll()   // Challenges referenzieren Gruppen
+        membershipDao().clearAll()  // Memberships referenzieren User + Gruppen
+        gruppeDao().clearAll()      // Gruppen werden ganz am Ende gelöscht
+        userDao().clearAll()        // User ggf. zuletzt (je nach App-Logik)
+    }
+
 }

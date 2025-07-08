@@ -23,4 +23,6 @@ interface BeitragDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAllBeitraege(beitraege: List<BeitragEntity>)
 
+    @Query("DELETE FROM beitraege")
+    suspend fun clearAll()
 }

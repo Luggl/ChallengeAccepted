@@ -21,4 +21,7 @@ interface ChallengeDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAllChallenges(challenges: List<Challenge>)
+
+    @Query("DELETE FROM challenges")
+    suspend fun clearAll()
 }

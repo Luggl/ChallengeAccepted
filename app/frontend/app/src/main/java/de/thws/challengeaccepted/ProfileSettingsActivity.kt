@@ -116,11 +116,19 @@ class ProfileSettingsActivity : AppCompatActivity() {
             AlertDialog.Builder(this)
                 .setMessage("Wirklich abmelden?")
                 .setPositiveButton("Abmelden") { _, _ ->
-                    prefs.edit().clear().apply()
-                    val intent = Intent(this, LoginActivity::class.java)
-                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                    startActivity(intent)
-                    finish()
+                    // 1. Datenbank löschen (suspend → Coroutine!)
+                    lifecycleScope.launch {
+                        AppDatabase.getDatabase(applicationContext).clearAllData()
+
+                        // 2. SharedPreferences löschen
+                        prefs.edit().clear().apply()
+
+                        // 3. Navigation
+                        val intent = Intent(this@ProfileSettingsActivity, LoginActivity::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        startActivity(intent)
+                        finish()
+                    }
                 }
                 .setNegativeButton("Abbrechen", null)
                 .show()
