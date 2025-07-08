@@ -115,9 +115,9 @@ def complete_task_logic(erfuellung_id, user_id, description, video_file):
     # Videopfad in Aufgabenerfüllung speichern
     videopath = safe_video_success["data"]
 
-    safe_video_path_success = update_task_by_video_url(erfuellung_id_uuid, videopath["url"])
-    if not safe_video_path_success:
-        warnungen.append("Thumbnailpfad konnte nicht korrekt erstellt werden")
+    video_update_result = update_task_by_video_url(erfuellung_id_uuid, videopath["url"])
+    if not video_update_result:
+        warnungen.append("Videopfad konnte nicht korrekt gespeichert werden")
 
     #thumbnail erzeugen und in Aufgabenerfüllung speichern
     thumbnailpath = generate_video_thumbnail(videopath["path"])
