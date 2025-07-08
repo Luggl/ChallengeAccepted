@@ -55,7 +55,8 @@ class RegisterActivity : AppCompatActivity() {
             // Das Backend ist jetzt die alleinige Quelle der Wahrheit für diese Logik.
 
             // Jetzt API-Aufruf
-            registerUser(user, mail, pw)
+            val capitalizedUser = user.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
+            registerUser(capitalizedUser, mail, pw)
         }
 
         alreadyAccount.setOnClickListener {
