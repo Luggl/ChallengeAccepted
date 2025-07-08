@@ -131,8 +131,8 @@ def update_user():
     email = request.form.get("email")
     profilbild = request.files.get("profilbild")
 
-    if username is None or not username.strip() \
-    and email is None or not email.strip() \
+    if (username is None or not username.strip()) \
+    and (email is None or not email.strip()) \
     and not profilbild :
         return jsonify({"error": "Keine Daten übergeben."}), 400
 

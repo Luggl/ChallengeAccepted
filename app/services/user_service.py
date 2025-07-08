@@ -210,6 +210,7 @@ def update_user_logic(user_id_str, username, email, profilbild):
         if not result["success"]:
             return response(False, error=result["error"])
         user.profilbild_url = result["data"]
+        updated = True
 
     if not updated:
         return response(False, error="Keine gültigen Änderungen übergeben")
@@ -229,8 +230,11 @@ def save_profilbild(user_id, profilbild):
         full_path = os.path.join(upload_path, filename)
         profilbild.save(full_path)
 
-        relative_path = os.path.join("profilbilder", filename)
-        return response(True, data=relative_path)
+        SERVER_URL = "http://138.199.220.111"
+
+        relative_url = f"/media/profilbilder/{filename}"
+        absolute_url = SERVER_URL + relative_url
+        return response(True, data=absolute_url)
 
     except Exception as e:
         return response(False, error=f"Fehler beim Speichern des Bilds: {str(e)}")
