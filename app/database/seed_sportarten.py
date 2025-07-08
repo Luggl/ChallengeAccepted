@@ -1,8 +1,8 @@
 import json
 import uuid
 from app import create_app
-from database.database import SessionLocal
-from database.models import Sportart, SportartIntervall, StatusUnit, Schwierigkeit
+from app.database.database import SessionLocal
+from app.database.models import Sportart, SportartIntervall, StatusUnit, Schwierigkeit
 
 NAMESPACE = uuid.UUID("12345678-1234-5678-1234-567812345678")
 
