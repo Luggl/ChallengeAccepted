@@ -1,4 +1,5 @@
 import os
+from pathlib import Path, PurePosixPath
 
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
@@ -24,7 +25,13 @@ from app.utils.auth_utils import get_uuid_formated_id
 from app.utils.password import is_password_strong
 
 ALLOWED_UPDATE_FIELDS = {"username", "email", "profilbild_url"}
-UPLOAD_ROOT = "media/profilbilder"
+if os.name == "nt": #Windows
+    BASE_DIR = Path(__file__).resolve().parent
+    UPLOAD_ROOT = BASE_DIR / "media" / "profilbilder"
+else:  # Linux
+    BASE_DIR = Path("/media")
+    UPLOAD_ROOT = BASE_DIR / "profilbilder"
+
 
 
 # Registrierung eines neuen Users
@@ -230,15 +237,16 @@ def save_profilbild(user_id, profilbild):
         return response(False, error="Nur Bilddateien erlaubt")
     try:
         filename = secure_filename(f"{user_id}.jpg")
-        upload_path = os.path.abspath(UPLOAD_ROOT)
-        os.makedirs(upload_path, exist_ok=True)
+        os.makedirs(UPLOAD_ROOT, exist_ok=True)
 
-        full_path = os.path.join(upload_path, filename)
+        full_path = UPLOAD_ROOT / filename
+        absolute_path = str(full_path.resolve())
+
         profilbild.save(full_path)
 
         SERVER_URL = "http://138.199.220.111"
 
-        relative_url = f"/media/profilbilder/{filename}"
+        relative_url = "/" + str(PurePosixPath(full_path.relative_to(BASE_DIR)))
         absolute_url = SERVER_URL + relative_url
         return response(True, data=absolute_url)
 

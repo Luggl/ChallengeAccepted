@@ -1,3 +1,5 @@
+from sqlalchemy.orm import joinedload
+
 from app.database.models import Membership
 from app.database.database import SessionLocal
 
@@ -15,7 +17,10 @@ def find_memberships_by_user(user_id):
 def find_memberships_by_group(gruppe_id):
     """Finde alle Mitglieder einer Gruppe."""
     with SessionLocal() as session:
-        return session.query(Membership).filter_by(gruppe_id=gruppe_id).all()
+        return session.query(Membership) \
+            .options(joinedload(Membership.user)) \
+            .filter_by(gruppe_id=gruppe_id)\
+            .all()
 
 def create_membership(membership):
     """Erstelle und speichere eine neue Membership."""
