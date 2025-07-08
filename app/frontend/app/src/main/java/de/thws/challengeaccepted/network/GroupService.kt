@@ -22,4 +22,11 @@ interface GroupService {
 
     @GET("groups")
     suspend fun getGroupOverview(): GroupOverviewResponse
+
+    @POST("vote")
+    suspend fun voteBeitragGroup(
+        @Query("beitrag_id") beitragId: String,
+        @Body voteRequest: VoteRequest
+    )
+
 }

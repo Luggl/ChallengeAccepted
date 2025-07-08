@@ -12,6 +12,7 @@ import de.thws.challengeaccepted.data.entities.Gruppe
 import de.thws.challengeaccepted.data.entities.Membership
 import de.thws.challengeaccepted.data.entities.User
 import de.thws.challengeaccepted.models.GroupResponse
+import de.thws.challengeaccepted.models.VoteRequest
 import de.thws.challengeaccepted.network.GroupService
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
@@ -86,7 +87,9 @@ class GroupRepository(
             aufgabe = response.aufgabe
         )
     }
-
+    suspend fun voteBeitragGroup(beitragId: String, voteRequest: VoteRequest) {
+        service.voteBeitragGroup(beitragId, voteRequest)
+    }
     suspend fun refreshGroupData(groupId: String) {
         try {
             val response = service.getGroupFeed(groupId)
@@ -153,11 +156,13 @@ class GroupRepository(
             // Feed speichern
             val feedEntities = data.feed.map { feedItem ->
                 val beitrag = BeitragEntity(
-                    beitragId = feedItem.beitrag_id,
-                    gruppeId = group.gruppeId,
+                    beitrag_Id = feedItem.beitrag_id,
+                    gruppe_id = group.gruppeId,
                     beschreibung = feedItem.beschreibung,
-                    videoUrl = feedItem.video_url,
-                    imageUrl = feedItem.thumbnail_url
+                    video_url = feedItem.video_url,
+                    erstellt_am    = feedItem.erstellt_am,
+                    thumbnail_url = feedItem.thumbnail_url,
+                    user_id = feedItem.user_id,
                 )
                 Log.d("GroupRepo", "Speichere Feed/Beitrag: $beitrag")
                 beitrag

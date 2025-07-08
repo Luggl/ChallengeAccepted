@@ -14,5 +14,7 @@ data class Beitrag(
     val erstellt_am: String?,
     val gruppe_id: String,
     val user_id: String,
-    val video_url: String?
+    val video_url: String?,
+    val thumbnail_url: String?,
+    var user_vote: String? = null
 )

@@ -11,13 +11,13 @@ import kotlinx.coroutines.flow.Flow
 interface BeitragDao {
 
     // Gibt alle Beiträge für eine Gruppe als Flow zurück
-    @Query("SELECT * FROM beitraege WHERE gruppeId = :gruppeId ORDER BY beitragId DESC") // Annahme: Neueste zuerst
+    @Query("SELECT * FROM beitraege WHERE gruppe_id = :gruppeId ORDER BY beitrag_Id DESC") // Annahme: Neueste zuerst
     fun getBeitraegeForGroupAsFlow(gruppeId: String): Flow<List<BeitragEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(beitraege: List<BeitragEntity>)
 
-    @Query("DELETE FROM beitraege WHERE gruppeId = :gruppeId")
+    @Query("DELETE FROM beitraege WHERE gruppe_id = :gruppeId")
     suspend fun clearBeitraegeForGroup(gruppeId: String)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

@@ -13,8 +13,10 @@ import androidx.recyclerview.widget.RecyclerView
 import de.thws.challengeaccepted.R
 import de.thws.challengeaccepted.models.Beitrag
 
-class FeedAdapter(private val feedList: List<Beitrag>) :
-    RecyclerView.Adapter<FeedAdapter.FeedViewHolder>() {
+class FeedAdapter(
+    private var items: List<Beitrag>,
+    private val onVote: (beitragId: String, vote: String) -> Unit
+) : RecyclerView.Adapter<FeedAdapter.FeedViewHolder>() {
 
     class FeedViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val tvBeschreibung: TextView = view.findViewById(R.id.tvBeschreibung)
@@ -30,49 +32,80 @@ class FeedAdapter(private val feedList: List<Beitrag>) :
         return FeedViewHolder(view)
     }
 
+    override fun getItemCount() = items.size
+
     override fun onBindViewHolder(holder: FeedViewHolder, position: Int) {
-        val beitrag = feedList[position]
+        val beitrag = items[position]
         holder.tvBeschreibung.text = beitrag.beschreibung
 
         if (!beitrag.video_url.isNullOrBlank()) {
             holder.feedImage.visibility = View.GONE
             holder.feedVideo.visibility = View.VISIBLE
 
-            // -- WICHTIG: Video-URL ggf. mit Server-Adresse ergänzen --
             val videoUrl = if (beitrag.video_url.startsWith("/")) {
-                "http://192.168.178.37:5000${
-                    beitrag.video_url.replace(
-                        "\\",
-                        "/"
-                    )
-                }" // Passe die Base-URL an!
+                "http://192.168.178.37:5000${beitrag.video_url.replace("\\", "/")}"
             } else {
                 beitrag.video_url
             }
-
             holder.feedVideo.setVideoPath(videoUrl)
-            holder.feedVideo.seekTo(1) // Zeigt Vorschaubild
-
-            // Optional: MediaController für Play/Pause
-            val mediaController = MediaController(holder.itemView.context)
-            mediaController.setAnchorView(holder.feedVideo)
-            holder.feedVideo.setMediaController(mediaController)
-
+            holder.feedVideo.seekTo(1)
         } else {
             holder.feedVideo.visibility = View.GONE
             holder.feedImage.visibility = View.VISIBLE
             holder.feedImage.setImageResource(R.drawable.login_background_pic)
         }
 
-        // Buttons: z.B. Listener setzen (hier nur Toast zum Test)
-        holder.btnAccepted.setOnClickListener {
-            Toast.makeText(holder.itemView.context, "Accepted geklickt!", Toast.LENGTH_SHORT).show()
-        }
-        holder.btnRejected.setOnClickListener {
-            Toast.makeText(holder.itemView.context, "Rejected geklickt!", Toast.LENGTH_SHORT).show()
+        val prefs = holder.itemView.context.getSharedPreferences("app", android.content.Context.MODE_PRIVATE)
+        val userId = prefs.getString("USER_ID", null)
+        val isOwnBeitrag = beitrag.user_id == userId
+
+        if (isOwnBeitrag) {
+            // Eigener Beitrag → beides ausgegraut
+            holder.btnAccepted.setBackgroundResource(R.drawable.button_grey)
+            holder.btnRejected.setBackgroundResource(R.drawable.button_grey)
+            holder.btnAccepted.alpha = 0.5f
+            holder.btnRejected.alpha = 0.5f
+            holder.btnAccepted.isEnabled = false
+            holder.btnRejected.isEnabled = false
+        } else {
+            // Voting-UI: Buttons wie gehabt
+            when (beitrag.user_vote) {
+                "Accepted" -> {
+                    holder.btnAccepted.setBackgroundResource(R.drawable.blue_frame)
+                    holder.btnRejected.setBackgroundResource(R.drawable.button_grey)
+                    holder.btnAccepted.alpha = 1f
+                    holder.btnRejected.alpha = 0.6f
+                }
+                "Rejected" -> {
+                    holder.btnRejected.setBackgroundResource(R.drawable.red_frame)
+                    holder.btnAccepted.setBackgroundResource(R.drawable.button_grey)
+                    holder.btnRejected.alpha = 1f
+                    holder.btnAccepted.alpha = 0.6f
+                }
+                else -> {
+                    holder.btnAccepted.setBackgroundResource(R.drawable.blue_frame)
+                    holder.btnRejected.setBackgroundResource(R.drawable.red_frame)
+                    holder.btnAccepted.alpha = 1f
+                    holder.btnRejected.alpha = 1f
+                }
+            }
+            holder.btnAccepted.isEnabled = true
+            holder.btnRejected.isEnabled = true
+
+            holder.btnAccepted.setOnClickListener {
+                if (beitrag.user_vote != "Accepted") {
+                    onVote(beitrag.beitrag_id, "Accepted")
+                }
+            }
+            holder.btnRejected.setOnClickListener {
+                if (beitrag.user_vote != "Rejected") {
+                    onVote(beitrag.beitrag_id, "Rejected")
+                }
+            }
         }
     }
-    override fun getItemCount(): Int {
-        return feedList.size
+    fun submitList(newItems: List<Beitrag>) {
+        items = newItems
+        notifyDataSetChanged()
     }
 }

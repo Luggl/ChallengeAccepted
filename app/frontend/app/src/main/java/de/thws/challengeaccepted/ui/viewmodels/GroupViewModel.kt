@@ -8,6 +8,7 @@ import de.thws.challengeaccepted.data.entities.Challenge
 import de.thws.challengeaccepted.data.entities.Gruppe
 import de.thws.challengeaccepted.data.entities.User
 import de.thws.challengeaccepted.data.repository.GroupRepository
+import de.thws.challengeaccepted.models.VoteRequest
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -49,6 +50,22 @@ class GroupViewModel(private val repository: GroupRepository) : ViewModel() {
     fun loadGroupOverview() {
         viewModelScope.launch {
             repository.refreshGroupOverview() // Holt und speichert ALLE Gruppen!
+        }
+    }
+    fun vote(beitragId: String, vote: String, userId: String, groupId: String) {
+        viewModelScope.launch {
+            try {
+                val feedList = feed.value
+                val beitrag = feedList.find { it.beitrag_Id == beitragId }
+                if (beitrag != null && beitrag.user_id == userId) {
+                    // Optional: Fehler/Toast
+                    return@launch
+                }
+                repository.voteBeitragGroup(beitragId, VoteRequest(vote))
+                repository.refreshGroupData(groupId)
+            } catch (e: Exception) {
+                // Fehlerbehandlung
+            }
         }
     }
 }

@@ -63,8 +63,17 @@ class GroupDashboardActivity : AppCompatActivity() {
         val btnCreateChallenge = findViewById<Button>(R.id.btn_create_challenge)
         val challengeLaufzeit = findViewById<TextView>(R.id.tv_challenge_laufzeit)
         val deadMembersLayout = findViewById<LinearLayout>(R.id.ll_dead_members)
-        // Adapter einrichten
-        groupFeedAdapter = GroupFeedAdapter()
+
+        // Voting-Adapter mit Callback für Accepted/Rejected
+        groupFeedAdapter = GroupFeedAdapter(emptyList()) { beitragId, vote ->
+            val prefs = getSharedPreferences("app", MODE_PRIVATE)
+            val userId = prefs.getString("USER_ID", null)
+            if (userId != null && groupId != null) {
+                groupViewModel.vote(beitragId, vote, userId, groupId)
+            } else {
+                Toast.makeText(this, "UserId oder GroupId fehlt!", Toast.LENGTH_SHORT).show()
+            }
+        }
         feedRecycler.layoutManager = LinearLayoutManager(this)
         feedRecycler.adapter = groupFeedAdapter
 
@@ -107,7 +116,7 @@ class GroupDashboardActivity : AppCompatActivity() {
             }
         }
 
-        // Feed beobachten
+        // Feed beobachten (und Voting updaten)
         lifecycleScope.launch {
             groupViewModel.feed.collect { beitragsListe ->
                 groupFeedAdapter.submitList(beitragsListe)

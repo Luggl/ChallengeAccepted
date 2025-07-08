@@ -5,9 +5,12 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "beitraege")
 data class BeitragEntity(
-    @PrimaryKey val beitragId: String,
-    val gruppeId: String, // Um Beiträge einer Gruppe zuzuordnen
+    @PrimaryKey val beitrag_Id: String,
     val beschreibung: String,
-    val videoUrl: String?,
-    val imageUrl: String? // Annahme, dass es auch ein Bild geben kann
+    val erstellt_am: String?,
+    val gruppe_id: String,
+    val user_id: String,
+    val video_url: String?,
+    val thumbnail_url: String?,
+    var user_vote: String? = null
 )

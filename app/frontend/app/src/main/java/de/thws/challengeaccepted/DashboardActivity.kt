@@ -32,14 +32,12 @@ import java.util.Locale
 class DashboardActivity : AppCompatActivity() {
 
     private val userViewModel: UserViewModel by viewModels {
-        // GEÄNDERT: Die Factory braucht jetzt nur noch das Repository
         val db = AppDatabase.getDatabase(applicationContext)
         val userService = ApiClient.getRetrofit(applicationContext).create(UserService::class.java)
         val repository = UserRepository(userService, db.userDao())
-        UserViewModelFactory(repository) // Nur noch das Repository übergeben
+        UserViewModelFactory(repository)
     }
 
-    // FeedViewModel bleibt wie gehabt
     private val feedViewModel: FeedViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,23 +45,31 @@ class DashboardActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_dashboard)
 
-        // Views holen
         val tvGreeting = findViewById<TextView>(R.id.tv_greeting)
         val tvStreak = findViewById<TextView>(R.id.tv_streak_count)
         val calendarLayout = findViewById<LinearLayout>(R.id.calendar)
         val recyclerView = findViewById<RecyclerView>(R.id.feedRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        // Token und User-ID aus SharedPreferences holen
         val prefs = getSharedPreferences("app", MODE_PRIVATE)
         val token = prefs.getString("token", null)
         val userId = prefs.getString("USER_ID", null)
 
+        // FeedAdapter einmalig erstellen und als Variable halten!
+        val feedAdapter = FeedAdapter(emptyList()) { beitragId, vote ->
+            // Voting-Callback: Hier das ViewModel aufrufen!
+            feedViewModel.vote(beitragId, vote)
+        }
+        recyclerView.adapter = feedAdapter
+
         if (token != null && userId != null) {
             // Feed laden
             feedViewModel.fetchFeed()
+
+            // Feed-Observer: Die Feed-Daten werden an den Adapter übergeben
             feedViewModel.feed.observe(this) { beitragList ->
-                recyclerView.adapter = FeedAdapter(beitragList)
+                // Adapter bekommt neue Liste
+                feedAdapter.submitList(beitragList)
             }
 
             // ViewModel mit der User-ID initialisieren

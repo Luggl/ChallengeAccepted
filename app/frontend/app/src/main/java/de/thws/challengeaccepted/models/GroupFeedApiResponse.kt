@@ -40,7 +40,7 @@ data class ApiGroupInfo(
     @SerializedName("gruppenbild")
     val gruppenbild: String?,
     val gruppenname: String,
-    val aufgabe: Boolean
+    val aufgabe: Boolean,
 )
 
 data class ApiMemberInfo(
@@ -54,8 +54,15 @@ data class ApiMemberInfo(
     val username: String
 )
 data class ApiFeedItem(
+    val aufgabe_anzahl: Int?,
+    val aufgabeSportart: String?,
+    val aufgabe_unit: String?,
     val beitrag_id: String,
     val beschreibung: String,
-    val video_url: String?,
-    val thumbnail_url: String?
+    val erstellt_am: String?,
+    val gruppe_id: String,
+    val thumbnail_url: String?,
+    val user_id: String,
+    val user_vote: String?,
+    val video_url: String?
 )
