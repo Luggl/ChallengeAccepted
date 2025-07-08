@@ -124,7 +124,7 @@ def complete_task_logic(erfuellung_id, user_id, description, video_file):
     if not thumbnailpath["success"]:
         warnungen.append("Thumbnail konnte nicht erzeugt werden")
     else:
-        update_task_thumbnail_success = update_task_by_thumbnail(erfuellung_id_uuid, thumbnailpath["data"]["path"])
+        update_task_thumbnail_success = update_task_by_thumbnail(erfuellung_id_uuid, thumbnailpath["data"]["url"])
         if not update_task_thumbnail_success:
             warnungen.append("Thumbnailpfad konnte nicht gespeichert werden")
 
