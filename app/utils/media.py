@@ -9,8 +9,8 @@ if os.name == "nt": #Windows
     BASE_DIR = Path(__file__).resolve().parent
     UPLOAD_ROOT = BASE_DIR / "media" / "aufgabenerfuellung"
 else: #Linux
-    BASE_DIR = Path("/media")
-    UPLOAD_ROOT = BASE_DIR / "aufgabenerfuellung"
+    BASE_DIR = Path("/")
+    UPLOAD_ROOT = BASE_DIR / "media" / "aufgabenerfuellung"
 
 SERVER_URL = "http://138.199.220.111"
 
