@@ -20,5 +20,5 @@ def schedule_deadline_job(scheduler, aufgabe):
     )
 
 def run_daily_survival_task():
-    from services.task_service import generate_survival_tasks_for_all_challenges
+    from app.services.task_service import generate_survival_tasks_for_all_challenges
     generate_survival_tasks_for_all_challenges()

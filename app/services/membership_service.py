@@ -5,12 +5,12 @@ from app.repositories.membership_repository import (
 )
 from app.utils.response import response
 from app.database.models import AufgabeStatus
-from repositories.challenge_repository import find_active_challenge_by_group
-from repositories.group_repository import find_group_by_id
-from repositories.task_repository import find_aufgabenerfuellung_by_challenge_and_date_and_user
-from utils.auth_utils import get_uuid_formated_id
-from utils.serialize import serialize_gruppe
-from utils.time import date_today
+from app.repositories.challenge_repository import find_active_challenge_by_group
+from app.repositories.group_repository import find_group_by_id
+from app.repositories.task_repository import find_aufgabenerfuellung_by_challenge_and_date_and_user
+from app.utils.auth_utils import get_uuid_formated_id
+from app.utils.serialize import serialize_gruppe
+from app.utils.time import date_today
 
 
 # User aus Gruppe entfernen
