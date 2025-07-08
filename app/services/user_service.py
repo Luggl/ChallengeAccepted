@@ -198,9 +198,15 @@ def update_user_logic(user_id_str, username, email, profilbild):
 
     updated = False
 
-    if username and username != getattr(user, "username"):
+    if username and username != user.username:
+        existing_user = find_user_by_username(username)
+
+        if existing_user and existing_user.user_id != user.user_id:
+            return response(False, error="Username ist bereits vergeben.")
+
         user.username = username
         updated = True
+
     if email and email != getattr(user, "email"):
         user.email = email
         updated = True
