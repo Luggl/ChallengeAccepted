@@ -4,9 +4,13 @@ from app.repositories.membership_repository import (
     find_memberships_by_user
 )
 from app.utils.response import response
+from app.database.models import AufgabeStatus
+from repositories.challenge_repository import find_active_challenge_by_group
 from repositories.group_repository import find_group_by_id
+from repositories.task_repository import find_aufgabenerfuellung_by_challenge_and_date_and_user
 from utils.auth_utils import get_uuid_formated_id
 from utils.serialize import serialize_gruppe
+from utils.time import date_today
 
 
 # User aus Gruppe entfernen
@@ -30,5 +34,26 @@ def get_membership_overview_logic(user_id):
     groups = []
     for membership in memberships:
         group = find_group_by_id(membership.gruppe_id)
-        groups.append(serialize_gruppe(group))
+        serialized_group = serialize_gruppe(group)
+
+        # Prüfung auf offene Aufgabe
+        aufgabe_offen = False
+        challenge = find_active_challenge_by_group(group.gruppe_id)
+        if challenge:
+            erfuellung = find_aufgabenerfuellung_by_challenge_and_date_and_user(
+                challenge.challenge_id,
+                date_today(),
+                user_id_uuid
+            )
+
+            if (
+                    erfuellung
+                    and erfuellung.status == AufgabeStatus.offen
+                    and erfuellung.gruppe_id == group.gruppe_id
+            ):
+                aufgabe_offen = True
+
+        serialized_group["aufgabe"] = aufgabe_offen
+        groups.append(serialized_group)
+
     return response(True, groups)
