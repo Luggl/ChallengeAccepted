@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="100dp"
-    android:background="@drawable/grey_background"
-    android:gravity="center_vertical"
-    android:orientation="horizontal"
-    android:padding="8dp">
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/rootLayout"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="@drawable/green_frame"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        android:layout_marginBottom="12dp">
 
     <!-- Gruppenbild -->
-    <ImageView
+        <ImageView
         android:id="@+id/ivGroupImage"
         android:layout_width="70dp"
         android:layout_height="70dp"
@@ -21,7 +22,7 @@
         android:src="@drawable/group_profile_picture" />
 
     <!-- Gruppenname -->
-    <TextView
+        <TextView
         android:id="@+id/tvGroupName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -33,6 +34,5 @@
         android:textSize="18sp"
         android:textStyle="bold" />
 
-    <!-- Indikatoren (optional, für Zusatzinfos wie Streak etc.) -->
-    <!-- Hier kannst du weitere Views einbauen -->
-</LinearLayout>
+    <!-- Platz für weitere Indikatoren (optional) -->
+    </LinearLayout>

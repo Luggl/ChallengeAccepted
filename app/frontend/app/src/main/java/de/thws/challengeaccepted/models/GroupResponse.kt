@@ -5,5 +5,6 @@ data class GroupResponse(
     val gruppenname: String,
     val beschreibung: String?,
     val erstellt_am: String?,
-    val gruppenbild: String?
+    val gruppenbild: String?,
+    val aufgabe: Boolean
 )

@@ -82,7 +82,8 @@ class GroupRepository(
             beschreibung = response.beschreibung,
             gruppenbild = response.gruppenbild,
             einladungscode = "",
-            einladungscodeGueltigBis = 0L
+            einladungscodeGueltigBis = 0L,
+            aufgabe = response.aufgabe
         )
     }
 
@@ -105,7 +106,8 @@ class GroupRepository(
                 beschreibung = group.beschreibung,
                 gruppenbild = group.gruppenbild,
                 einladungscode = "",
-                einladungscodeGueltigBis = 0L
+                einladungscodeGueltigBis = 0L,
+                aufgabe = group.aufgabe
             )
             Log.d("GroupRepo", "Speichere Gruppe: $groupEntity")
             gruppeDao.insertGruppe(groupEntity)

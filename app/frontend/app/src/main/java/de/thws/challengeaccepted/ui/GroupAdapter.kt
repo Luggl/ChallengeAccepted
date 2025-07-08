@@ -19,6 +19,7 @@ class GroupAdapter(
     class GroupViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val name: TextView = view.findViewById(R.id.tvGroupName)
         private val image: ImageView = view.findViewById(R.id.ivGroupImage)
+        private val rootLayout: View = view.findViewById(R.id.rootLayout)
 
         fun bind(gruppe: Gruppe, onClick: (Gruppe) -> Unit) {
             name.text = gruppe.gruppenname
@@ -26,8 +27,16 @@ class GroupAdapter(
             if (!gruppe.gruppenbild.isNullOrEmpty()) {
                 Glide.with(image.context).load(gruppe.gruppenbild).into(image)
             } else {
-                image.setImageResource(R.drawable.group_profile_picture) // Fallback-Bild
+                image.setImageResource(R.drawable.group_profile_picture)
             }
+
+            // Dynamischer Rahmen:
+            if (gruppe.aufgabe) {
+                rootLayout.setBackgroundResource(R.drawable.red_frame)
+            } else {
+                rootLayout.setBackgroundResource(R.drawable.green_frame)
+            }
+
             itemView.setOnClickListener { onClick(gruppe) }
         }
     }

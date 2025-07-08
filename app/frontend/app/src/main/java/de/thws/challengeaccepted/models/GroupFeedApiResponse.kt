@@ -39,7 +39,8 @@ data class ApiGroupInfo(
     val gruppeId: String,
     @SerializedName("gruppenbild")
     val gruppenbild: String?,
-    val gruppenname: String
+    val gruppenname: String,
+    val aufgabe: Boolean
 )
 
 data class ApiMemberInfo(

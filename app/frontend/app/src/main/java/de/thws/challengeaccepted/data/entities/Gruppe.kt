@@ -10,5 +10,6 @@ data class Gruppe(
     val beschreibung: String?,
     val gruppenbild: String?,
     val einladungscode: String,
-    val einladungscodeGueltigBis: Long // Timestamp in Millisekunden
+    val einladungscodeGueltigBis: Long,
+    val aufgabe: Boolean// Timestamp in Millisekunden
 )
