@@ -4,7 +4,7 @@ from sqlalchemy import Column, String, Integer, Boolean, Date, ForeignKey, Forei
 from sqlalchemy.dialects.mysql import DATETIME
 from sqlalchemy.dialects.sqlite import BLOB
 from sqlalchemy.orm import relationship, foreign, configure_mappers
-from database.database import Base
+from app.database.database import Base
 from enum import Enum
 
 
