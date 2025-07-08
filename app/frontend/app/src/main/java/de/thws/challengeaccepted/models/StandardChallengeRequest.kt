@@ -3,8 +3,8 @@ package de.thws.challengeaccepted.models
 // Ein einzelner Eintrag für Sportart + Start-/Zielintensität
 data class SportartIntensity(
     val sportart_id: String,
-    val startintensität: Int,
-    val zielintensität: Int
+    val startintensität: String,
+    val zielintensität: String
 )
 
 // Der komplette Request für die Challenge-Erstellung

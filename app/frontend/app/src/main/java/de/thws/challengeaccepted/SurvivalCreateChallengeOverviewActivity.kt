@@ -100,11 +100,11 @@ class SurvivalCreateChallengeOverviewActivity : AppCompatActivity() {
             // --- Sportarten-IDs zuweisen ---
             val sportartNameToId = mapOf(
                 "Push-Ups" to "5cf913b2-d0b8-543f-bf61-ba209f6c0fad",
-                "Sit-Ups" to "7e042c26-b6e6-5420-b0c8-d2e543108976",
+                "Sit-Ups" to "7e042c26-b6e6-542d-b0c8-d2e543108976",
                 "Squats" to "67727a0a-3bb5-5f6a-9bba-7a12c4adf4cc",
                 "Lunges" to "a31eece7-3623-5ae6-ba43-3210fe706e32",
                 "Burpees" to "2c73675b-996c-5020-a0ef-e17dda08b9fc",
-                "Planks" to "0e9dcf37-eb51-548d-8480-4fbe9bf0aef4"
+                "Plank" to "0e9dcf37-eb51-548d-8480-4fbe9bf0aef4"
             )
 
             // --- SurvivalChallengeRequest bauen ---

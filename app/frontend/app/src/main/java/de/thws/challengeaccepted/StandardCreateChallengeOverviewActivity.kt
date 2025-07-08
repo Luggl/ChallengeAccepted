@@ -3,10 +3,12 @@ package de.thws.challengeaccepted
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.*
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
+import com.google.gson.Gson
 import de.thws.challengeaccepted.data.database.AppDatabase
 import de.thws.challengeaccepted.data.repository.ChallengeRepository
 import de.thws.challengeaccepted.models.StandardChallengeRequest
@@ -106,7 +108,7 @@ class StandardCreateChallengeOverviewActivity : AppCompatActivity() {
         // Sportarten Mapping
         val sportartNameToId = mapOf(
             "Push-Ups" to "5cf913b2-d0b8-543f-bf61-ba209f6c0fad",
-            "Sit-Ups" to "7e042c26-b6e6-5420-b0c8-d2e543108976",
+            "Sit-Ups" to "7e042c26-b6e6-542d-b0c8-d2e543108976",
             "Squats" to "67727a0a-3bb5-5f6a-9bba-7a12c4adf4cc",
             "Lunges" to "a31eece7-3623-5ae6-ba43-3210fe706e32",
             "Burpees" to "2c73675b-996c-5020-a0ef-e17dda08b9fc",
@@ -124,8 +126,8 @@ class StandardCreateChallengeOverviewActivity : AppCompatActivity() {
                 sportartNameToId[name]?.let { id ->
                     SportartIntensity(
                         sportart_id = id,
-                        startintensität = pair.first,
-                        zielintensität = pair.second
+                        startintensität = pair.first.toString(),
+                        zielintensität = pair.second.toString()
                     )
                 }
             }
@@ -140,7 +142,7 @@ class StandardCreateChallengeOverviewActivity : AppCompatActivity() {
                 enddatum = formatIsoDate(endDate!!),
                 sportarten = sportarten
             )
-
+            Log.d("ChallengeRequest", Gson().toJson(request))
             createChallengeViewModel.createStandardChallenge(incomingGroupId, request)
         }
 
