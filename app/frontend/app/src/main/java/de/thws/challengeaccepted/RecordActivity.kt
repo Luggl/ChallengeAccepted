@@ -83,7 +83,12 @@ class RecordActivity : AppCompatActivity() {
             startCamera()
         } else {
 //            val REQUIRED_PERMISSIONS = null
-            requestPermissions.launch(REQUIRED_PERMISSIONS)
+            requestPermissions.launch(
+                arrayOf(
+                    Manifest.permission.CAMERA,
+                    Manifest.permission.RECORD_AUDIO
+                )
+            )
         }
 
         findViewById<ImageButton>(R.id.btn_switch_camera).setOnClickListener {

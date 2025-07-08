@@ -1,5 +1,7 @@
 package de.thws.challengeaccepted.ui
 
+import android.net.Uri
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,6 +26,11 @@ class FeedAdapter(
         val feedVideo: VideoView = view.findViewById(R.id.feedVideo)
         val btnAccepted: Button = view.findViewById(R.id.btn_accepted)
         val btnRejected: Button = view.findViewById(R.id.btn_rejected)
+
+        // Optional: damit später .stopPlayback() möglich ist
+        fun stopVideo() {
+            feedVideo.stopPlayback()
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FeedViewHolder {
@@ -38,22 +45,44 @@ class FeedAdapter(
         val beitrag = items[position]
         holder.tvBeschreibung.text = beitrag.beschreibung
 
-        if (!beitrag.video_url.isNullOrBlank()) {
-            holder.feedImage.visibility = View.GONE
-            holder.feedVideo.visibility = View.VISIBLE
+        val context = holder.itemView.context
 
-            val videoUrl = if (beitrag.video_url.startsWith("/")) {
-                "http://192.168.178.37:5000${beitrag.video_url.replace("\\", "/")}"
-            } else {
-                beitrag.video_url
+        if (!beitrag.video_url.isNullOrBlank()) {
+            val rawUrl = beitrag.video_url?.replace("\\", "/")?.removePrefix("/") ?: ""
+            val videoUrl =
+                if (rawUrl.startsWith("http")) rawUrl else "http://192.168.178.37:5000/$rawUrl"
+
+// Setze URI
+            holder.feedVideo.setVideoURI(Uri.parse(videoUrl))
+
+// Vor dem Start: VideoView vorbereiten lassen
+            holder.feedVideo.setOnPreparedListener { mediaPlayer ->
+                mediaPlayer.isLooping = false
+                holder.feedVideo.seekTo(1) // Nur Vorschaubild anzeigen
             }
-            holder.feedVideo.setVideoPath(videoUrl)
-            holder.feedVideo.seekTo(1)
-        } else {
-            holder.feedVideo.visibility = View.GONE
-            holder.feedImage.visibility = View.VISIBLE
-            holder.feedImage.setImageResource(R.drawable.login_background_pic)
-        }
+
+// Fehlerbehandlung hinzufügen (optional, aber empfohlen)
+            holder.feedVideo.setOnErrorListener { mp, what, extra -> Log.e(
+                    "FeedAdapter",
+                    "Video konnte nicht geladen werden: what=$what, extra=$extra, url=$videoUrl"
+                )
+                Toast.makeText(
+                    holder.itemView.context,
+                    "Fehler beim Laden des Videos.",
+                    Toast.LENGTH_SHORT
+                ).show()
+                true
+            }
+
+// MediaController einbinden (optional)
+            val mediaController = MediaController(holder.itemView.context)
+            mediaController.setAnchorView(holder.feedVideo)
+            holder.feedVideo.setMediaController(mediaController)
+
+// Wiedergabe nur per Klick
+            holder.feedVideo.setOnClickListener {
+                holder.feedVideo.start()
+            }
 
         val prefs = holder.itemView.context.getSharedPreferences("app", android.content.Context.MODE_PRIVATE)
         val userId = prefs.getString("USER_ID", null)
@@ -103,9 +132,15 @@ class FeedAdapter(
                 }
             }
         }
+            holder.feedImage.visibility = View.GONE
+            holder.feedVideo.visibility = View.VISIBLE
+
+
+        }
     }
     fun submitList(newItems: List<Beitrag>) {
         items = newItems
         notifyDataSetChanged()
     }
+
 }
