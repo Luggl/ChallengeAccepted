@@ -33,6 +33,7 @@ class GroupDashboardActivity : AppCompatActivity() {
         val service = ApiClient.getRetrofit(applicationContext).create(GroupService::class.java)
         val repository = GroupRepository(
             service,
+            applicationContext,// --- NEU: Context als zweiter Parameter!
             db.gruppeDao(),
             db.challengeDao(),
             db.beitragDao(),
@@ -55,6 +56,15 @@ class GroupDashboardActivity : AppCompatActivity() {
             return
         }
 
+        // --- UserId aus SharedPreferences holen (für die Aufgaben-API)
+        val prefs = getSharedPreferences("app", MODE_PRIVATE)
+        val userId = prefs.getString("USER_ID", null)
+        if (userId == null) {
+            Toast.makeText(this, "Fehler: User-ID fehlt", Toast.LENGTH_LONG).show()
+            finish()
+            return
+        }
+
         // Views initialisieren
         val groupNameTextView = findViewById<TextView>(R.id.tvGroupNameDashboard)
         val groupImageView = findViewById<ImageView>(R.id.ivGroupImageDashboard)
@@ -63,6 +73,9 @@ class GroupDashboardActivity : AppCompatActivity() {
         val btnCreateChallenge = findViewById<Button>(R.id.btn_create_challenge)
         val challengeLaufzeit = findViewById<TextView>(R.id.tv_challenge_laufzeit)
         val deadMembersLayout = findViewById<LinearLayout>(R.id.ll_dead_members)
+        // --- NEU: Views für Aufgabe & Countdown (Füge diese IDs ins Layout ein!) // View für Aufgabenkarte (optional)
+        val aufgabeDescText = findViewById<TextView>(R.id.tv_aufgabe_desc) // Beschreibung offene Aufgabe
+        val countdownText = findViewById<TextView>(R.id.tv_remaining_time)  // Countdown bis zur Deadline
 
         // Voting-Adapter mit Callback für Accepted/Rejected
         groupFeedAdapter = GroupFeedAdapter(emptyList()) { beitragId, vote ->
@@ -77,8 +90,8 @@ class GroupDashboardActivity : AppCompatActivity() {
         feedRecycler.layoutManager = LinearLayoutManager(this)
         feedRecycler.adapter = groupFeedAdapter
 
-        // --- Daten Laden & UI Beobachten ---
-        groupViewModel.loadGroupData(groupId)
+        // --- NEU: Lade Gruppe + offene Aufgabe + Timer!
+        groupViewModel.loadGroupDataWithTask(groupId, userId)
 
         // Gruppendetails beobachten (Header!)
         lifecycleScope.launch {
@@ -123,7 +136,44 @@ class GroupDashboardActivity : AppCompatActivity() {
             }
         }
 
+        // --- NEU: Offene Aufgabe beobachten & anzeigen
+        lifecycleScope.launch {
+            groupViewModel.openTask.collect { aufgabe ->
+                if (aufgabe != null) {
+                    aufgabeDescText?.text = aufgabe.beschreibung
+                } else {
+                    aufgabeDescText?.text = "Keine offene Aufgabe"
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            groupViewModel.remainingTime.collect { remaining ->
+                if (remaining != null && remaining > 0) {
+                    countdownText?.text = formatSeconds(remaining)
+                } else {
+                    countdownText?.text = "Abgelaufen"
+                }
+            }
+        }
+
+        findViewById<View>(R.id.challenge_card_active).setOnClickListener {
+            groupViewModel.openTask.value?.let { task ->
+                val intent = Intent(this, RecordActivity::class.java)
+                intent.putExtra("TASK_ID", task.aufgabeId)
+                intent.putExtra("GROUP_ID", groupId)
+                startActivity(intent)
+            }
+        }
+
         setupNavigation(groupId)
+    }
+
+    private fun formatSeconds(seconds: Long): String {
+        val h = seconds / 3600
+        val m = (seconds % 3600) / 60
+        val s = seconds % 60
+        return String.format("%02d:%02d:%02d", h, m, s)
     }
 
     private fun setupNavigation(groupId: String) {

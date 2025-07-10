@@ -29,6 +29,7 @@ class GroupstatusActivity : AppCompatActivity() {
         val service = ApiClient.getRetrofit(applicationContext).create(GroupService::class.java)
         val repo = GroupRepository(
             service,
+            applicationContext,
             db.gruppeDao(),
             db.challengeDao(),
             db.beitragDao(),

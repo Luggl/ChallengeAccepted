@@ -3,12 +3,15 @@ package de.thws.challengeaccepted.ui.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import de.thws.challengeaccepted.data.entities.Aufgabe
 import de.thws.challengeaccepted.data.entities.BeitragEntity
 import de.thws.challengeaccepted.data.entities.Challenge
 import de.thws.challengeaccepted.data.entities.Gruppe
 import de.thws.challengeaccepted.data.entities.User
 import de.thws.challengeaccepted.data.repository.GroupRepository
 import de.thws.challengeaccepted.models.VoteRequest
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -40,6 +43,75 @@ class GroupViewModel(private val repository: GroupRepository) : ViewModel() {
     val gruppen: StateFlow<List<Gruppe>> = repository.getAllGroups()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
+    // --- NEU: Aufgabe + Timer-Logik ---
+
+    // StateFlow für die offene Aufgabe in der aktuellen Gruppe
+    private val _openTask = MutableStateFlow<Aufgabe?>(null)
+    val openTask: StateFlow<Aufgabe?> = _openTask
+
+    // StateFlow für den verbleibenden Countdown in Sekunden
+    private val _remainingTime = MutableStateFlow<Long?>(null)
+    val remainingTime: StateFlow<Long?> = _remainingTime
+
+    private var countdownJob: Job? = null
+
+    /**
+     * Lädt alle Gruppendaten und die offene Aufgabe (mit Timer) für das Dashboard.
+     * userId: Muss aus SharedPreferences oder sonst wie bereitgestellt werden.
+     */
+    fun loadGroupDataWithTask(groupId: String, userId: String) {
+        if (_groupId.value == groupId) return
+        _groupId.value = groupId
+
+        // Lade normale Gruppendaten
+        viewModelScope.launch {
+            repository.refreshGroupData(groupId)
+        }
+
+        // Lade die offene Aufgabe + starte Timer
+        viewModelScope.launch {
+            val task = repository.getOpenTaskForGroup(groupId, userId)
+            _openTask.value = task
+
+            // Starte/Reset Timer nur, wenn eine Aufgabe da ist und Deadline gesetzt ist
+            countdownJob?.cancel()
+            if (task?.deadline != null) {
+                startCountdown(task.deadline)
+            } else {
+                _remainingTime.value = null
+            }
+        }
+    }
+
+    // Nur Aufgaben/Timer neu laden (ohne alle Gruppendaten)
+    fun reloadTaskOnly(groupId: String, userId: String) {
+        viewModelScope.launch {
+            val task = repository.getOpenTaskForGroup(groupId, userId)
+            _openTask.value = task
+
+            countdownJob?.cancel()
+            if (task?.deadline != null) {
+                startCountdown(task.deadline)
+            } else {
+                _remainingTime.value = null
+            }
+        }
+    }
+
+    private fun startCountdown(deadlineMillis: Long) {
+        countdownJob?.cancel()
+        countdownJob = viewModelScope.launch {
+            while (true) {
+                val now = System.currentTimeMillis()
+                val remaining = (deadlineMillis - now) / 1000 // Sekunden
+                _remainingTime.value = remaining.coerceAtLeast(0)
+                if (remaining <= 0) break
+                delay(1000)
+            }
+        }
+    }
+
+    // --- Bisherige Standard-Methoden ---
     fun loadGroupData(groupId: String) {
         if (_groupId.value == groupId) return
         _groupId.value = groupId
@@ -47,11 +119,13 @@ class GroupViewModel(private val repository: GroupRepository) : ViewModel() {
             repository.refreshGroupData(groupId)
         }
     }
+
     fun loadGroupOverview() {
         viewModelScope.launch {
             repository.refreshGroupOverview() // Holt und speichert ALLE Gruppen!
         }
     }
+
     fun vote(beitragId: String, vote: String, userId: String, groupId: String) {
         viewModelScope.launch {
             try {

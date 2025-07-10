@@ -25,6 +25,7 @@ class GroupOverviewActivity : AppCompatActivity() {
         val groupService = ApiClient.getRetrofit(applicationContext).create(GroupService::class.java)
         val repository = GroupRepository(
             groupService,
+            applicationContext,
             database.gruppeDao(),
             database.challengeDao(),
             database.beitragDao(),

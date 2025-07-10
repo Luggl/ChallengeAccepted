@@ -56,7 +56,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp">
 
-                <!-- 1. Ansicht: Aktive Challenge (standardmäßig unsichtbar) -->
+                <!-- 1. Ansicht: Aktive Challenge (jetzt mit Aufgabe + Timer) -->
                 <LinearLayout
                     android:id="@+id/challenge_card_active"
                     android:layout_width="match_parent"
@@ -67,6 +67,7 @@
                     android:visibility="gone"
                     tools:visibility="visible">
 
+                    <!-- Challenge-Titel -->
                     <TextView
                         android:id="@+id/tv_challenge_laufzeit"
                         android:layout_width="wrap_content"
@@ -75,6 +76,18 @@
                         android:textSize="16sp"
                         android:textStyle="bold"
                         tools:text="Challenge läuft seit 5 Tagen" />
+
+                    <!-- Aufgabenbeschreibung (NEU) -->
+                    <TextView
+                        android:id="@+id/tv_aufgabe_desc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="Offene Aufgabe"
+                        android:textColor="@color/white"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
 
                     <LinearLayout
                         android:id="@+id/ll_dead_members"
@@ -106,7 +119,7 @@
                         android:textColor="#FF0000"
                         android:textSize="16sp"
                         android:textStyle="bold"
-                        tools:text="Verbleibende Zeit für die Aufgabe: 5h" />
+                        android:text="00:00:00" />
                 </LinearLayout>
 
                 <!-- 2. Ansicht: Button zum Erstellen (standardmäßig sichtbar) -->
@@ -154,7 +167,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:visibility="gone" />
-
 
         </LinearLayout>
     </ScrollView>

@@ -1,11 +1,13 @@
 package de.thws.challengeaccepted.data.repository
 
+import android.content.Context
 import android.util.Log
 import de.thws.challengeaccepted.data.dao.BeitragDao
 import de.thws.challengeaccepted.data.dao.ChallengeDao
 import de.thws.challengeaccepted.data.dao.GruppeDao
 import de.thws.challengeaccepted.data.dao.MembershipDao
 import de.thws.challengeaccepted.data.dao.UserDao
+import de.thws.challengeaccepted.data.entities.Aufgabe
 import de.thws.challengeaccepted.data.entities.BeitragEntity
 import de.thws.challengeaccepted.data.entities.Challenge
 import de.thws.challengeaccepted.data.entities.Gruppe
@@ -14,6 +16,7 @@ import de.thws.challengeaccepted.data.entities.User
 import de.thws.challengeaccepted.models.GroupResponse
 import de.thws.challengeaccepted.models.VoteRequest
 import de.thws.challengeaccepted.network.GroupService
+import de.thws.challengeaccepted.network.TaskService
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
@@ -22,12 +25,14 @@ import java.util.Locale
 
 class GroupRepository(
     private val service: GroupService,
+    private val context: Context,
     private val gruppeDao: GruppeDao,
     private val challengeDao: ChallengeDao,
     private val beitragDao: BeitragDao,
     private val membershipDao: MembershipDao,
     private val userDao: UserDao
 ) {
+
     fun getFeedForGroup(groupId: String): Flow<List<BeitragEntity>> =
         beitragDao.getBeitraegeForGroupAsFlow(groupId)
 
@@ -90,6 +95,39 @@ class GroupRepository(
     suspend fun voteBeitragGroup(beitragId: String, voteRequest: VoteRequest) {
         service.voteBeitragGroup(beitragId, voteRequest)
     }
+    private val taskService = de.thws.challengeaccepted.network.ApiClient
+        .getRetrofit(context)
+        .create(TaskService::class.java)
+
+    suspend fun getOpenTaskForGroup(groupId: String, userId: String): Aufgabe? {
+        val taskApiResponse = taskService.getTasksForUser() // Holt alle Aufgaben des Users
+        val aufgabeApi = taskApiResponse.message.Aufgaben
+            .firstOrNull { it.gruppe_id == groupId && it.status == "offen" }
+        return aufgabeApi?.let {
+            Aufgabe(
+                aufgabeId = it.aufgabe_id,
+                challengeId = "",
+                beschreibung = it.beschreibung,
+                zielwert = it.zielwert,
+                dauer = it.dauer?.toIntOrNull(),
+                deadline = parseApiDateToMillis(it.deadline),
+                datum = parseApiDateToMillis(it.datum),
+                unit = it.unit,
+                typ = ""
+            )
+        }
+    }
+
+    private fun parseApiDateToMillis(dateStr: String): Long? {
+        return try {
+            val format = java.text.SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", java.util.Locale.ENGLISH)
+            format.parse(dateStr)?.time
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+
     suspend fun refreshGroupData(groupId: String) {
         try {
             val response = service.getGroupFeed(groupId)
