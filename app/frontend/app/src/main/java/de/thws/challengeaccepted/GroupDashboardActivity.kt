@@ -161,7 +161,9 @@ class GroupDashboardActivity : AppCompatActivity() {
             groupViewModel.openTask.value?.let { task ->
                 val intent = Intent(this, RecordActivity::class.java)
                 intent.putExtra("TASK_ID", task.aufgabeId)
+                intent.putExtra("TASK_DESC", task.beschreibung)
                 intent.putExtra("GROUP_ID", groupId)
+                intent.putExtra("GROUP_NAME", groupNameTextView.text)
                 startActivity(intent)
             }
         }
