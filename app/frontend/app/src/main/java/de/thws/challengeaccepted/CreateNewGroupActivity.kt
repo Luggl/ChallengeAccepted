@@ -3,7 +3,9 @@ package de.thws.challengeaccepted
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Intent
+import android.content.res.Resources
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
@@ -12,7 +14,10 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
 import de.thws.challengeaccepted.models.GroupCreateRequest
 import de.thws.challengeaccepted.models.GroupResponse
 import de.thws.challengeaccepted.models.CreateGroupResponse
@@ -24,11 +29,48 @@ import kotlinx.coroutines.launch
 
 class CreateNewGroupActivity : AppCompatActivity() {
 
+    fun Int.dpToPx(): Int =
+        (this * Resources.getSystem().displayMetrics.density).toInt()
+
     override fun onCreate(savedInstanceState: Bundle?) {
-        WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_new_group)
 
+
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+
+        val rootScroll = findViewById<View>(R.id.root_scroll)
+        val bottomNav = findViewById<View>(R.id.bottom_navigation)
+
+// STATUSLEISTE OBEN BEHANDELN (z. B. bei Notch oder Uhrzeit)
+        ViewCompat.setOnApplyWindowInsetsListener(rootScroll) { view, insets ->
+            val systemInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.setPadding(
+                view.paddingLeft,
+                systemInsets.top,
+                view.paddingRight,
+                view.paddingBottom
+            )
+            insets
+        }
+
+// NAVIGATIONSBALKEN UNTEN BEHANDELN
+        ViewCompat.setOnApplyWindowInsetsListener(bottomNav) { view, insets ->
+            val systemInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+
+            // Padding NUR unten – oben fest (z. B. 8dp), unten dynamisch
+            view.setPadding(
+                view.paddingLeft,
+                8.dpToPx(),
+                view.paddingRight,
+                8.dpToPx(),
+            )
+            insets
+        }
+
+// Optional: Hintergrundfarbe für Navigationsleiste setzen
+        window.navigationBarColor = ContextCompat.getColor(this, R.color.black)
+        // Gruppe erstellen Button
         val groupNameEditText = findViewById<EditText>(R.id.tv_group_name)
         val groupDescriptionEditText = findViewById<EditText>(R.id.et_group_description)
         val createButton = findViewById<Button>(R.id.button_finish)
@@ -91,17 +133,26 @@ class CreateNewGroupActivity : AppCompatActivity() {
             }
         }
 
+
+
         // Navigation
         val navGroup = findViewById<ImageView>(R.id.nav_group)
-        val navHome = findViewById<ImageView>(R.id.nav_home)
-        val navProfile = findViewById<ImageView>(R.id.nav_profile)
+        navGroup.setOnClickListener {
+            val intent = Intent(this, GroupOverviewActivity::class.java)
+            startActivity(intent)
+        }
+
 
         navGroup.setOnClickListener {
             startActivity(Intent(this, GroupOverviewActivity::class.java))
         }
+
+        val navHome = findViewById<ImageView>(R.id.nav_home)
         navHome.setOnClickListener {
             startActivity(Intent(this, DashboardActivity::class.java))
         }
+
+        val navProfile = findViewById<ImageView>(R.id.nav_profile)
         navProfile.setOnClickListener {
             startActivity(Intent(this, ProfileActivity::class.java))
         }

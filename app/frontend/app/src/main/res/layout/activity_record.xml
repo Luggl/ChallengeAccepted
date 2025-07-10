@@ -9,24 +9,23 @@
     android:fitsSystemWindows="true"
     tools:context=".RecordActivity">
 
-    <!-- Neuer Header für Gruppenname + Aufgabenbeschreibung -->
+    <!-- Header mit Titel -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/grey_background"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:padding="16dp"
-        android:layout_alignParentTop="true">
+        android:padding="16dp">
 
         <TextView
             android:id="@+id/tvGroupNameRecord"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Gruppenname"
+            android:text="Kämpfernatur\nAktivität aufnehmen"
             android:textColor="@color/white"
-            android:textSize="20sp"
+            android:textSize="25sp"
             android:textStyle="bold" />
 
         <TextView
@@ -46,14 +45,12 @@
         android:id="@+id/btn_cancel"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_margin="30dp"
+        android:layout_margin="16dp"
         android:background="@drawable/grey_background"
         android:contentDescription="@string/desc_check_cancel"
         android:padding="8dp"
         android:scaleType="center"
         android:src="@drawable/x_icon"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
         tools:ignore="UseAppTint" />
 
     <!-- Kamera-View -->
@@ -71,6 +68,19 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleX="-1" />
+
+        <TextView
+            android:id="@+id/activity"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/grey_background"
+            android:text="    Sit-Ups - 10 Stück"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            android:textStyle="bold" />
     </androidx.cardview.widget.CardView>
 
     <LinearLayout
@@ -94,6 +104,7 @@
             android:scaleType="centerInside"
             android:src="@drawable/switch_camera_icon" />
 
+
         <ImageButton
             android:id="@+id/btnPlay"
             android:layout_width="90dp"
@@ -105,6 +116,7 @@
             android:padding="16dp"
             android:scaleType="centerInside"
             android:src="@drawable/play_icon" />
+
 
         <!-- Check Button -->
         <ImageButton
@@ -118,6 +130,7 @@
             android:src="@drawable/check_icon" />
 
     </LinearLayout>
+
 
     <!-- Bottom Navigation -->
     <LinearLayout
@@ -144,6 +157,7 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:src="@drawable/group_white_icon" />
+
         </LinearLayout>
 
         <!-- Home Icon -->
@@ -158,7 +172,8 @@
                 android:id="@+id/nav_home"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/home_white_icon" />
+                android:src="@drawable/home_blue_icon" />
+
         </LinearLayout>
 
         <!-- Add Icon -->
@@ -173,7 +188,8 @@
                 android:id="@+id/nav_add"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/add_blue_icon" />
+                android:src="@drawable/add_white_icon" />
+
         </LinearLayout>
 
         <!-- Profile Icon -->
@@ -189,6 +205,7 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:src="@drawable/profile_white_icon" />
+
         </LinearLayout>
     </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -1,296 +1,282 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinator"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     android:background="@color/black"
-    tools:context=".DashboardActivity">
+    tools:context=".StandardCreateChallengeOverviewActivity">
 
-    <LinearLayout
-        android:id="@+id/ll_groupstatus"
-        android:layout_width="400dp"
-        android:layout_height="80dp"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="16dp"
-        android:background="@drawable/grey_background"
-        android:gravity="center_vertical"
-        android:orientation="vertical"
-        android:padding="8dp">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/grey_background"
-            android:orientation="horizontal">
-
-            <!-- Gruppenbild -->
-            <ImageView
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:background="@drawable/round_background"
-                android:clipToOutline="true"
-                android:scaleType="centerCrop"
-                android:src="@drawable/group_profile_picture" />
-
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="40dp"
-                android:paddingVertical="10dp"
-                android:text="Kämpfernatur"
-                android:textColor="@color/white"
-                android:textSize="30dp" />
-
-        </LinearLayout>
-    </LinearLayout>
-
-    <!-- Hier kommen die Tagesanzeigen -->
-    <LinearLayout
-        android:id="@+id/calendar"
+    <!-- Scrollbarer Hauptbereich -->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/root_scroll"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="100dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginBottom="8dp"
-        android:background="@drawable/grey_background"
-        android:gravity="center_vertical"
-        android:orientation="vertical"
-        android:padding="8dp"
-        tools:ignore="DuplicateIds">
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingBottom="100dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_margin="16dp"
-            android:layout_marginBottom="8dp"
-            android:background="@drawable/grey_background"
-            android:backgroundTint="@color/black"
             android:orientation="vertical"
-            android:padding="12dp">
+            android:padding="16dp">
 
-            <!-- Erste Zeile: Challenge läuft seit + Icon -->
+            <!-- Gruppenstatus -->
             <LinearLayout
+                android:id="@+id/ll_groupstatus"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="4dp"
+                android:layout_height="80dp"
+                android:background="@drawable/grey_background"
                 android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:orientation="vertical"
+                android:padding="8dp">
 
-                <TextView
-                    android:layout_width="150dp"
+                <LinearLayout
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Challenge läuft seit "
-                    android:textColor="@color/white"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:orientation="horizontal">
 
-                <TextView
-                    android:layout_width="100dp"
-                    android:layout_height="wrap_content"
-                    android:text="5 Tagen"
-                    android:textColor="#00d5cf"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    <ImageView
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:background="@drawable/round_background"
+                        android:clipToOutline="true"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/group_profile_picture" />
 
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_marginStart="8dp"
-                    android:src="@drawable/challenge_plan_icon" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="40dp"
+                        android:paddingVertical="10dp"
+                        android:text="Kämpfernatur"
+                        android:textColor="@color/white"
+                        android:textSize="30sp" />
+                </LinearLayout>
             </LinearLayout>
 
-            <!-- Zweite Zeile: Dead: + Bilder -->
+
+            <!-- Kalender -->
             <LinearLayout
+                android:id="@+id/calendar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:layout_marginTop="16dp"
+                android:background="@drawable/grey_background"
+                android:orientation="vertical"
+                android:padding="12dp"
+                tools:ignore="DuplicateIds">
 
+                <!-- Challenge läuft seit -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="150dp"
+                        android:layout_height="wrap_content"
+                        android:text="Challenge läuft seit "
+                        android:textColor="@color/white"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:text="5 Tagen"
+                        android:textColor="#00d5cf"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginStart="8dp"
+                        android:src="@drawable/challenge_plan_icon" />
+                </LinearLayout>
+
+                <!-- Teilnehmeranzeige -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="4dp"
                     android:text="Heutige Aktivität wurde ausgeführt von:"
                     android:textColor="@color/white"
                     android:textSize="16sp"
                     android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <!-- Avatare -->
+                    <ImageView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_marginEnd="6dp"
+                        android:background="@drawable/bright_grey_frame"
+                        android:clipToOutline="true"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/profile_picture" />
+
+                    <ImageView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_marginEnd="6dp"
+                        android:background="@drawable/bright_grey_frame"
+                        android:clipToOutline="true"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/profile_picture" />
+
+                    <ImageView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_marginEnd="6dp"
+                        android:background="@drawable/bright_grey_frame"
+                        android:clipToOutline="true"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/profile_picture" />
+
+                    <ImageView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:background="@drawable/red_frame"
+                        android:clipToOutline="true"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/profile_picture" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tv_remaining_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginEnd="16dp"
+                    android:background="@drawable/blue_frame"
+                    android:gravity="center"
+                    android:padding="12dp"
+                    android:text="Verbleibende Zeit für die Aufgabe: 5h"
+                    android:textColor="@color/blue"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-                <!-- Avatare -->
-                <ImageView
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_marginEnd="6dp"
-                    android:background="@drawable/bright_grey_frame"
-                    android:clipToOutline="true"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/profile_picture" />
+                android:layout_below="@id/calendar"
+                android:layout_margin="16dp"
+                android:background="@drawable/grey_background"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:padding="15dp">
 
-                <ImageView
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_marginEnd="6dp"
-                    android:background="@drawable/bright_grey_frame"
-                    android:clipToOutline="true"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/profile_picture" />
+                <!-- Überschrift -->
+                <TextView
+                    android:id="@+id/playersTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:text="Players"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
-                <ImageView
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_marginEnd="6dp"
-                    android:background="@drawable/bright_grey_frame"
-                    android:clipToOutline="true"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/profile_picture" />
+                <!-- Spieler 1 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/blue_frame"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="8dp">
 
-                <ImageView
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:background="@drawable/red_frame"
-                    android:clipToOutline="true"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/profile_picture" />
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginEnd="6dp"
+                        android:background="@drawable/bright_grey_frame"
+                        android:clipToOutline="true"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/profile_picture" />
+
+                    <TextView
+                        android:layout_width="50dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="100dp"
+                        android:text="Ben"
+                        android:textColor="@color/white"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+                <!-- Spieler 2 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/blue_frame"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="8dp">
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginEnd="6dp"
+                        android:background="@drawable/bright_grey_frame"
+                        android:clipToOutline="true"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/profile_picture" />
+
+                    <TextView
+                        android:layout_width="50dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="100dp"
+                        android:text="Ben"
+                        android:textColor="@color/white"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+
+                </LinearLayout>
+
             </LinearLayout>
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/tv_remaining_time"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginEnd="16dp"
-            android:background="@drawable/blue_frame"
-            android:gravity="center"
-            android:padding="12dp"
-            android:text="Verbleibende Zeit für die Aufgabe: 5h"
-            android:textColor="@color/blue"
-            android:textSize="16sp"
-            android:textStyle="bold" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/calendar"
-        android:layout_margin="16dp"
-        android:background="@drawable/grey_background"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:padding="15dp">
-
-        <!-- Überschrift -->
-        <TextView
-            android:id="@+id/playersTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:text="Players"
-            android:textColor="@color/white"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
-        <!-- Spieler 1 -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:layout_marginBottom="8dp"
-            android:background="@drawable/blue_frame"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:padding="8dp">
-
-            <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginEnd="6dp"
-                android:background="@drawable/bright_grey_frame"
-                android:clipToOutline="true"
-                android:scaleType="centerCrop"
-                android:src="@drawable/profile_picture" />
-
-            <TextView
-                android:layout_width="50dp"
+            <!-- Challenge verlassen -->
+            <Button
+                android:id="@+id/btn_leave_challenge"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="100dp"
-                android:text="Ben"
-                android:textColor="@color/white"
+                android:layout_marginTop="24dp"
+                android:background="@drawable/red_frame"
+                android:padding="12dp"
+                android:text="Challenge verlassen"
+                android:textColor="@color/button_red"
                 android:textSize="16sp"
                 android:textStyle="bold" />
-
         </LinearLayout>
-
-        <!-- Spieler 2 -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:layout_marginBottom="8dp"
-            android:background="@drawable/blue_frame"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:padding="8dp">
-
-            <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginEnd="6dp"
-                android:background="@drawable/bright_grey_frame"
-                android:clipToOutline="true"
-                android:scaleType="centerCrop"
-                android:src="@drawable/profile_picture" />
-
-            <TextView
-                android:layout_width="50dp"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="100dp"
-                android:text="Ben"
-                android:textColor="@color/white"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <!-- Challenge verlassen -->
-    <Button
-        android:id="@+id/btn_leave_challenge"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="600dp"
-        android:layout_marginRight="16dp"
-        android:background="@drawable/red_frame"
-        android:padding="12dp"
-        android:text="Challenge verlassen"
-        android:textColor="@color/button_red"
-        android:textSize="16sp"
-        android:textStyle="bold" />
-
+    </androidx.core.widget.NestedScrollView>
 
     <!-- Bottom Navigation -->
     <LinearLayout
-        android:id="@+id/ll_bottom_navigation"
+        android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom"
         android:background="@color/grey_300"
         android:orientation="horizontal"
         android:weightSum="4">
 
-        <!-- Community Icon -->
+        <!-- Community -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -302,11 +288,10 @@
                 android:id="@+id/nav_group"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/group_blue_icon" />
-
+                android:src="@drawable/group_white_icon" />
         </LinearLayout>
 
-        <!-- Home Icon -->
+        <!-- Home -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -319,10 +304,9 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:src="@drawable/home_white_icon" />
-
         </LinearLayout>
 
-        <!-- Add Icon -->
+        <!-- Add -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -334,11 +318,10 @@
                 android:id="@+id/nav_add"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/add_white_icon" />
-
+                android:src="@drawable/add_blue_icon" />
         </LinearLayout>
 
-        <!-- Profile Icon -->
+        <!-- Profile -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -351,9 +334,7 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:src="@drawable/profile_white_icon" />
-
         </LinearLayout>
-
     </LinearLayout>
 
-</RelativeLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -14,24 +14,25 @@ import android.widget.VideoView
 import androidx.recyclerview.widget.RecyclerView
 import de.thws.challengeaccepted.R
 import de.thws.challengeaccepted.models.Beitrag
+import java.io.File
 
 class FeedAdapter(
     private var items: List<Beitrag>,
-    private val onVote: (beitragId: String, vote: String) -> Unit
-) : RecyclerView.Adapter<FeedAdapter.FeedViewHolder>() {
+    private val onVote: (beitragId: String, vote: String) -> Unit,
+    private val onUpload: (userId: String, erfuellungId: String, beschreibung: String, videoFile: File) -> Unit) :
+        RecyclerView.Adapter<FeedAdapter.FeedViewHolder>() {
+            class FeedViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+                val tvBeschreibung: TextView = view.findViewById(R.id.tvBeschreibung)
+                val feedImage: ImageView = view.findViewById(R.id.feedImage)
+                val feedVideo: VideoView = view.findViewById(R.id.feedVideo)
+                val btnAccepted: Button = view.findViewById(R.id.btn_accepted)
+                val btnRejected: Button = view.findViewById(R.id.btn_rejected)
 
-    class FeedViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val tvBeschreibung: TextView = view.findViewById(R.id.tvBeschreibung)
-        val feedImage: ImageView = view.findViewById(R.id.feedImage)
-        val feedVideo: VideoView = view.findViewById(R.id.feedVideo)
-        val btnAccepted: Button = view.findViewById(R.id.btn_accepted)
-        val btnRejected: Button = view.findViewById(R.id.btn_rejected)
-
-        // Optional: damit später .stopPlayback() möglich ist
-        fun stopVideo() {
-            feedVideo.stopPlayback()
-        }
-    }
+                // Optional: damit später .stopPlayback() möglich ist
+                fun stopVideo() {
+                    feedVideo.stopPlayback()
+                }
+            }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FeedViewHolder {
         val view = LayoutInflater.from(parent.context)

@@ -2,13 +2,16 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinator"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black"
-    tools:context=".DashboardActivity">
+    android:fitsSystemWindows="true"
+    tools:context=".PostEditActivity">
 
+    <!-- Header -->
     <LinearLayout
-        android:layout_width="300dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
@@ -34,47 +37,50 @@
         android:id="@+id/btn_cancel"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_margin="40dp"
+        android:layout_margin="16dp"
         android:background="@drawable/grey_background"
+        android:contentDescription="@string/desc_check_cancel"
         android:padding="8dp"
         android:scaleType="center"
         android:src="@drawable/x_icon"
-        tools:ignore="UseAppTint"
-        android:contentDescription="@string/desc_check_cancel"
-        />
+        tools:ignore="UseAppTint" />
 
+    <!-- Video + Text -->
     <androidx.cardview.widget.CardView
         android:id="@+id/cv_video"
-        android:layout_width="4000dp"
-        android:layout_height="300dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@id/btn_cancel"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="16dp"
         android:layout_centerHorizontal="true"
         app:cardCornerRadius="12dp"
         app:cardElevation="4dp">
 
-        <VideoView
-            android:id="@+id/video_preview"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:layout_gravity="center"
-            android:scaleType="centerCrop"
-            android:background="@drawable/grey_background"
-            />
+            android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/activity"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginLeft="50dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/grey_background"
-            android:text="    Sit-Ups - 10 Stück"
-            android:textColor="@color/white"
-            android:textSize="24sp"
-            android:textStyle="bold" />
+            <VideoView
+                android:id="@+id/video_preview"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:background="@drawable/grey_background"
+                android:layout_alignParentTop="true" />
+
+            <TextView
+                android:id="@+id/activity"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/grey_background"
+                android:text="    Sit-Ups - 10 Stück"
+                android:textColor="@color/white"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+        </RelativeLayout>
     </androidx.cardview.widget.CardView>
-
 
     <!-- Beschreibung -->
     <EditText
@@ -101,10 +107,8 @@
         android:layout_alignParentEnd="true"
         android:layout_margin="16dp"
         android:background="@drawable/green_button"
-        android:src="@drawable/check_icon"
         android:contentDescription="@string/desc_check_confirm"
-        />
-
+        android:src="@drawable/check_icon" />
 
     <!-- Bottom Navigation -->
     <LinearLayout
@@ -129,7 +133,6 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:src="@drawable/group_white_icon" />
-
         </LinearLayout>
 
         <!-- Home Icon -->
@@ -145,7 +148,6 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:src="@drawable/home_white_icon" />
-
         </LinearLayout>
 
         <!-- Add Icon -->
@@ -160,8 +162,7 @@
                 android:id="@+id/nav_add"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/add_blue_icon" />
-
+                android:src="@drawable/add_white_icon" />
         </LinearLayout>
 
         <!-- Profile Icon -->
@@ -176,10 +177,9 @@
                 android:id="@+id/nav_profile"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/profile_white_icon" />
-
+                android:src="@drawable/profile_blue_icon" />
         </LinearLayout>
-
     </LinearLayout>
+
 
 </RelativeLayout>

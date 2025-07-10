@@ -1,84 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinator_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black"
-    tools:context=".DashboardActivity">
+    tools:context=".StandardCreateChallengeOverviewActivity">
 
-    <LinearLayout
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
-        android:background="@drawable/grey_background"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:padding="8dp">
-
-        <!-- Gruppenname -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingStart="8dp"
-            android:text="Kämpfernatur\nStandard Challenge"
-            android:textColor="@color/white"
-            android:textSize="25sp"
-            android:textStyle="bold" />
-    </LinearLayout>
-
-    <!-- Zurück-Button -->
-    <ImageButton
-        android:id="@+id/btn_back"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_margin="28dp"
-        android:background="@drawable/grey_background"
-        android:src="@drawable/back_icon"
-        android:tint="@android:color/white"
-        tools:ignore="UseAppTint"
-        android:contentDescription="@string/back_button_desc" />
-
-    <!-- Hauptinhalt -->
-    <LinearLayout
-        android:id="@+id/main_content"
+    <!-- Scrollbarer Inhalt -->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/root_scroll"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/btn_back"
-        android:layout_margin="16dp"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:background="@color/black"
+        android:clipToPadding="false"
+        android:paddingBottom="100dp">
 
-        <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/black"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
             android:padding="16dp">
 
+            <!-- Überschrift mit Zurück-Button -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <!-- Zurück -->
+                <ImageButton
+                    android:id="@+id/btn_back"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_margin="16dp"
+                    android:background="@drawable/grey_background"
+                    android:contentDescription="@string/back_button_desc"
+                    android:src="@drawable/back_icon"
+                    android:tint="@android:color/white"
+                    tools:ignore="UseAppTint" />
+
+                <!-- Titel -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/grey_background"
+                    android:padding="8dp"
+                    android:text="Kämpfernatur\nStandard Challenge"
+                    android:textColor="@color/white"
+                    android:textSize="25sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- Start- & Enddatum -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
 
-                <!--Startdatum Button -->
+                <!-- Startdatum Button -->
                 <Button
                     android:id="@+id/btn_start_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
                     android:background="@drawable/grey_background"
+                    android:padding="8dp"
                     android:text="Startdatum wählen"
-                    android:textColor="@color/white"
-                    android:padding="8dp"/>
-                <!--Anzeige Startdatum -->
+                    android:textColor="@color/blue" />
+
+                <!-- Startdatum Anzeige -->
                 <TextView
                     android:id="@+id/tv_start_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
                     android:text="Noch kein Startdatum"
-                    android:textColor="@color/white"
-                    android:layout_marginBottom="16dp"/>
+                    android:textColor="@color/white" />
 
                 <!-- Enddatum Button -->
                 <Button
@@ -87,77 +90,79 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
                     android:background="@drawable/grey_background"
+                    android:padding="8dp"
                     android:text="Enddatum wählen"
-                    android:textColor="@color/white"
-                    android:padding="8dp" />
+                    android:textColor="@color/blue" />
 
-                <!-- Anzeige Enddatum -->
+                <!-- Enddatum Anzeige -->
                 <TextView
                     android:id="@+id/tv_end_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
                     android:text="Noch kein Enddatum"
-                    android:textColor="@color/white"
-                    android:layout_marginBottom="16dp" />
-
-
-                <!-- Tabelle Sportaktivitäten -->
-                <TableLayout
-                    android:id="@+id/table_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/grey_100"
-                    android:padding="8dp"
-                    android:stretchColumns="0,1,2">
-
-                    <!-- Kopfzeile -->
-                    <TableRow>
-
-                        <TextView
-                            android:text="Aktivitäten"
-                            android:textColor="@color/white"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:text="Start"
-                            android:textColor="@color/white"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:text="Ende"
-                            android:textColor="@color/white"
-                            android:textStyle="bold" />
-                    </TableRow>
-                </TableLayout>
+                    android:textColor="@color/white" />
             </LinearLayout>
-        </ScrollView>
-    </LinearLayout>
 
-    <!-- Check Button -->
-    <ImageButton
-        android:id="@+id/btn_confirm_selection"
-        android:layout_width="80dp"
-        android:layout_height="50dp"
-        android:layout_below="@+id/main_content"
-        android:layout_alignParentEnd="true"
-        android:layout_margin="16dp"
-        android:background="@drawable/green_button"
-        android:src="@drawable/check_icon"
-        android:contentDescription="@string/desc_check_confirm" />
+            <!-- Tabelle Sportarten -->
+            <TableLayout
+                android:id="@+id/table_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/grey_100"
+                android:padding="8dp"
+                android:stretchColumns="0,1,2">
+
+                <!-- Kopfzeile -->
+                <TableRow>
+
+                    <TextView
+                        android:text="Aktivitäten"
+                        android:textColor="@color/white"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:text="Start"
+                        android:textColor="@color/white"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:text="Ende"
+                        android:textColor="@color/white"
+                        android:textStyle="bold" />
+                </TableRow>
+            </TableLayout>
+
+            <!-- Bestätigungsbutton -->
+            <ImageButton
+                android:id="@+id/btn_confirm_selection"
+                android:layout_width="80dp"
+                android:layout_height="50dp"
+                android:layout_gravity="end"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/green_button"
+                android:contentDescription="@string/desc_check_confirm"
+                android:src="@drawable/check_icon" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
 
     <!-- Bottom Navigation -->
     <LinearLayout
-        android:id="@+id/ll_bottom_navigation"
+        android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_alignParentBottom="true"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
         android:background="@color/grey_300"
         android:orientation="horizontal"
+        android:paddingTop="0dp"
+        android:paddingBottom="0dp"
         android:weightSum="4">
+
         <!-- Community Icon -->
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="60dp"
             android:layout_weight="1"
             android:gravity="center"
             android:orientation="vertical">
@@ -182,7 +187,7 @@
                 android:id="@+id/nav_home"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/home_white_icon" />
+                android:src="@drawable/home_blue_icon" />
 
         </LinearLayout>
 
@@ -198,7 +203,7 @@
                 android:id="@+id/nav_add"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/add_blue_icon" />
+                android:src="@drawable/add_white_icon" />
 
         </LinearLayout>
 
@@ -217,7 +222,5 @@
                 android:src="@drawable/profile_white_icon" />
 
         </LinearLayout>
-
     </LinearLayout>
-
-</RelativeLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

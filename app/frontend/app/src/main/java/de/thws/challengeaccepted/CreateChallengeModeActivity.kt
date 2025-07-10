@@ -1,14 +1,19 @@
 package de.thws.challengeaccepted
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.res.Resources
 import android.os.Bundle
+import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
 
 
 class CreateChallengeModeActivity : AppCompatActivity() {
@@ -24,14 +29,44 @@ class CreateChallengeModeActivity : AppCompatActivity() {
     private lateinit var tvStandard: TextView
     private lateinit var tvSurvival: TextView
 
-
+    fun Int.dpToPx(): Int =
+        (this * Resources.getSystem().displayMetrics.density).toInt()
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
-        //Randloses Layout aktivieren (Edge-to-Edge)
-        WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_challenge_mode)
+
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+
+        val rootScroll = findViewById<View>(R.id.root_scroll)
+        val bottomNav = findViewById<View>(R.id.bottom_navigation)
+
+        ViewCompat.setOnApplyWindowInsetsListener(rootScroll) { view, insets ->
+            val systemInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.setPadding(
+                view.paddingLeft,
+                systemInsets.top,
+                view.paddingRight,
+                view.paddingBottom
+            )
+            insets
+        }
+
+        ViewCompat.setOnApplyWindowInsetsListener(bottomNav) { view, insets ->
+            val systemInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+
+            view.setPadding(
+                view.paddingLeft,
+                8.dpToPx(),
+                view.paddingRight,
+                8.dpToPx(),
+            )
+            insets
+        }
+
+        window.navigationBarColor = ContextCompat.getColor(this, R.color.black)
+
 
         //Views aus dem XML holen
         val navBack = findViewById<ImageView>(R.id.btn_back)

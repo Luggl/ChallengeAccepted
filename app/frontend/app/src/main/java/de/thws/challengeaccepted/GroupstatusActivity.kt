@@ -1,7 +1,9 @@
 package de.thws.challengeaccepted
 
 import android.content.Intent
+import android.content.res.Resources
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
@@ -9,6 +11,10 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -41,9 +47,47 @@ class GroupstatusActivity : AppCompatActivity() {
 
     private lateinit var memberAdapter: MemberGridAdapter
 
+    fun Int.dpToPx(): Int =
+        (this * Resources.getSystem().displayMetrics.density).toInt()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_groupstatus)
+
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+
+        val rootScroll = findViewById<View>(R.id.root_scroll)
+        val bottomNav = findViewById<View>(R.id.bottom_navigation)
+
+// STATUSLEISTE OBEN BEHANDELN (z. B. bei Notch oder Uhrzeit)
+        ViewCompat.setOnApplyWindowInsetsListener(rootScroll) { view, insets ->
+            val systemInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.setPadding(
+                view.paddingLeft,
+                systemInsets.top,
+                view.paddingRight,
+                view.paddingBottom
+            )
+            insets
+        }
+
+// NAVIGATIONSBALKEN UNTEN BEHANDELN
+        ViewCompat.setOnApplyWindowInsetsListener(bottomNav) { view, insets ->
+            val systemInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+
+            // Padding NUR unten – oben fest (z. B. 8dp), unten dynamisch
+            view.setPadding(
+                view.paddingLeft,
+                8.dpToPx(),
+                view.paddingRight,
+                8.dpToPx(),
+            )
+            insets
+        }
+
+// Optional: Hintergrundfarbe für Navigationsleiste setzen
+        window.navigationBarColor = ContextCompat.getColor(this, R.color.black)
+
 
         val groupId = intent.getStringExtra("GROUP_ID")
         if (groupId == null) {

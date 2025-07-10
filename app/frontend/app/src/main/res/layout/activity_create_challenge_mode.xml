@@ -1,138 +1,170 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinator"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black"
-    tools:context=".DashboardActivity">
+    android:fitsSystemWindows="true"
+    tools:context=".CreateChallengeModeActivity">
 
-    <!-- Gruppenname -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="16dp"
-        android:background="@drawable/grey_background"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:padding="8dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingStart="8dp"
-            android:text="The Hustlers"
-            android:textColor="@color/white"
-            android:textSize="25sp"
-            android:textStyle="bold" />
-    </LinearLayout>
-
-    <!-- Zurück-Button -->
-    <ImageButton
-        android:id="@+id/btn_back"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_margin="16dp"
-        android:background="@drawable/grey_background"
-        android:src="@drawable/back_icon"
-        android:tint="@android:color/white"
-        tools:ignore="UseAppTint"
-        android:contentDescription="@string/back_button_desc" />
-
-    <!-- Modusauswahl -->
-    <LinearLayout
+    <!-- Scrollbarer Inhalt -->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/root_scroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/btn_confirm_selection"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="92dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginBottom="16dp"
-        android:background="@drawable/grey_background"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:background="@color/black"
+        android:clipToPadding="false"
+        android:paddingBottom="100dp">
 
-        <!-- Standard-Modus -->
-        <FrameLayout
-            android:id="@+id/fl_standard"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="215dp"
-            android:layout_marginBottom="16dp"
-            android:background="@drawable/blue_frame"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
 
-            <ImageView
-                android:id="@+id/iv_standard"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/grey_background"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal"
+                android:padding="8dp">
+
+                <!-- Zurück-Button -->
+                <ImageButton
+                    android:id="@+id/btn_back"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="start"
+                    android:background="@drawable/grey_background"
+                    android:contentDescription="@string/back_button_desc"
+                    android:src="@drawable/back_icon"
+                    android:tint="@android:color/white"
+                    tools:ignore="UseAppTint" />
+
+                <!-- Gruppenname -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/grey_background"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:padding="8dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="The Hustlers"
+                        android:textColor="@color/white"
+                        android:textSize="25sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </LinearLayout>
+
+
+            <!-- Modusauswahl -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_above="@id/btn_confirm_selection"
+                android:layout_margin="16dp"
                 android:background="@drawable/grey_background"
-                android:clipToOutline="true"
-                android:scaleType="centerCrop"
-                android:src="@drawable/standard_mode_pic" />
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/tv_standard"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@drawable/bright_grey_frame"
-                android:paddingHorizontal="16dp"
-                android:paddingVertical="6dp"
-                android:text="Standard"
-                android:textColor="@color/white"
-                android:textSize="24sp"
-                android:textStyle="bold" />
-        </FrameLayout>
+                <!-- Modusauswahl -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/grey_background"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
-        <!-- Survival-Modus -->
-        <FrameLayout
-            android:id="@+id/fl_survival"
-            android:layout_width="match_parent"
-            android:layout_height="215dp">
+                    <!-- Standard-Modus -->
+                    <FrameLayout
+                        android:id="@+id/fl_standard"
+                        android:layout_width="match_parent"
+                        android:layout_height="215dp"
+                        android:layout_marginBottom="16dp"
+                        android:background="@drawable/blue_frame">
 
-            <ImageView
-                android:id="@+id/iv_survival"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/grey_background"
-                android:clipToOutline="true"
-                android:scaleType="centerCrop"
-                android:src="@drawable/survival_mode_pic" />
+                        <ImageView
+                            android:id="@+id/iv_standard"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/grey_background"
+                            android:clipToOutline="true"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/standard_mode_pic" />
 
-            <TextView
-                android:id="@+id/tv_survival"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@drawable/bright_grey_frame"
-                android:paddingHorizontal="16dp"
-                android:paddingVertical="6dp"
-                android:text="Survival"
-                android:textColor="@color/white"
-                android:textSize="24sp"
-                android:textStyle="bold" />
-        </FrameLayout>
-    </LinearLayout>
+                        <TextView
+                            android:id="@+id/tv_standard"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:background="@drawable/bright_grey_frame"
+                            android:paddingHorizontal="16dp"
+                            android:paddingVertical="6dp"
+                            android:text="Standard"
+                            android:textColor="@color/white"
+                            android:textSize="24sp"
+                            android:textStyle="bold" />
+                    </FrameLayout>
 
-    <!-- Check Button -->
-    <ImageButton
-        android:id="@+id/btn_confirm_selection"
-        android:layout_width="80dp"
-        android:layout_height="50dp"
-        android:layout_above="@id/ll_bottom_navigation"
-        android:layout_alignParentEnd="true"
-        android:layout_margin="16dp"
-        android:background="@drawable/green_button"
-        android:src="@drawable/check_icon"
-        android:contentDescription="@string/desc_check_confirm" />
+
+                    <!-- Survival-Modus -->
+                    <FrameLayout
+                        android:id="@+id/fl_survival"
+                        android:layout_width="match_parent"
+                        android:layout_height="215dp">
+
+                        <ImageView
+                            android:id="@+id/iv_survival"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/grey_background"
+                            android:clipToOutline="true"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/survival_mode_pic" />
+
+                        <TextView
+                            android:id="@+id/tv_survival"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:background="@drawable/bright_grey_frame"
+                            android:paddingHorizontal="16dp"
+                            android:paddingVertical="6dp"
+                            android:text="Survival"
+                            android:textColor="@color/white"
+                            android:textSize="24sp"
+                            android:textStyle="bold" />
+                    </FrameLayout>
+                </LinearLayout>
+
+                <!-- Bestätigungsbutton -->
+                <ImageButton
+                    android:id="@+id/btn_confirm_selection"
+                    android:layout_width="80dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="end"
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/green_button"
+                    android:contentDescription="@string/desc_check_confirm"
+                    android:src="@drawable/check_icon" />
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
     <!-- Bottom Navigation -->
     <LinearLayout
-        android:id="@+id/ll_bottom_navigation"
+        android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom"
         android:background="@color/grey_300"
         android:orientation="horizontal"
         android:weightSum="4">
@@ -197,5 +229,4 @@
                 android:src="@drawable/profile_white_icon" />
         </LinearLayout>
     </LinearLayout>
-
-</RelativeLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

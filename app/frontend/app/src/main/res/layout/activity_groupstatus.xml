@@ -1,104 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black"
+    android:fitsSystemWindows="true"
     tools:context=".GroupstatusActivity">
 
-    <!-- Scrollbarer Hauptinhalt -->
-    <ScrollView
+    <!-- Inhalt + Navigation via FrameLayout -->
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/ll_bottom_navigation">
+        android:layout_height="match_parent">
 
-        <LinearLayout
+        <!-- Scrollbarer Contentbereich -->
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/root_scroll"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingBottom="24dp">
+            android:layout_height="match_parent"
+            android:layout_gravity="top"
+            android:clipToPadding="false"
+            android:paddingBottom="100dp">
 
-            <!-- Header-Sektion mit Bild und Titel -->
-            <FrameLayout
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="220dp">
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="24dp">
 
-                <ImageView
-                    android:id="@+id/iv_group_banner"
+                <!-- Header-Sektion mit Bild und Titel -->
+                <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="centerCrop"
-                    tools:src="@drawable/group_picture_bg" />
+                    android:layout_height="220dp">
 
-                <ImageView
-                    android:id="@+id/btn_back"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_margin="16dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:padding="8dp"
-                    android:src="@drawable/back_icon" />
+                    <ImageView
+                        android:id="@+id/iv_group_banner"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/group_picture_bg" />
+
+                    <ImageView
+                        android:id="@+id/btn_back"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_margin="16dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:padding="8dp"
+                        android:src="@drawable/back_icon" />
+
+                    <TextView
+                        android:id="@+id/tv_group_name_detail"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="48dp"
+                        android:shadowColor="@color/black"
+                        android:background="@drawable/grey_background"
+                        android:shadowDx="2"
+                        android:shadowDy="2"
+                        android:shadowRadius="4"
+                        android:text="The Hustlers"
+                        android:textColor="@color/white"
+                        android:textSize="32sp"
+                        android:textStyle="bold" />
+
+                    <Button
+                        android:id="@+id/btn_invite_friends"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom|center_horizontal"
+                        android:layout_marginBottom="24dp"
+                        android:background="@drawable/blue_frame"
+                        android:paddingHorizontal="40dp"
+                        android:text="LADE FREUNDE EIN!"
+                        android:textColor="@color/white" />
+
+                </FrameLayout>
+
+                <!-- Beschreibung -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="24dp"
+                    android:text="Beschreibung:"
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
 
                 <TextView
-                    android:id="@+id/tv_group_name_detail"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/tv_group_description"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="48dp"
-                    android:shadowColor="@color/black"
-                    android:shadowDx="2"
-                    android:shadowDy="2"
-                    android:shadowRadius="4"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="4dp"
+                    android:background="@drawable/grey_background"
+                    android:padding="12dp"
+                    android:text="Hallo..."
                     android:textColor="@color/white"
-                    android:textSize="32sp"
-                    android:textStyle="bold"
-                    tools:text="The Hustlers" />
+                    android:textSize="16sp" />
 
-                <Button
-                    android:id="@+id/btn_invite_friends"
+                <!-- Mitglieder -->
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="bottom|center_horizontal"
-                    android:layout_marginBottom="24dp"
-                    android:background="@drawable/blue_frame"
-                    android:paddingHorizontal="40dp"
-                    android:text="LADE FREUNDE EIN!"
-                    android:textColor="@color/white" />
-
-            </FrameLayout>
-
-            <!-- Beschreibung -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginTop="24dp"
-                android:text="Beschreibung:"
-                android:textColor="@color/grey"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/tv_group_description"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginTop="4dp"
-                android:background="@drawable/grey_background"
-                android:padding="12dp"
-                android:textColor="@color/white"
-                android:textSize="16sp"
-                tools:text="Hallo..." />
-
-            <!-- Mitglieder -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginTop="24dp"
-                android:text="Gruppen Members:"
-                android:textColor="@color/white"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="24dp"
+                    android:text="Gruppen Members:"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_view_group_members"
@@ -112,72 +122,72 @@
                 tools:listitem="@layout/item_member_grid"
                 tools:spanCount="2" />
 
-            <!-- Challenge Overview Button -->
-            <Button
-                android:id="@+id/btn_challenge_overview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginTop="24dp"
-                android:background="@drawable/blue_frame"
-                android:text="CHALLENGE OVERVIEW"
-                android:textColor="@color/white" />
+                <!-- Challenge Overview Button -->
+                <Button
+                    android:id="@+id/btn_challenge_overview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="24dp"
+                    android:background="@drawable/blue_frame"
+                    android:text="CHALLENGE OVERVIEW"
+                    android:textColor="@color/white" />
 
-            <!-- Gruppe verlassen Button -->
-            <Button
-                android:id="@+id/btn_leave_group"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginTop="16dp"
-                android:background="@drawable/red_frame"
-                android:text="GRUPPE VERLASSEN"
-                android:textColor="@color/button_red" />
+                <!-- Gruppe verlassen Button -->
+                <Button
+                    android:id="@+id/btn_leave_group"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/red_frame"
+                    android:text="GRUPPE VERLASSEN"
+                    android:textColor="@color/button_red" />
 
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+
+        <!-- Bottom Navigation -->
+        <LinearLayout
+            android:id="@+id/bottom_navigation"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_gravity="bottom"
+            android:background="@color/grey_300"
+            android:orientation="horizontal"
+            android:weightSum="4">
+
+            <ImageView
+                android:id="@+id/nav_group"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:padding="10dp"
+                android:src="@drawable/group_blue_icon" />
+
+            <ImageView
+                android:id="@+id/nav_home"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:padding="10dp"
+                android:src="@drawable/home_white_icon" />
+
+            <ImageView
+                android:id="@+id/nav_add"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:padding="10dp"
+                android:src="@drawable/add_white_icon" />
+
+            <ImageView
+                android:id="@+id/nav_profile"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:padding="10dp"
+                android:src="@drawable/profile_white_icon" />
         </LinearLayout>
-    </ScrollView>
-
-    <!-- Bottom Navigation (JETZT KORREKT GEFÜLLT) -->
-    <LinearLayout
-        android:id="@+id/ll_bottom_navigation"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_alignParentBottom="true"
-        android:background="@color/grey_300"
-        android:orientation="horizontal"
-        android:weightSum="4">
-
-        <ImageView
-            android:id="@+id/nav_group"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:padding="10dp"
-            android:src="@drawable/group_blue_icon" />
-
-        <ImageView
-            android:id="@+id/nav_home"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:padding="10dp"
-            android:src="@drawable/home_white_icon" />
-
-        <ImageView
-            android:id="@+id/nav_add"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:padding="10dp"
-            android:src="@drawable/add_white_icon" />
-
-        <ImageView
-            android:id="@+id/nav_profile"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:padding="10dp"
-            android:src="@drawable/profile_white_icon" />
-    </LinearLayout>
-
-</RelativeLayout>
+    </FrameLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

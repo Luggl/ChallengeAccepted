@@ -1,140 +1,145 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinator"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black"
-    tools:context=".DashboardActivity">
+    android:fitsSystemWindows="true"
+    tools:context=".StandardIntensityActivity">
 
-    <LinearLayout
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
-        android:background="@drawable/grey_background"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:padding="8dp">
-
-        <!-- Gruppenname -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingStart="8dp"
-            android:text="Kämpfernatur\nStandard Challenge"
-            android:textColor="@color/white"
-            android:textSize="25sp"
-            android:textStyle="bold" />
-    </LinearLayout>
-
-    <!-- Zurück-Button -->
-    <ImageButton
-        android:id="@+id/btn_back"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_margin="28dp"
-        android:background="@drawable/grey_background"
-        android:src="@drawable/back_icon"
-        android:tint="@android:color/white"
-        tools:ignore="UseAppTint"
-        android:contentDescription="@string/back_button_desc" />
-
-    <!-- Hauptinhalt -->
-    <LinearLayout
-        android:id="@+id/main_content"
+    <!-- Scrollbarer Inhalt -->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/root_scroll"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/btn_back"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:orientation="vertical"
-        android:gravity="center_horizontal">
+        android:layout_height="match_parent"
+        android:background="@color/black"
+        android:clipToPadding="false"
+        android:paddingBottom="100dp">
 
-        <TextView
-            android:id="@+id/tv_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Übungstitel"
-            android:textColor="@color/white"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="8dp"
-            />
-
-        <!-- Header mit Icon und Titel -->
-        <ImageView
-            android:id="@+id/iv_exercise_icon"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_marginBottom="16dp"
-            android:src="@drawable/pushups_icon"
-            android:background="@drawable/blue_frame"
-            android:padding="12dp"
-            android:scaleType="centerInside"
-            android:tint="@android:color/holo_blue_bright"
-            tools:ignore="UseAppTint" />
-
-        <!-- Startintensität -->
         <LinearLayout
+            android:id="@+id/main_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:background="@drawable/bright_grey_frame"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:padding="12dp">
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
 
-            <TextView
+            <LinearLayout
+                android:id="@+id/header"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="Startintensität"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal"
+                android:paddingBottom="16dp">
+
+
+                <!-- Zurück-Button -->
+                <ImageButton
+                    android:id="@+id/btn_back"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_margin="28dp"
+                    android:background="@drawable/grey_background"
+                    android:contentDescription="@string/back_button_desc"
+                    android:src="@drawable/back_icon"
+                    android:tint="@android:color/white"
+                    tools:ignore="UseAppTint" />
+
+                <!-- Gruppenname -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:background="@drawable/grey_background"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:padding="8dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="8dp"
+                        android:text="Kämpfernatur\nStandard Challenge"
+                        android:textColor="@color/white"
+                        android:textSize="25sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- Übungstitel -->
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:text="Übungstitel"
                 android:textColor="@color/white"
-                android:textSize="25sp"
+                android:textSize="24sp"
                 android:textStyle="bold" />
 
+            <!-- Icon der Übung -->
+            <ImageView
+                android:id="@+id/iv_exercise_icon"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_marginBottom="24dp"
+                android:background="@drawable/blue_frame"
+                android:padding="12dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/pushups_icon"
+                android:tint="@android:color/holo_blue_bright"
+                tools:ignore="UseAppTint" />
 
+            <!-- Startintensität -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:background="@drawable/bright_grey_frame"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="12dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:text="Startintensität"
+                    android:textColor="@color/white"
+                    android:textSize="25sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/tv_start_main"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
-                    android:layout_marginVertical="8dp"
+                    android:layout_marginBottom="8dp"
                     android:background="@drawable/blue_frame"
                     android:gravity="center"
                     android:text="0"
                     android:textColor="@color/white"
                     android:textSize="20sp"
-                    android:textStyle="bold"
-                    />
+                    android:textStyle="bold" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:padding="12dp">
                 <SeekBar
                     android:id="@+id/seekbar_start"
                     android:layout_width="200dp"
                     android:layout_height="wrap_content"
                     android:max="50"
                     android:progress="0" />
-
             </LinearLayout>
-    </LinearLayout>
 
-        <!-- Endintensität -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/bright_grey_frame"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:padding="12dp">
-
+            <!-- Endintensität -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:background="@drawable/bright_grey_frame"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="12dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -144,6 +149,7 @@
                     android:textColor="@color/white"
                     android:textSize="25sp"
                     android:textStyle="bold" />
+
                 <TextView
                     android:id="@+id/tv_end_main"
                     android:layout_width="60dp"
@@ -161,30 +167,33 @@
                     android:layout_width="200dp"
                     android:layout_height="wrap_content"
                     android:max="100"
-                    android:progress="0"/>
+                    android:progress="0" />
             </LinearLayout>
-        </LinearLayout>
 
-    <!-- Check Button -->
-    <ImageButton
-        android:id="@+id/btn_confirm_selection"
-        android:layout_width="80dp"
-        android:layout_height="50dp"
-        android:layout_below="@id/main_content"
-        android:layout_alignParentEnd="true"
-        android:layout_margin="16dp"
-        android:background="@drawable/green_button"
-        android:src="@drawable/check_icon"
-        android:contentDescription="@string/desc_check_confirm"  />
+            <!-- Ceck Button -->
+            <ImageButton
+                android:id="@+id/btn_confirm_selection"
+                android:layout_width="70dp"
+                android:layout_height="50dp"
+                android:layout_gravity="bottom|end"
+                android:layout_margin="16dp"
+                android:background="@drawable/green_button"
+                android:contentDescription="@string/desc_check_confirm"
+                android:src="@drawable/check_icon" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
 
     <!-- Bottom Navigation -->
     <LinearLayout
-        android:id="@+id/ll_bottom_navigation"
+        android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_alignParentBottom="true"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
         android:background="@color/grey_300"
         android:orientation="horizontal"
+        android:paddingTop="0dp"
+        android:paddingBottom="0dp"
         android:weightSum="4">
 
         <!-- Community Icon -->
@@ -215,7 +224,7 @@
                 android:id="@+id/nav_home"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/home_white_icon" />
+                android:src="@drawable/home_blue_icon" />
 
         </LinearLayout>
 
@@ -231,7 +240,7 @@
                 android:id="@+id/nav_add"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/add_blue_icon" />
+                android:src="@drawable/add_white_icon" />
 
         </LinearLayout>
 
@@ -250,6 +259,5 @@
                 android:src="@drawable/profile_white_icon" />
 
         </LinearLayout>
-
     </LinearLayout>
-</RelativeLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

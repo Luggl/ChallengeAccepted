@@ -40,7 +40,6 @@ android {
     }
 }
 
-// HIER IST DIE KORREKTE STELLE 👇
 kapt {
     arguments {
         arg("room.schemaLocation", "$projectDir/schemas")
@@ -50,6 +49,7 @@ val camerax_version = "1.3.0"
 
 dependencies {
     implementation ("androidx.room:room-runtime:2.6.1")
+    implementation("com.google.android.filament:filament-android:1.28.1")
     kapt ("androidx.room:room-compiler:2.6.1")
     implementation ("androidx.room:room-ktx:2.6.1")
 
@@ -76,6 +76,8 @@ dependencies {
     implementation("androidx.camera:camera-view:$camerax_version") // wichtig für PreviewView!
     implementation("androidx.camera:camera-extensions:$camerax_version")
     implementation("androidx.coordinatorlayout:coordinatorlayout:1.2.0")
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

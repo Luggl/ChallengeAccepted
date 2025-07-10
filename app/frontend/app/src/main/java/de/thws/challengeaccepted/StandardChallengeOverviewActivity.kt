@@ -3,9 +3,11 @@ package de.thws.challengeaccepted
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -13,27 +15,51 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
 
 class StandardChallengeOverviewActivity : AppCompatActivity() {
+
+    fun Int.dpToPx(): Int =
+        (this * Resources.getSystem().displayMetrics.density).toInt()
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_standard_challenge_overview)
 
-        // Navigation Groupstatus
-        val navGroupstatus = findViewById<LinearLayout>(R.id.ll_groupstatus)
-        navGroupstatus.setOnClickListener {
-            val intent = Intent(this, GroupstatusActivity::class.java)
-            startActivity(intent)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+
+        val rootScroll = findViewById<View>(R.id.root_scroll)
+        val bottomNav = findViewById<View>(R.id.bottom_navigation)
+
+        ViewCompat.setOnApplyWindowInsetsListener(rootScroll) { view, insets ->
+            val systemInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.setPadding(
+                view.paddingLeft,
+                systemInsets.top,
+                view.paddingRight,
+                view.paddingBottom
+            )
+            insets
         }
 
-        // Navigation Record Activity
-        val navRecordAc = findViewById<TextView>(R.id.tv_remaining_time)
-        navRecordAc.setOnClickListener {
-            val intent = Intent(this, RecordActivity::class.java)
-            startActivity(intent)
+        ViewCompat.setOnApplyWindowInsetsListener(bottomNav) { view, insets ->
+            val systemInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+
+            view.setPadding(
+                view.paddingLeft,
+                8.dpToPx(),
+                view.paddingRight,
+                8.dpToPx(),
+            )
+            insets
         }
+
+        window.navigationBarColor = ContextCompat.getColor(this, R.color.black)
+
 
         // Challenge verlassen PopUp
         val leaveBtn = findViewById<Button>(R.id.btn_leave_challenge)

@@ -2,11 +2,16 @@ package de.thws.challengeaccepted
 
 import android.app.DatePickerDialog
 import android.content.Intent
+import android.content.res.Resources
 import android.os.Bundle
+import android.view.View
 import android.widget.*
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
 import de.thws.challengeaccepted.data.database.AppDatabase
 import de.thws.challengeaccepted.data.repository.ChallengeRepository
 import de.thws.challengeaccepted.models.SurvivalChallengeRequest
@@ -37,10 +42,41 @@ class SurvivalCreateChallengeOverviewActivity : AppCompatActivity() {
     private lateinit var intensityMap: HashMap<String, String>
     private var groupId: String = ""
 
+    fun Int.dpToPx(): Int =
+        (this * Resources.getSystem().displayMetrics.density).toInt()
+
     override fun onCreate(savedInstanceState: Bundle?) {
-        WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_survival_create_challenge_overview)
+
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+
+        val rootScroll = findViewById<View>(R.id.root_scroll)
+        val bottomNav = findViewById<View>(R.id.bottom_navigation)
+
+        ViewCompat.setOnApplyWindowInsetsListener(rootScroll) { view, insets ->
+            val systemInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.setPadding(
+                view.paddingLeft,
+                systemInsets.top,
+                view.paddingRight,
+                systemInsets.bottom + 60.dpToPx()
+            )
+            insets
+        }
+
+        ViewCompat.setOnApplyWindowInsetsListener(bottomNav) { view, insets ->
+            val systemInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.setPadding(
+                view.paddingLeft,
+                0,
+                view.paddingRight,
+                systemInsets.bottom
+            )
+            insets
+        }
+
+        window.navigationBarColor = ContextCompat.getColor(this, R.color.black)
 
         // groupId aus Intent holen
         groupId = intent.getStringExtra("groupId") ?: ""
