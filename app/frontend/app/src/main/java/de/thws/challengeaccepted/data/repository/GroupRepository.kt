@@ -201,6 +201,7 @@ class GroupRepository(
                     erstellt_am    = feedItem.erstellt_am,
                     thumbnail_url = feedItem.thumbnail_url,
                     user_id = feedItem.user_id,
+                    user_vote = feedItem.user_vote,
                 )
                 Log.d("GroupRepo", "Speichere Feed/Beitrag: $beitrag")
                 beitrag

@@ -13,6 +13,9 @@ import kotlinx.coroutines.launch
 class FeedViewModel(application: Application) : AndroidViewModel(application) {
     private val api = ApiClient.getRetrofit(application).create(FeedService::class.java)
 
+    private val _errorMessage = MutableLiveData<String?>()
+    val errorMessage: LiveData<String?> = _errorMessage
+
     private val _feed = MutableLiveData<List<Beitrag>>()
     val feed: LiveData<List<Beitrag>> = _feed
 
@@ -28,39 +31,27 @@ class FeedViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun vote(beitragId: String, vote: String) {
-        val oldList = _feed.value ?: return
-        // 1. Lokal ändern (damit UI direkt reagiert)
-        val newList = oldList.map {
-            fun vote(beitragId: String, vote: String, userId: String) {
-                val oldList = _feed.value ?: return
-                val beitrag = oldList.find { it.beitrag_id == beitragId }
-                // Blockiere Voting auf eigene Beiträge:
-                if (beitrag != null && beitrag.user_id == userId) {
-                    // Optional: Toast/Log
-                    return
+        // NICHT lokal updaten! Nur Backend-Call + danach Refresh
+        viewModelScope.launch {
+            try {
+                val req = VoteRequest(vote)
+                Log.d("VOTE_REQ", "ID: $beitragId, JSON: ${Gson().toJson(req)}")
+                api.voteBeitrag(beitragId, VoteRequest(vote))
+                // Feed nach Voting NEU vom Backend holen!
+                fetchFeed()
+            } catch (e: retrofit2.HttpException) {
+                if (e.code() == 400) {
+                    _errorMessage.value = "Du hast schon gevoted!"
+                } else {
+                    _errorMessage.value = "Fehler: ${e.code()}"
                 }
-
-                // 1. Lokal ändern (damit UI direkt reagiert)
-                val newList = oldList.map {
-                    if (it.beitrag_id == beitragId) it.copy(user_vote = vote)
-                    else it
-                }
-                _feed.value = newList
-
-                // 2. Dann Backend-Call asynchron (Optional: Fehler-Handling)
-                viewModelScope.launch {
-                    try {
-                        val req = VoteRequest(vote)
-                        Log.d("VOTE_REQ", "ID: $beitragId, JSON: ${Gson().toJson(req)}")
-                        api.voteBeitrag(beitragId, VoteRequest(vote))
-                        fetchFeed()
-                    } catch (e: Exception) {
-                        Log.e("VOTE", "Error sending vote", e)
-                        // Fehler-Handling
-                    }
-                }
+            } catch (e: Exception) {
+                _errorMessage.value = "Ein Fehler ist aufgetreten"
             }
         }
     }
-}
+    fun clearError() {
+        _errorMessage.value = null
+    }
 
+}

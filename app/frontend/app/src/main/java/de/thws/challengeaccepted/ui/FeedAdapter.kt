@@ -106,7 +106,7 @@ class FeedAdapter(
                     holder.btnAccepted.alpha = 1f
                     holder.btnRejected.alpha = 0.6f
                 }
-                "Rejected" -> {
+                "abgelehnt" -> {
                     holder.btnRejected.setBackgroundResource(R.drawable.red_frame)
                     holder.btnAccepted.setBackgroundResource(R.drawable.button_grey)
                     holder.btnRejected.alpha = 1f
@@ -128,8 +128,8 @@ class FeedAdapter(
                 }
             }
             holder.btnRejected.setOnClickListener {
-                if (beitrag.user_vote != "Rejected") {
-                    onVote(beitrag.beitrag_id, "Rejected")
+                if (beitrag.user_vote != "abgelehnt") {
+                    onVote(beitrag.beitrag_id, "abgelehnt")
                 }
             }
         }

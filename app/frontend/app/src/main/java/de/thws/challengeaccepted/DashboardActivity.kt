@@ -130,6 +130,14 @@ class DashboardActivity : AppCompatActivity() {
                 feedAdapter.submitList(beitragList)
             }
 
+            // FEHLERMELDUNG-OBSERVER HIER
+            feedViewModel.errorMessage.observe(this) { msg ->
+                if (!msg.isNullOrEmpty()) {
+                    Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
+                    feedViewModel.clearError()
+                }
+            }
+
             // ViewModel mit der User-ID initialisieren
             userViewModel.loadInitialData(userId)
 

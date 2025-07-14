@@ -1,5 +1,7 @@
 package de.thws.challengeaccepted.ui.viewmodels
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -23,6 +25,8 @@ import kotlinx.coroutines.launch
 class GroupViewModel(private val repository: GroupRepository) : ViewModel() {
 
     private val _groupId = MutableStateFlow<String?>(null)
+    private val _errorMessage = MutableLiveData<String?>()
+    val errorMessage: LiveData<String?> = _errorMessage
 
     val feed: StateFlow<List<BeitragEntity>> = _groupId.filterNotNull().flatMapLatest { id ->
         repository.getFeedForGroup(id)
@@ -137,11 +141,21 @@ class GroupViewModel(private val repository: GroupRepository) : ViewModel() {
                 }
                 repository.voteBeitragGroup(beitragId, VoteRequest(vote))
                 repository.refreshGroupData(groupId)
+            } catch (e: retrofit2.HttpException) {
+                if (e.code() == 400) {
+                    _errorMessage.value = "Du hast schon gevoted!"
+                } else {
+                    _errorMessage.value = "Fehler: ${e.code()}"
+                }
             } catch (e: Exception) {
-                // Fehlerbehandlung
+                _errorMessage.value = "Ein Fehler ist aufgetreten"
             }
         }
     }
+    fun clearError() {
+        _errorMessage.value = null
+    }
+
 }
 
 // Factory

@@ -174,6 +174,13 @@ class GroupDashboardActivity : AppCompatActivity() {
             }
         }
 
+        // FEHLERMELDUNG-OBSERVER: Direkt darunter!
+        groupViewModel.errorMessage.observe(this) { msg ->
+            if (!msg.isNullOrEmpty()) {
+                Toast.makeText(this@GroupDashboardActivity, msg, Toast.LENGTH_SHORT).show()
+                groupViewModel.clearError()
+            }
+        }
         // --- NEU: Offene Aufgabe beobachten & anzeigen
         lifecycleScope.launch {
             groupViewModel.openTask.collect { aufgabe ->

@@ -89,7 +89,7 @@ class GroupFeedAdapter(
                     holder.btnAccepted.alpha = 1f
                     holder.btnRejected.alpha = 0.6f
                 }
-                "Rejected" -> {
+                "abgelehnt" -> {
                     holder.btnRejected.setBackgroundResource(R.drawable.red_frame)
                     holder.btnAccepted.setBackgroundResource(R.drawable.button_grey)
                     holder.btnRejected.alpha = 1f
@@ -111,8 +111,8 @@ class GroupFeedAdapter(
                 }
             }
             holder.btnRejected.setOnClickListener {
-                if (beitrag.user_vote != "Rejected") {
-                    onVote(beitrag.beitrag_Id, "Rejected")
+                if (beitrag.user_vote != "abgelehnt") {
+                    onVote(beitrag.beitrag_Id, "abgelehnt")
                 }
             }
         }
