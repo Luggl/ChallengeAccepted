@@ -90,6 +90,7 @@ def get_task_logic(user_id):
 
 # Aufgabe als erledigt markieren
 def complete_task_logic(erfuellung_id, user_id, description, video_file):
+    print("Erfüllung_ID:" + erfuellung_id)
     user_id_uuid = get_uuid_formated_id(user_id)
     erfuellung_id_uuid = get_uuid_formated_id(erfuellung_id)
 
