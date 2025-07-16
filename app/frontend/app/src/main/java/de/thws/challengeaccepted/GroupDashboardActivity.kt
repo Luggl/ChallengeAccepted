@@ -30,7 +30,9 @@ import de.thws.challengeaccepted.ui.viewmodels.*
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 import android.content.res.Resources
+import android.util.Log
 import de.thws.challengeaccepted.data.entities.Aufgabe
+import kotlinx.coroutines.flow.collectLatest
 
 class GroupDashboardActivity : AppCompatActivity() {
 
@@ -39,7 +41,7 @@ class GroupDashboardActivity : AppCompatActivity() {
         val service = ApiClient.getRetrofit(applicationContext).create(GroupService::class.java)
         val repository = GroupRepository(
             service,
-            applicationContext,
+            applicationContext,// --- NEU: Context als zweiter Parameter!
             db.gruppeDao(),
             db.challengeDao(),
             db.beitragDao(),
@@ -56,14 +58,48 @@ class GroupDashboardActivity : AppCompatActivity() {
 
     // --- HILFSFUNKTION FÜR INTENT ---
     private fun createRecordIntent(aufgabe: Aufgabe, groupId: String, groupName: String): Intent {
+        Log.d("GroupDashboardActivity", "Erfuellungs_ID: ${aufgabe.erfuellungId}")
         return Intent(this, RecordActivity::class.java).apply {
             putExtra("TASK_ID", aufgabe.aufgabeId)
             putExtra("TASK_DESC", aufgabe.beschreibung)
             putExtra("GROUP_ID", groupId)
             putExtra("GROUP_NAME", groupName)
-            putExtra("Erfuellungs_ID", aufgabe.erfuellungsId)
+            putExtra("Erfuellungs_ID", aufgabe.erfuellungId)
+
         }
     }
+
+    private fun showUniversalAddDialog(groupId: String, groupName: String, aufgabe: Aufgabe?) {
+        val dialogBuilder = AlertDialog.Builder(this)
+        dialogBuilder.setTitle("Was möchtest du tun?")
+            .setMessage("Wähle eine Aktion:")
+
+        if (aufgabe != null) {
+            dialogBuilder.setPositiveButton("Aufgabe erledigen") { _, _ ->
+                val intent = createRecordIntent(aufgabe, groupId, groupName)
+                startActivity(intent)
+            }
+        }
+
+        dialogBuilder.setNegativeButton("Challenge erstellen") { _, _ ->
+            val intent = Intent(this, CreateChallengeModeActivity::class.java)
+            intent.putExtra("groupId", groupId)
+            startActivity(intent)
+        }
+
+        val alertDialog = dialogBuilder.create()
+        alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.BLACK))
+        alertDialog.setOnShowListener {
+            val titleId = resources.getIdentifier("alertTitle", "id", "android")
+            alertDialog.findViewById<TextView>(titleId)?.setTextColor(Color.WHITE)
+            alertDialog.findViewById<TextView>(android.R.id.message)?.setTextColor(Color.WHITE)
+            alertDialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(Color.WHITE)
+            alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(Color.WHITE)
+        }
+        alertDialog.show()
+    }
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,6 +123,7 @@ class GroupDashboardActivity : AppCompatActivity() {
 
         ViewCompat.setOnApplyWindowInsetsListener(bottomNav) { view, insets ->
             val systemInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+
             view.setPadding(
                 view.paddingLeft,
                 8.dpToPx(),
@@ -105,6 +142,7 @@ class GroupDashboardActivity : AppCompatActivity() {
             return
         }
 
+        // --- UserId aus SharedPreferences holen (für die Aufgaben-API)
         val prefs = getSharedPreferences("app", MODE_PRIVATE)
         val userId = prefs.getString("USER_ID", null)
         if (userId == null) {
@@ -121,10 +159,11 @@ class GroupDashboardActivity : AppCompatActivity() {
         val btnCreateChallenge = findViewById<Button>(R.id.btn_create_challenge)
         val challengeLaufzeit = findViewById<TextView>(R.id.tv_challenge_laufzeit)
         val deadMembersLayout = findViewById<LinearLayout>(R.id.ll_dead_members)
-        val aufgabeDescText = findViewById<TextView>(R.id.tv_aufgabe_desc)
-        val countdownText = findViewById<TextView>(R.id.tv_remaining_time)
+        // --- NEU: Views für Aufgabe & Countdown (Füge diese IDs ins Layout ein!) // View für Aufgabenkarte (optional)
+        val aufgabeDescText = findViewById<TextView>(R.id.tv_aufgabe_desc) // Beschreibung offene Aufgabe
+        val countdownText = findViewById<TextView>(R.id.tv_remaining_time)  // Countdown bis zur Deadline
 
-        // Voting-Adapter
+        // Voting-Adapter mit Callback für Accepted/Rejected
         groupFeedAdapter = GroupFeedAdapter(emptyList()) { beitragId, vote ->
             val prefs = getSharedPreferences("app", MODE_PRIVATE)
             val userId = prefs.getString("USER_ID", null)
@@ -137,10 +176,10 @@ class GroupDashboardActivity : AppCompatActivity() {
         feedRecycler.layoutManager = LinearLayoutManager(this)
         feedRecycler.adapter = groupFeedAdapter
 
-        // --- Lade Gruppe + offene Aufgabe + Timer! ---
+        // --- NEU: Lade Gruppe + offene Aufgabe + Timer!
         groupViewModel.loadGroupDataWithTask(groupId, userId)
 
-        // Gruppendetails beobachten
+        // Gruppendetails beobachten (Header!)
         lifecycleScope.launch {
             groupViewModel.groupDetails.collect { gruppe ->
                 gruppe?.let {
@@ -171,7 +210,7 @@ class GroupDashboardActivity : AppCompatActivity() {
                     challengeLaufzeit.text = "Challenge läuft seit $daysSinceStart Tagen"
                 } else {
                     challengeCardActive.visibility = View.GONE
-                    btnCreateChallenge.visibility = View.VISIBLE
+//                    btnCreateChallenge.visibility = View.VISIBLE
                 }
             }
         }
@@ -212,10 +251,14 @@ class GroupDashboardActivity : AppCompatActivity() {
             }
         }
 
-        // --- Challenge Card OnClick ---
-        challengeCardActive.setOnClickListener {
-            groupViewModel.openTask.value?.let { aufgabe ->
-                val intent = createRecordIntent(aufgabe, groupId, groupNameTextView.text.toString())
+        findViewById<View>(R.id.challenge_card_active).setOnClickListener {
+            groupViewModel.openTask.value?.let { task ->
+                val intent = Intent(this, RecordActivity::class.java)
+                intent.putExtra("TASK_ID", task.aufgabeId)
+                intent.putExtra("TASK_DESC", task.beschreibung)
+                intent.putExtra("GROUP_ID", groupId)
+                intent.putExtra("GROUP_NAME", groupNameTextView.text)
+                intent.putExtra("Erfuellungs_ID", task.erfuellungId)
                 startActivity(intent)
             }
         }
@@ -258,15 +301,13 @@ class GroupDashboardActivity : AppCompatActivity() {
             startActivity(Intent(this, ProfileActivity::class.java))
         }
         findViewById<ImageView>(R.id.nav_add).setOnClickListener {
-            val aufgabe = groupViewModel.openTask.value
-            if (aufgabe != null) {
-                showAddActionDialog(
+            lifecycleScope.launch{
+                val task = groupViewModel.openTask.value
+                showUniversalAddDialog(
                     groupId,
                     groupNameTextView.text.toString(),
-                    aufgabe
+                    task
                 )
-            } else {
-                Toast.makeText(this, "Keine offene Aufgabe gefunden!", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -278,14 +319,19 @@ class GroupDashboardActivity : AppCompatActivity() {
             .setPositiveButton("Aufgabe erledigen") { _, _ ->
                 Toast.makeText(this, "Aufgaben-Erledigungs-Flow startet...", Toast.LENGTH_SHORT).show()
                 val intent = createRecordIntent(aufgabe, groupId, groupName)
+                intent.putExtra("TASK_ID", aufgabe.aufgabeId)
+                intent.putExtra("TASK_DESC", aufgabe.beschreibung)
+                intent.putExtra("GROUP_ID", groupId)
+                intent.putExtra("ERFUELLUNG_ID", aufgabe.erfuellungId)
                 startActivity(intent)
             }
             .setNegativeButton("Challenge erstellen") { _, _ ->
                 Toast.makeText(this, "Challenge-Erstellung startet...", Toast.LENGTH_SHORT).show()
                 val intent = Intent(this, CreateChallengeModeActivity::class.java)
-                intent.putExtra("groupId", groupId)
+                intent.putExtra("GROUP_ID", groupId)
                 startActivity(intent)
             }
+
 
         val alertDialog = dialogBuilder.create()
         alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.BLACK))

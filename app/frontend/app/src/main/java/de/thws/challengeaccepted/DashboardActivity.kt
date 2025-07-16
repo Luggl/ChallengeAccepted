@@ -50,7 +50,7 @@ class DashboardActivity : AppCompatActivity() {
     // FeedViewModel bleibt wie gehabt
     private val feedViewModel: FeedViewModel by viewModels()
     private val beitragViewModel: BeitragViewModel by viewModels {
-        BeitragViewModelFactory(BeitragRepository(this))
+        BeitragViewModelFactory(applicationContext)
     }
 
 
@@ -110,8 +110,8 @@ class DashboardActivity : AppCompatActivity() {
         val feedAdapter = FeedAdapter(
             emptyList(),
             onVote = {beitragId, vote -> feedViewModel.vote(beitragId, vote)},
-            onUpload = {userId, erfuellungId, beschreibung, videoFile ->
-                beitragViewModel.uploadBeitrag(userId, erfuellungId, beschreibung, videoFile){ success ->
+            onUpload = {erfuellungId, beschreibung, videoFile ->
+                beitragViewModel.uploadBeitrag(erfuellungId, beschreibung, videoFile){ success ->
                     if (success) {
                         Toast.makeText(this, "Upload erfolgreich", Toast.LENGTH_SHORT).show()
                     }else{

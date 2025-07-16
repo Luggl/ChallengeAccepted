@@ -21,12 +21,12 @@ data class ChallengeApiResponse(
 data class AufgabeApiResponse(
     @SerializedName("aufgabe_id")
     val aufgabeId: String,
+    val erfuellungId: String,
     val beschreibung: String,
     val zielwert: Int,
     val dauer: Int?,
     val deadline: Long?,
     val datum: Long?,
     val unit: String,
-    val typ: String,
-    val erfuellungsId: String?
+    val typ: String
 )

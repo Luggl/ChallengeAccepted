@@ -14,5 +14,5 @@ data class Aufgabe(
     val datum: Long?,
     val unit: String,
     val typ: String,
-    val erfuellungsId: String?
+    val erfuellungId: String
 )

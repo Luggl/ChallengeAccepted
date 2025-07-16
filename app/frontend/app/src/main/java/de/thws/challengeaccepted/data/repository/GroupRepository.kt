@@ -106,6 +106,7 @@ class GroupRepository(
         return aufgabeApi?.let {
             Aufgabe(
                 aufgabeId = it.aufgabe_id,
+                erfuellungId = it.erfuellung_id,
                 challengeId = "",
                 beschreibung = it.beschreibung,
                 zielwert = it.zielwert,
@@ -113,8 +114,7 @@ class GroupRepository(
                 deadline = parseApiDateToMillis(it.deadline),
                 datum = parseApiDateToMillis(it.datum),
                 unit = it.unit,
-                typ = "",
-                erfuellungsId = it.erfuellung_id
+                typ = ""
             )
         }
     }

@@ -74,7 +74,7 @@ class ChallengeRepository(
         datum = api.datum,
         unit = api.unit,
         typ = api.typ,
-        erfuellungsId = api.erfuellungsId
+        erfuellungId = api.erfuellungId
     )
 
     // --- Bestehende Funktionen zum Erstellen von Challenges ---

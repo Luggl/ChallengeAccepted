@@ -6,14 +6,14 @@ import retrofit2.Response
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
+import retrofit2.http.Query
 
 interface BeitragApiService {
     @Multipart
     @POST("task")
     suspend fun uploadBeitrag(
-        @Part("userId") userId: RequestBody,
-        @Part("erfuellungId") erfuellungId: RequestBody,
-        @Part("beschreibung") beschreibung: RequestBody,
+        @Query("erfuellung_id") erfuellungId: String,
+        @Part("description") beschreibung: RequestBody,
         @Part video: MultipartBody.Part
     ): Response<Unit>
 }

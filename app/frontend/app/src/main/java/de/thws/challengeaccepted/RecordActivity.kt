@@ -8,6 +8,7 @@ import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ImageButton
@@ -56,6 +57,7 @@ class RecordActivity : AppCompatActivity() {
         // Dynamische Titel/Texts für Aufgabe & Gruppe
         val groupName = intent.getStringExtra("GROUP_NAME")
         val taskDesc = intent.getStringExtra("TASK_DESC")
+        val erfuellungId = intent.getStringExtra("Erfuellungs_ID")
 
         val groupNameText = findViewById<TextView>(R.id.tvGroupNameRecord)
         val taskDescText = findViewById<TextView>(R.id.tvTaskDescRecord)
@@ -141,6 +143,7 @@ class RecordActivity : AppCompatActivity() {
                                 val savedUri = event.outputResults.outputUri
                                 val intent = Intent(this, PostEditActivity::class.java)
                                 intent.putExtra("video_uri", savedUri.toString())
+                                intent.putExtra("Erfuellungs_ID", erfuellungId)
                                 startActivity(intent)
                             }
                         }
@@ -194,6 +197,9 @@ class RecordActivity : AppCompatActivity() {
                     Toast.makeText(this, "Aktivität wurde abgeschlossen!", Toast.LENGTH_SHORT)
                         .show()
                     val intent = Intent(this, PostEditActivity::class.java)
+                    intent.putExtra("Erfuellungs_ID", erfuellungId)
+                    intent.putExtra("GROUP_ID", intent.getStringExtra("GROUP_ID"))
+                    Log.d("RecordActivity", "Erfuellungs_ID: $erfuellungId")
                     startActivity(intent)
                 }
 

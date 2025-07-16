@@ -19,7 +19,7 @@ import java.io.File
 class FeedAdapter(
     private var items: List<Beitrag>,
     private val onVote: (beitragId: String, vote: String) -> Unit,
-    private val onUpload: (userId: String, erfuellungId: String, beschreibung: String, videoFile: File) -> Unit) :
+    private val onUpload: (erfuellungId: String, beschreibung: String, videoFile: File) -> Unit) :
         RecyclerView.Adapter<FeedAdapter.FeedViewHolder>() {
             class FeedViewHolder(view: View) : RecyclerView.ViewHolder(view) {
                 val tvBeschreibung: TextView = view.findViewById(R.id.tvBeschreibung)

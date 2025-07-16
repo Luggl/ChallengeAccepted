@@ -150,7 +150,7 @@ class StandardCreateChallengeOverviewActivity : AppCompatActivity() {
             "Squats" to "67727a0a-3bb5-5f6a-9bba-7a12c4adf4cc",
             "Lunges" to "a31eece7-3623-5ae6-ba43-3210fe706e32",
             "Burpees" to "2c73675b-996c-5020-a0ef-e17dda08b9fc",
-            "Plank" to "0e9dcf37-eb51-548d-8480-4fbe9bf0aef4"
+            "Planks" to "0e9dcf37-eb51-548d-8480-4fbe9bf0aef4"
         )
 
         // Challenge abschicken

@@ -6,7 +6,9 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -17,6 +19,10 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.ViewModelProvider
+import de.thws.challengeaccepted.ui.viewmodels.BeitragViewModelFactory
+import de.thws.challengeaccepted.ui.viewmodels.BeitragViewModel
+import de.thws.challengeaccepted.data.repository.BeitragRepository
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -27,10 +33,13 @@ import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.Response
 import java.io.File
 import java.io.IOException
+import androidx.activity.viewModels
 
 
 class PostEditActivity : AppCompatActivity() {
 
+    private lateinit var beitragViewModel: BeitragViewModel
+    private var erfuellungId: String? = null
 
     fun Int.dpToPx(): Int =
         (this * Resources.getSystem().displayMetrics.density).toInt()
@@ -47,49 +56,45 @@ class PostEditActivity : AppCompatActivity() {
 
     }
 
-    private fun uploadVideo(file: File) {
-        val client = OkHttpClient()
+    private fun uploadVideo(
+        file: File,
+        beschreibung: String,
+        erfuellungId: String
+    ) {
+        Log.d("PostEditActivity", "Starte Video-Upload innerhalb der Methode uploadVideo")
+        Log.d("PostEditActivity", "ErfuellungId: $erfuellungId, Beschreibung: $beschreibung")
 
-        val requestBody = MultipartBody.Builder()
-            .setType(MultipartBody.FORM)
-            .addFormDataPart(
-                "video", file.name,
-                file.asRequestBody("video/mp4".toMediaTypeOrNull())
-            )
-            .build()
-
-        val request = Request.Builder()
-            .url("http://138.199.220.111:5000/api/task")
-            .post(requestBody)
-            .build()
-
-        client.newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                runOnUiThread {
-                    Toast.makeText(this@PostEditActivity, "Upload fehlgeschlagen", Toast.LENGTH_SHORT).show()
+        beitragViewModel.uploadBeitrag(
+            erfuellungId = erfuellungId,
+            beschreibung = beschreibung,
+            videoFile = file
+        ){ success ->
+            runOnUiThread {
+                if (success) {
+                    Toast.makeText(this, "Beitrag hochgeladen", Toast.LENGTH_SHORT).show()
+                    startActivity(Intent(this, GroupDashboardActivity::class.java))
+                    intent.putExtra("GROUP_ID", intent.getStringExtra("GROUP_ID"))
+                    finish()
+                }else{
+                    Toast.makeText(this, "Fehler beim Upload", Toast.LENGTH_SHORT).show()
                 }
             }
 
-            override fun onResponse(call: Call, response: Response) {
-                runOnUiThread {
-                    if (response.isSuccessful){
-                        Toast.makeText(this@PostEditActivity, "Upload erfolgreich", Toast.LENGTH_SHORT).show()
-                    } else{
-                        Toast.makeText(this@PostEditActivity, "Upload fehlgeschlagen", Toast.LENGTH_SHORT).show()
-                    }
-                }
-            }
-        })
+        }
+
     }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_post_edit)
 
         // Randloses Layout aktivieren
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
+        val factory = BeitragViewModelFactory(applicationContext)
+        beitragViewModel = ViewModelProvider(this, factory).get(BeitragViewModel::class.java)
 
         val bottomNav = findViewById<View>(R.id.bottom_navigation)
 
@@ -106,6 +111,9 @@ class PostEditActivity : AppCompatActivity() {
             )
             insets
         }
+
+        erfuellungId = intent.getStringExtra("Erfuellungs_ID")
+        Log.d("PostEditActivity", "Erfuellungs_ID in onCreate: $erfuellungId")
 
         window.navigationBarColor = ContextCompat.getColor(this, R.color.black)
 
@@ -146,6 +154,7 @@ class PostEditActivity : AppCompatActivity() {
             val videoView = findViewById<VideoView>(R.id.video_preview)
             val uri = Uri.parse(videoUriString)
 
+
             videoView.setVideoURI(uri)
             videoView.setOnPreparedListener { mp ->
                 mp.isLooping = true // optional
@@ -164,18 +173,39 @@ class PostEditActivity : AppCompatActivity() {
             dialogBuilder.setMessage("Du bist fertig mit deiner Aktivität?")
 
             dialogBuilder.setPositiveButton("Abschließen") { _, _ ->
-                Toast.makeText(this, "Aktivität wurde abgeschlossen!", Toast.LENGTH_SHORT).show()
-                val intent = Intent(this, GroupDashboardActivity::class.java)
-                startActivity(intent)
-            }
-            val videoUriString = intent.getStringExtra("video_uri")
-            val uri = Uri.parse(videoUriString)
+                Log.d("PostEditActivity", "Abschließen Button wurde gedrückt")
+                Toast.makeText(this, "Button wurde gedrückt...", Toast.LENGTH_SHORT).show()
+                Log.d("PostEditActivity", "Toast wurde angezeigt")
+                val prefs = getSharedPreferences("app", MODE_PRIVATE)
+                Log.d("PostEditActivity", "prefs wurden erzeugt")
+                val userId = prefs.getString("USER_ID", null)
+                Log.d("PostEditActivity", "userid wurde geholt")
+                val beschreibung = findViewById<EditText>(R.id.et_group_description).text.toString()
+                Log.d("PostEditActivity", "Beschreibung wurde geholt")
+                val videoUriString = intent.getStringExtra("video_uri") ?: return@setPositiveButton
+                Log.d("PostEditActivity", "video uri")
+                val uri = Uri.parse(videoUriString)
+                Log.d("PostEditActivity", "uri")
+                val file = uriToFile(uri)
+                Log.d("PostEditActivity", "file")
 
-            val file = uriToFile(uri)
-            if (file != null) {
-                uploadVideo(file)
-            }else{
-                Toast.makeText(this, "Dateiumwandlung fehlgeschlagen", Toast.LENGTH_SHORT).show()
+
+                Log.d("PostEditActivity", "Starte Video-Upload")
+                Log.d("PostEditActivity", "Beschreibung: $beschreibung")
+                Log.d("PostEditActivity", "userId: $userId")
+                Log.d("PostEditActivity", "Erfüllung ID: $erfuellungId")
+                Log.d("PostEditActivity", "Video-Datei vorhanden: ${file?.exists()} Pfad: ${file?.path}")
+
+
+                if (userId != null && file != null && erfuellungId != null) {
+                    Log.d("PostEditActivity", "Video-Upload gestartet")
+                    Toast.makeText(this, "Upload wird gestartet...", Toast.LENGTH_SHORT).show()
+                    uploadVideo(file, beschreibung, erfuellungId!!)
+                } else {
+                    Log.d("PostEditActivity", "Fehlende Daten für Upload: user ${userId}, file ${file}, beschreibung ${beschreibung}, erfuellungId ${erfuellungId}")
+                    Toast.makeText(this, "Fehlende Daten für Upload", Toast.LENGTH_SHORT).show()
+                }
+
             }
 
             // Abbrechen

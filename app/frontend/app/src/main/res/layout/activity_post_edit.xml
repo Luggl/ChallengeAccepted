@@ -21,7 +21,6 @@
         android:orientation="vertical"
         android:padding="8dp">
 
-        <!-- Gruppenname -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -96,7 +95,6 @@
         android:padding="12dp"
         android:textColor="@color/white"
         android:textColorHint="#cccccc" />
-
 
     <!-- Check Button -->
     <ImageButton
