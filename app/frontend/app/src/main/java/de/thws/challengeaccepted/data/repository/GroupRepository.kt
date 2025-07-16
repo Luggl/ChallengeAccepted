@@ -113,7 +113,8 @@ class GroupRepository(
                 deadline = parseApiDateToMillis(it.deadline),
                 datum = parseApiDateToMillis(it.datum),
                 unit = it.unit,
-                typ = ""
+                typ = "",
+                erfuellungsId = it.erfuellung_id
             )
         }
     }
