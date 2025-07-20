@@ -1,3 +1,6 @@
+import logging
+from fileinput import filename
+
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from app.services.task_service import get_task_logic, complete_task_logic, vote_logic, generate_survival_tasks_for_all_challenges
@@ -21,17 +24,37 @@ def get_tasks():
 @task_bp.route("/api/task", methods=["POST"])
 @jwt_required()
 def complete_task():
-    user_id = get_jwt_identity()
-    erfuellung_id = request.args.get("erfuellung_id")
-    description = request.form.get("description")
-    video_file = request.files.get("verification")
+    try:
+        user_id = get_jwt_identity()
 
-    result = complete_task_logic(erfuellung_id, user_id, description, video_file)
+        #Zugriff auf Query Parameter
+        erfuellung_id = request.args.get("erfuellung_id")
 
-    if not result["success"]:
-        return jsonify({"error": result["error"]}), 400
+        #Zugriff auf Text aus Multipart
+        description = request.form.get("description")
 
-    return jsonify({"message": result}), 201
+        #Zugriff auf Datei
+        video_file = request.files.get("verification")
+
+        #Logging
+        logging.info(f"description: {description}")
+        logging.info(f"video_file: {video_file.filename if filename else None}")
+
+        result = complete_task_logic(erfuellung_id, user_id, description, video_file)
+
+        if not result["success"]:
+            return jsonify({"error": result["error"]}), 400
+
+        return jsonify({"message": result}), 201
+
+    except Exception as e:
+        logging.exception("Fehler beim Hochladen des Beitrags:")
+        return jsonify({
+            "success": False,
+            "data": None,
+            "error": str(e)
+        }), 500
+
 
 @task_bp.route('/api/vote', methods=["POST"])
 @jwt_required()

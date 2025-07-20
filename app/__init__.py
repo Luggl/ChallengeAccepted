@@ -21,6 +21,9 @@ def check_if_token_revokes(jwt_header, jwt_payload):
 def create_app():
     app = Flask(__name__)
 
+    # 100MB Videoupload möglich!
+    app.config['MAX_CONTENT_LENGTH'] = 10 * 1024 * 1024
+
     # DB-Konfiguration
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
