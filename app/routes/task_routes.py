@@ -23,39 +23,37 @@ def get_tasks():
 @task_bp.route("/api/task", methods=["POST"])
 @jwt_required()
 def complete_task():
-    user_id = get_jwt_identity()
-    erfuellung_id = request.args.get("erfuellung_id")
-    description = request.form.get("description")
-    video_file = request.files.get("verification")
-    app.logger.info(f"API /api/task called - user_id from token: {user_id}, erfuellung_id: {erfuellung_id}")
-
-    if not user_id:
-        app.logger.warning("Missing or invalid JWT token: user_id is None")
-        return {"error": "Unauthorized"}, 401
-
-    if not erfuellung_id:
-        app.logger.warning(f"user_id {user_id} sent request without erfuellung_id")
-        return {"error": "Missing erfuellung_id"}, 400
-
-    if not video_file:
-        app.logger.warning(f"user_id {user_id} sent request without verification video file")
-        return {"error": "Missing verification file"}, 400
-
     try:
-        result = complete_task_logic(erfuellung_id, user_id, description, video_file)
-        app.logger.info(f"Task completed successfully for user_id {user_id}, erfuellung_id {erfuellung_id}")
-        return {"success": True}
-    except Exception as e:
-        app.logger.error(f"Error processing task for user_id {user_id}: {e}", exc_info=True)
-        return {"error": "Internal Server Error"}, 500
+        user_id = get_jwt_identity()
 
-    #
-    # result = complete_task_logic(erfuellung_id, user_id, description, video_file)
-    #
-    # if not result["success"]:
-    #     return jsonify({"error": result["error"]}), 400
-    #
-    # return jsonify({"message": result}), 201
+        #Zugriff auf Query Parameter
+        erfuellung_id = request.args.get("erfuellung_id")
+
+        #Zugriff auf Text aus Multipart
+        description = request.form.get("description")
+
+        #Zugriff auf Datei
+        video_file = request.files.get("verification")
+
+        #Logging
+        logging.info(f"description: {description}")
+        logging.info(f"video_file: {video_file.filename if video_file.filename else None}")
+
+        result = complete_task_logic(erfuellung_id, user_id, description, video_file)
+
+        if not result["success"]:
+            return jsonify({"error": result["error"]}), 400
+
+        return jsonify({"message": result}), 201
+
+    except Exception as e:
+        logging.exception("Fehler beim Hochladen des Beitrags:")
+        return jsonify({
+            "success": False,
+            "data": None,
+            "error": str(e)
+        }), 500
+
 
 @task_bp.route('/api/vote', methods=["POST"])
 @jwt_required()
