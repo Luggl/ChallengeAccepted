@@ -5,7 +5,7 @@ from sqlalchemy import event
 DATABASE_URL = r"sqlite:////root/ChallengeAccepted/mydatabase.db"
 
 Base=declarative_base()
-engine=create_engine(DATABASE_URL, echo=True)
+engine=create_engine(DATABASE_URL)
 SessionLocal= sessionmaker(bind=engine)
 
 
