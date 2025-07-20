@@ -24,12 +24,30 @@ def safe_video_logic(task_id, video_file):
     full_path = upload_path / filename
     absolute_path = str(full_path.resolve())
     try:
-        video_file.save(str(full_path))
+        # Temporäre Datei abspeichern
+        temp_path = full_path.with_suffix(".temp.mp4")
+        video_file.save(str(temp_path))
+
+        # Mit ffmpeg streambar machen (moov atom an Anfang setzen)
+        # -c copy = keine Neucodierung, nur Metadaten umbauen
+        streamable_path = full_path
+        subprocess.run([
+            "ffmpeg", "-i", str(temp_path),
+            "-movflags", "faststart",
+            "-c", "copy",
+            str(streamable_path)
+        ], check=True)
+
+        # Temporäre Datei löschen
+        temp_path.unlink(missing_ok=True)
+
 
         #Rückgabe einer URL, nicht eines Dateipfads
         relative_url = "/" + str(PurePosixPath(full_path.relative_to(BASE_DIR)))
         absolute_url = SERVER_URL + relative_url
         return response(True, data={"path": absolute_path, "url": absolute_url})
+    except subprocess.CalledProcessError as ffmpeg_error:
+        return response(False, error=f"FFmpeg-Fehler: {ffmpeg_error}")
     except Exception as e:
         return response(False, error="Fehler beim Speichern des Videos!")
 
