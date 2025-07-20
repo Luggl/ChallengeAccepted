@@ -1,10 +1,10 @@
 import atexit
 from datetime import timedelta
-from flask import Flask, request, jsonify
+from flask import Flask, request, Response
 from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager
 from app.utils.scheduler_instance import scheduler
-from services.schedule import run_daily_survival_task
+from app.services.schedule import run_daily_survival_task
 import logging
 
 db = SQLAlchemy()
@@ -68,12 +68,15 @@ def create_app():
         logging.info(f"Request JSON: {request.get_json(silent=True)}")
 
     @app.after_request
-    def log_request_info(response):
-        try:
-            data = response.get_json()
-            logging.info(f"Response: success={data.get('success')}, error={data.get('error')}")
-        except Exception:
-            logging.warning("Response konnte nicht als JSON gelesen werden.")
+    def log_response_info(response: Response):
+        if response.content_type == "application/json":
+            try:
+                response_data = response.get_data(as_text=True)
+                app.logger.info(f"Raw JSON response: {response_data}")
+            except Exception as e:
+                app.logger.warning(f"JSON-Auslesen fehlgeschlagen: {e}")
+        else:
+            app.logger.info(f"Non-JSON response: {response.status_code} {response.content_type}")
         return response
 
     return app
