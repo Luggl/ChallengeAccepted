@@ -4,7 +4,7 @@ from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager
 from app.utils.scheduler_instance import scheduler
-from services.schedule import run_daily_survival_task
+from app.services.schedule import run_daily_survival_task
 import logging
 
 db = SQLAlchemy()
