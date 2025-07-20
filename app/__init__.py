@@ -1,10 +1,11 @@
 import atexit
 from datetime import timedelta
-from flask import Flask
+from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager
 from app.utils.scheduler_instance import scheduler
-from app.services.schedule import run_daily_survival_task
+from services.schedule import run_daily_survival_task
+import logging
 
 db = SQLAlchemy()
 jwt = JWTManager()  # JWTManager global verfügbar machen
@@ -56,5 +57,23 @@ def create_app():
                       minute=0)  # Jeden Tag um 07:00 werden die Survival Tasks erzeugt
     scheduler.start()
     atexit.register(lambda: scheduler.shutdown())  # gägngige Praxis: Bei App-Ende wird der Scheduler deaktiviert
+
+    # Logging konfigurieren
+    logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
+    @app.before_request
+    def log_request_info():
+        logging.info(f"Route aufgerufen: {request.method} {request.path}")
+        logging.info(f"Request args: {request.args}")
+        logging.info(f"Request JSON: {request.get_json(silent=True)}")
+
+    @app.after_request
+    def log_request_info(response):
+        try:
+            data = response.get_json()
+            logging.info(f"Response: success={data.get('success')}, error={data.get('error')}")
+        except Exception:
+            logging.warning("Response konnte nicht als JSON gelesen werden.")
+        return response
 
     return app
