@@ -1,26 +1,35 @@
 from flask import Blueprint, request, jsonify
-from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token
-from app.services.user_service import *
-
+from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token, get_jwt
+from app import blacklisted_tokens
+from app.services.user_service import (
+    register_user_logic,
+    login_user_logic,
+    forgot_password_logic,
+    reset_password_logic,
+    delete_user_logic,
+    get_user_logic,
+    update_user_logic,
+    update_password_logic
+    )
 
 # Blueprint ist eine "Mini-App" innerhalb Flask, um Routen besser zu strukturieren.
 user_bp = Blueprint('user', __name__)
 
 @user_bp.route('/api/user', methods=['POST'])
 def register_user():
-    # Lesen der Daten aus dem Body der Schnittstelle
     data = request.get_json()
 
-    # Einzelne Werte zuweisen
-    username = data.get('username')
-    email = data.get('email')
-    password = data.get('password')
+    username = data.get("username")
+    email = data.get("email")
+    password = data.get("password")
 
-    # Prüfung, ob alle Daten vorhanden:
-    if username is None or email is None or password is None:
-        return jsonify({"error": "Username, Password und Email sind erforderlich"}), 400
+    # Pflichtfelder prüfen - ob gar nicht Vorhanden oder leer
+    if username is None or not username.strip() \
+    or email is None or not email.strip() \
+    or password is None or not password.strip():
+        return jsonify({"error": "Username, Password und E-Mail sind erforderlich"}), 400
 
-    # Hier die Methode einbinden, die prüft ob Werte i. O.!
+    # Benutzer registrieren
     result = register_user_logic(username, email, password)
 
     if not result["success"]:
@@ -37,16 +46,20 @@ def login_user():
     email = data.get('email')
     password = data.get('password')
 
-    if email is None or password is None:
+    if email is None or not email.strip()\
+    or password is None or not password.strip():
         return jsonify({"error": "Login und Password sind erforderlich"}), 400
 
-    # Hier Methode einbinden aus Services - login kann Username oder E-Mail sein!
     result = login_user_logic(email, password)
     if not result["success"]:
-        return jsonify({"error": result}), 401 # Nicht authorisiert!
+        return jsonify({"error": result["error"]}), 401 # Nicht authorisiert!
 
     # Token erzeugen
-    access_token = create_access_token(identity=result["data"]["id"])
+    try:
+        access_token = create_access_token(identity=result["data"]["id"])
+    except Exception:
+        return jsonify({"error": "Fehler beim Erstellen des Access_Tokens"}), 401
+
 
     return jsonify({"message": "Login erfolgreich",
                     "user": result["data"],
@@ -57,7 +70,7 @@ def forgot_password():
     data = request.get_json()
     email = data.get('email')
 
-    if not email:
+    if email is None or not email.strip():
         return jsonify({"error": "Email ist erforderlich"}), 400
 
     result = forgot_password_logic(email)
@@ -74,7 +87,8 @@ def reset_password():
     token = data.get('token')
     new_pw = data.get('newPassword')
 
-    if not token or not new_pw:
+    if token is None or not token.strip() \
+    or new_pw is None or not new_pw.strip():
         return jsonify({"error": "Token und neues Passwort sind erforderlich"}), 400
 
     result = reset_password_logic(token, new_pw)
@@ -84,19 +98,13 @@ def reset_password():
 
     return jsonify({"message": result["data"]}), 200
 
-@user_bp.route('/api/user/<uuid:id>', methods=['DELETE'])
+@user_bp.route('/api/deleteuser', methods=['DELETE'])
 @jwt_required() # Sicherstellen, dass User eingeloggt ist
-def delete_user(id):
+def delete_user():
     # Prüfen, wer der aktuell eingeloggte User ist
-    current_user_id = get_jwt_identity()
+    user_id = get_jwt_identity()
 
-    # Sicherstellen, dass kein anderer User gelöscht wird außer sich selbst.
-    uuid_obj = uuid.UUID(current_user_id)
-    if uuid_obj != id:
-        return jsonify({"error": "Du darfst nur deinen eigenen Account löschen!"}), 404
-
-    # Logik in Services:
-    message = delete_user_logic(id)
+    message = delete_user_logic(user_id)
 
     if not message["success"]:
         return jsonify({"error": message}), 404
@@ -107,7 +115,6 @@ def delete_user(id):
 @jwt_required()
 def get_user():
     current_user_id = get_jwt_identity()
-
     result = get_user_logic(current_user_id)
 
     if not result["success"]:
@@ -119,12 +126,17 @@ def get_user():
 @jwt_required()
 def update_user():
     current_user_id = get_jwt_identity()
-    update_data = request.get_json()
 
-    if not update_data:
+    username = request.form.get("username")
+    email = request.form.get("email")
+    profilbild = request.files.get("profilbild")
+
+    if (username is None or not username.strip()) \
+    and (email is None or not email.strip()) \
+    and not profilbild :
         return jsonify({"error": "Keine Daten übergeben."}), 400
 
-    result = update_user_logic(current_user_id, update_data)
+    result = update_user_logic(current_user_id, username, email, profilbild)
 
     if not result["success"]:
         return jsonify({"error": result["error"]}), 404
@@ -150,3 +162,12 @@ def update_password():
 
     return jsonify({"message": result}), 200
 
+@user_bp.route('/api/logout', methods=['POST'])
+@jwt_required()
+def logout():
+    try:
+        jti = get_jwt()["jti"]
+        blacklisted_tokens.add(jti)
+        return jsonify({"message": "Logged out"}), 200
+    except Exception:
+        return jsonify({"error": "Fehler beim Logout"})

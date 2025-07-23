@@ -1,4 +1,5 @@
 package de.thws.challengeaccepted
+
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.res.Resources

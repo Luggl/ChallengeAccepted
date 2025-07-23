@@ -1,6 +1,13 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from services.group_service import *
+from app.services.group_service import (
+    create_group_logic,
+    invitation_link_logic,
+    join_group_via_link_logic,
+    delete_group_logic,
+    get_group_feed_logic,
+    leave_group_logic
+)
 
 # Blueprint für alle Gruppenfunktionen
 group_bp = Blueprint('group', __name__)
@@ -8,8 +15,9 @@ group_bp = Blueprint('group', __name__)
 @group_bp.route('/api/group', methods=['POST'])
 @jwt_required()
 def create_group():
-    #Sicherstellen wer der User ist
-    current_user_id = str(uuid.UUID(get_jwt_identity())) #JWT_Token von String in UUID Format geswitcht und dann wieder in String
+    #Sicherstellen, wer der User ist
+    current_user_id = get_jwt_identity() #JWT_Token von String in UUID Format geswitcht und dann wieder in String
+
     # Daten in JSON Format auslesen
     data = request.get_json()
 
@@ -31,31 +39,24 @@ def create_group():
 @group_bp.route('/api/invitationlink', methods=['GET'])
 @jwt_required()
 def invitation_link():
-    current_user_id = str(uuid.UUID(get_jwt_identity()))
-
+    user_id = get_jwt_identity()
     # Gruppe-ID aus den Query-Parametern holen
+    group_id = request.args.get('gruppe_id')
 
-    gruppe_id_str = request.args.get('gruppe_id')
-
-    if not gruppe_id_str:
+    if not group_id:
         return jsonify({"error": "gruppe_id ist erforderlich!"}), 400
 
-    # Check, ob String ein gültiges UUID Obj
-    try:
-        gruppe_id = uuid.UUID(gruppe_id_str)
-    except ValueError:
-        return jsonify({"error": "Ungültige Gruppen-ID!"}), 400
-
-    result = invitation_link_logic(gruppe_id_str)
+    result = invitation_link_logic(group_id, user_id)
 
     if not result['success']:
-        return jsonify({"error": result["data"]}), 400
+        return jsonify({"error": result['data']}), 400
 
     return jsonify({"message": "Einladungslink erstellt", "link": result}), 200
 
 @group_bp.route('/api/group', methods=['PUT'])
+@jwt_required()
 def join_group_via_link():
-    user_id = request.args.get('user')
+    user_id = get_jwt_identity()
     invitation_link = request.args.get('invitationLink')
 
     result = join_group_via_link_logic(user_id, invitation_link)
@@ -75,33 +76,34 @@ def delete_group():
     result = delete_group_logic(group_id, current_user_id)
 
     if not result["success"]:
-        return jsonify({"error": result}), 403 # Keine Berechtigung oder Fehler
+        return jsonify({"error": result['data']}), 403 # Keine Berechtigung oder Fehler
 
-    return jsonify({"message": result}), 204
+    return jsonify({"message": result['data']}), 200
 
 
-@group_bp.route('/api/groupfeed/<int:gid>', methods=['GET'])
+@group_bp.route('/api/groupfeed', methods=['GET'])
 @jwt_required()
-def get_group_feed(gid):
+def get_group_feed():
     current_user_id = get_jwt_identity()
+    group_id = request.args.get('group_id')
 
-    success, result = get_group_feed_logic(gid, current_user_id)
+    result = get_group_feed_logic(group_id, current_user_id)
 
-    if not success:
+    if not result["success"]:
         return jsonify({"error": result}), 403
 
     return jsonify({"message": result}), 200
 
-@group_bp.route('/api/groups')
+
+@group_bp.route('/api/leavegroup', methods=['PUT'])
 @jwt_required()
-def get_group_overview():
+def leave_group():
     current_user_id = get_jwt_identity()
+    group_id = request.args.get('group_id')
 
-    # Achtung, hier muss im result auch eine Information mitgeliefert werden, ob der User eine Aufgabe zu erledigen hat oder nicht
-    # Genauso ob die Aufgabe Standard oder Survival Challenge bezogen ist
-    success, result = get_group_overview_logic(current_user_id)
+    result = leave_group_logic(current_user_id, group_id)
 
-    if not success:
+    if not result["success"]:
         return jsonify({"error": result}), 403
 
     return jsonify({"message": result}), 200

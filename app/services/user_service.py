@@ -1,31 +1,55 @@
+import os
+from pathlib import Path, PurePosixPath
+
 from werkzeug.security import generate_password_hash, check_password_hash
-from app import db
+from werkzeug.utils import secure_filename
+
 from app.utils.response import response
-from app.utils.time import now_berlin
+from app.utils.time import now_berlin, date_today, get_all_days
 from app.utils.mail_service import send_password_reset_mail
 from datetime import timedelta
-from app.database.models import User
-from app.database.models import ResetToken
+from app.database.models import User, ResetToken
 from app.repositories.token_repository import find_token_by_string, save_token, delete_token, delete_token_by_user_id
 from app.repositories.user_repository import (
     find_user_by_email,
     save_user,
     delete_user_by_id,
     find_user_by_id,
-    update_user
+    update_user,
+    find_user_by_username,
+    find_user_activities_and_erfuellungen
 )
 
 import uuid
+from app.utils.auth_utils import get_uuid_formated_id
+from app.utils.password import is_password_strong
 
-ALLOWED_UPDATE_FIELDS = {"username", "email", "profilbild"}
+ALLOWED_UPDATE_FIELDS = {"username", "email", "profilbild_url"}
+if os.name == "nt": #Windows
+    BASE_DIR = Path(__file__).resolve().parent
+    UPLOAD_ROOT = BASE_DIR / "media" / "profilbilder"
+else:  # Linux
+    BASE_DIR = Path("/media")
+    UPLOAD_ROOT = BASE_DIR / "profilbilder"
+
 
 
 # Registrierung eines neuen Users
 def register_user_logic(username, email, password):
     # Wenn E-Mail schon vergeben ist -> abbrechen
-    existing_user = find_user_by_email(email)
-    if existing_user:
+    existing_email = find_user_by_email(email)
+    if existing_email:
         return response(False, error="E-Mail ist bereits registriert.")
+
+    # Username bereits vergeben
+    existing_username = find_user_by_username(username)
+    if existing_username:
+        return response(False, error="Username ist bereits vergeben.")
+
+    #Prüfung ob Passwort den Mindestanforderungen entspricht
+    password_check, password_message = is_password_strong(password)
+    if not password_check:
+        return response(False, error=password_message)
 
     # Passwort hashen für sichere Speicherung
     hashed_pw = generate_password_hash(password)
@@ -36,7 +60,6 @@ def register_user_logic(username, email, password):
         username=username,
         email=email,
         passwordHash=hashed_pw
-        # Weitere Felder wie Profilbild oder Rolle später ergänzen
     )
 
     # User speichern
@@ -46,7 +69,7 @@ def register_user_logic(username, email, password):
     return response(True, data={
         "id": str(uuid.UUID(bytes=saved_user.user_id)),
         "username": saved_user.username,
-        "email": saved_user.email
+        "email": saved_user.email,
     })
 
 # Login eines bestehenden Users
@@ -61,7 +84,7 @@ def login_user_logic(email, password):
 
     # Wenn Login erfolgreich, dann Daten zurückgeben
     return response(True, data={
-        "id": user.user_id.hex(),
+        "id": str(uuid.UUID(bytes=user.user_id)),
         "username": user.username,
         "email": user.email
     })
@@ -88,7 +111,7 @@ def forgot_password_logic(email):
     )
     save_token(token)
 
-    # Mail senden Dummy
+    # Mail senden Dummy -- Mailserver noch nicht umgesetzt
     send_password_reset_mail(user.email, token_str)
 
     return response(True, data="Falls diese E-Mail existiert, wurde ein Link gesendet.")
@@ -127,19 +150,50 @@ def get_user_logic(user_id_str):
     if not user:
         return response(False, error="Benutzer nicht gefunden")
 
-    # TODO: Kalender-Daten und Streak dynamisch berechnen, wenn nötig
+    kalender = get_user_kalender_logic(user.user_id)
+
     user_data = {
         "id": str(uuid.UUID(bytes=user.user_id)),
         "username": user.username,
         "email": user.email,
-        "profilbild": user.profilbild,
-        "streak": user.streak
+        "profilbild": user.profilbild_url,
+        "streak": user.streak,
+        "Kalender": kalender
     }
 
     return response(True, data=user_data)
 
+def get_user_kalender_logic(user_id):
+    user = find_user_by_id(user_id)
+    if not user:
+        return response(False, error="Benutzer nicht gefunden")
 
-def update_user_logic(user_id_str, update_data):
+    kalender = {}
+    tage = get_all_days(date_today().year, date_today().month)
+
+    erfuellungen = find_user_activities_and_erfuellungen(user)
+
+    #JSON Format Map Datum --> Status
+    status_map = {}
+    for e in erfuellungen:
+        datum = e.aufgabe.datum
+        status = e.status.value
+        status_map[datum] = status
+
+    #Prüfung für jeden Tag im Monat, ob es eine Aufgabenerfüllung gab
+    for tag in tage:
+        aktuelles_datum = tag
+
+        if aktuelles_datum in status_map:
+            #Falls Aufgabenerfüllung vorhanden, Status übernehmen
+            kalender[aktuelles_datum.isoformat()] = status_map[aktuelles_datum]
+        else:
+            #Ansonsten gab es keine Aufgabe zu bewältigen
+            kalender[aktuelles_datum.isoformat()] = "Keine_Aufgabe"
+
+    return kalender
+
+def update_user_logic(user_id_str, username, email, profilbild):
     try:
         user_id = uuid.UUID(user_id_str).bytes
     except ValueError:
@@ -150,10 +204,26 @@ def update_user_logic(user_id_str, update_data):
         return response(False, error="Benutzer nicht gefunden")
 
     updated = False
-    for field in ALLOWED_UPDATE_FIELDS:
-        if field in update_data and getattr(user, field) != update_data[field]:
-            setattr(user, field, update_data[field])
-            updated = True
+
+    if username and username != user.username:
+        existing_user = find_user_by_username(username)
+
+        if existing_user and existing_user.user_id != user.user_id:
+            return response(False, error="Username ist bereits vergeben.")
+
+        user.username = username
+        updated = True
+
+    if email and email != getattr(user, "email"):
+        user.email = email
+        updated = True
+
+    if profilbild:
+        result = save_profilbild(user_id, profilbild)
+        if not result["success"]:
+            return response(False, error=result["error"])
+        user.profilbild_url = result["data"]
+        updated = True
 
     if not updated:
         return response(False, error="Keine gültigen Änderungen übergeben")
@@ -161,6 +231,27 @@ def update_user_logic(user_id_str, update_data):
     update_user(user)
 
     return response(True, data="Benutzer erfolgreich aktualisiert")
+
+def save_profilbild(user_id, profilbild):
+    if not profilbild.mimetype.startswith("image/"):
+        return response(False, error="Nur Bilddateien erlaubt")
+    try:
+        filename = secure_filename(f"{user_id}.jpg")
+        os.makedirs(UPLOAD_ROOT, exist_ok=True)
+
+        full_path = UPLOAD_ROOT / filename
+        absolute_path = str(full_path.resolve())
+
+        profilbild.save(full_path)
+
+        SERVER_URL = "http://138.199.220.111"
+
+        relative_url = "/" + str(PurePosixPath(full_path.relative_to(BASE_DIR)))
+        absolute_url = SERVER_URL + relative_url
+        return response(True, data=absolute_url)
+
+    except Exception as e:
+        return response(False, error=f"Fehler beim Speichern des Bilds: {str(e)}")
 
 
 def update_password_logic(user_id_str, old_password, new_password):
@@ -183,6 +274,7 @@ def update_password_logic(user_id_str, old_password, new_password):
 
 # User löschen (wird über ID angesprochen)
 def delete_user_logic(user_id):
+    user_id = get_uuid_formated_id(user_id)
     result = delete_user_by_id(user_id)
     if not result:
         return response(False, error="User konnte nicht gelöscht werden oder existiert nicht.")

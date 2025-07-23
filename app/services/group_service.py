@@ -1,54 +1,104 @@
 import uuid
-import app.repositories.group_repository
-from datetime import datetime, timedelta
+from datetime import timedelta
+
+from sqlalchemy.exc import SQLAlchemyError
+
 from app.utils.time import now_berlin, date_today
-from repositories.membership_repository import find_membership
-from utils.response import response
-from app.database.models import Gruppe, Membership
-from app.repositories.group_repository import *
+from app.repositories.challenge_repository import find_active_challenge_by_group
+from app.repositories.membership_repository import find_membership, delete_membership, create_membership, find_memberships_by_group
+from app.utils.auth_utils import get_uuid_formated_id
+from app.utils.response import response
+from app.database.models import Membership
+from app.repositories.group_repository import (
+    SessionLocal,
+    Gruppe,
+    find_group_by_id,
+    update_group,
+    find_group_by_invite_code,
+    delete_group_by_id,
+    get_group_feed_by_group_id
+)
+from app.utils.serialize import serialize_gruppe, serialize_challenge, serialize_membership
 
 
 # Gruppe erstellen
 def create_group_logic(name, beschreibung, gruppenbild, created_by):
-    invite_link = str(uuid.uuid4())  # einfacher Invite-Code
-    group = Gruppe(
-        gruppenname=name,
-        beschreibung=beschreibung,
-        gruppenbild=gruppenbild,
-        einladungscode=invite_link,
-        einladungscode_gueltig_bis=date_today(),
-        erstellungsDatum=date_today()
-    )
-    created_group = create_group(group)
+    try:
+        invite_link = str(uuid.uuid4())  # einfacher Invite-Code
+    except ValueError:
+        return response(False, error="Fehler beim Erzeugen des Invite-Links")
 
-    membership = Membership(
-        user_id=uuid.UUID(created_by).bytes,
-        gruppe_id=created_group.gruppe_id,
-        isAdmin=True
-    )
+    try:
+        user_id_uuid = get_uuid_formated_id(created_by)
+    except ValueError:
+        return response(False, error="User-ID konnte nicht umformatiert werden")
+
+    # Hier der DB-Zugriff direkt in Services, da Gruppe und Membership durch FK-Bedingung in einer Session comitted werden müssen!
+    try:
+
+        with SessionLocal() as session:
+            group = Gruppe(
+                gruppenname=name,
+                beschreibung=beschreibung,
+                gruppenbild=gruppenbild,
+                einladungscode=invite_link,
+                einladungscode_gueltig_bis=now_berlin() + timedelta(hours=4),
+                erstellungsDatum=date_today()
+            )
 
 
-    create_membership(membership)
+            session.add(group)
+            session.flush()
 
-    return response(True, {
-        "id": str(uuid.UUID(bytes=created_group.gruppe_id)),
-        "name": created_group.gruppenname,
-        "beschreibung": created_group.beschreibung,
-        "invite_link": created_group.einladungscode
-    })
+            membership = Membership(
+                user_id=user_id_uuid,
+                gruppe_id=group.gruppe_id,
+                isAdmin=True
+            )
+            session.add(membership)
+            session.commit()
+            session.refresh(group)
+
+            return response(True, {
+                "id": str(uuid.UUID(bytes=group.gruppe_id)),
+                "name": group.gruppenname,
+                "beschreibung": group.beschreibung,
+                "invite_link": group.einladungscode
+            })
+
+    except SQLAlchemyError as e:
+        # Fehler bei DB-Zugriff
+        return response(False, error=f"Datenbankfehler: {str(e)}")
+
+    except Exception as e:
+        # Fallback für unerwartete Fehler
+        return response(False, error=f"Unbekannter Fehler: {str(e)}")
+
+
 
 # Einladung erstellen
-def invitation_link_logic(group_id):
+def invitation_link_logic(group_id, user_id):
+    try:
+        group_id = get_uuid_formated_id(group_id)
+        user_id = get_uuid_formated_id(user_id)
+    except ValueError:
+        return response(False, error="Ungültige Group oder User-ID")
+
     group = find_group_by_id(group_id)
     if not group:
-        return response(False, "Gruppe nicht gefunden.")
+        return response(False, error="Gruppe nicht gefunden.")
 
-    group.einladungscode = str(uuid.uuid4())
-    group.einladungscode_gueltig_bis = now_berlin() + timedelta(hours=4)  # Link ist 4 Std gültig
-
-    updated = update_group(group)
-    if not updated:
-        return response(False, "Link konnte nicht aktualisiert werden.")
+    membership = find_membership(user_id, group.gruppe_id)
+    if not membership:
+        return response(False, "User nicht Member der Gruppe!")
+    try:
+        group.einladungscode = str(uuid.uuid4())
+        group.einladungscode_gueltig_bis = now_berlin() + timedelta(hours=4)  # Link ist 4 Std gültig
+        updated = update_group(group)
+        if not updated:
+            return response(False, error="Link konnte nicht aktualisiert werden.")
+    except ValueError as e:
+        return response(False, error=f"Fehler beim Aktualisieren: {str(e)}")
 
     return response(True, group.einladungscode)
 
@@ -56,14 +106,24 @@ def invitation_link_logic(group_id):
 def join_group_via_link_logic(user_id, invitation_link):
     group = find_group_by_invite_code(invitation_link)
     if not group:
-        return response(False, "Ungültiger Einladungslink.")
+        return response(False, error="Ungültiger Einladungslink.")
 
     # Ist Ablaufdatum kleiner als aktuelles
     if group.einladungscode_gueltig_bis.date() < now_berlin().date():
-        return response(False, "Einladungslink ist abgelaufen.")
+        return response(False, error="Einladungslink ist abgelaufen.")
+
+    try:
+        user_id_uuid = get_uuid_formated_id(user_id)
+    except ValueError:
+        return response(False, error="User-ID ungültig")
+
+    # Failcheck, falls User bereits Gruppenmitglied!
+    membershipcheck = find_membership(user_id_uuid, group.gruppe_id)
+    if membershipcheck:
+        return response(False, "User bereits Mitglied der Gruppe")
 
     membership = Membership(
-        user_id=uuid.UUID(user_id).bytes,
+        user_id=user_id_uuid,
         gruppe_id=group.gruppe_id,
         isAdmin=False)
 
@@ -75,29 +135,73 @@ def join_group_via_link_logic(user_id, invitation_link):
 
 # Gruppe löschen
 def delete_group_logic(group_id, user_id):
-    # Optional: prüfen, ob user der Admin ist → kommt später
-    user_id_bytes = uuid.UUID(user_id).bytes
-    group_id_bytes = uuid.UUID(group_id).bytes
+
+    try:
+        user_id_bytes = get_uuid_formated_id(user_id)
+        group_id_bytes = get_uuid_formated_id(group_id)
+    except ValueError:
+        return response(False, "User oder Group-ID ungültig")
+
     membership = find_membership(user_id_bytes, group_id_bytes)
+    if not membership:
+        return response(False, "Membership existiert nicht - Entweder Gruppe falsch oder User nicht berechtigt")
 
     if not membership.isAdmin:
         return response(False, "User darf die Gruppe nicht löschen")
 
-    result = delete_group_by_id(group_id)
-    if not result:
+    delete_success = delete_group_by_id(group_id_bytes)
+    if not delete_success:
         return response(False, "Löschen nicht erlaubt oder fehlgeschlagen.")
+
     return response(True, "Gruppe erfolgreich gelöscht.")
 
 # Gruppenfeed abrufen
 def get_group_feed_logic(group_id, user_id):
-    feed = get_group_feed_data(group_id, user_id)
-    if not feed:
-        return response(False, "Zugriff verweigert oder keine Daten.")
-    return response(True, feed)
+    try:
+        group_id_uuid = get_uuid_formated_id(group_id)
+        user_id_uuid = get_uuid_formated_id(user_id)
+    except ValueError:
+        return response(False, error="User oder Group-ID ungültig")
 
-# Gruppenübersicht für User abrufen
-def get_group_overview_logic(user_id):
-    groups = get_groups_for_user(user_id)
-    if not groups:
-        return response(False, "Keine Gruppen gefunden.")
-    return response(True, groups)
+    membership = find_membership(user_id_uuid, group_id_uuid)
+    if not membership:
+        return response(False, error="User ist kein Gruppenmitglied!")
+
+    group = find_group_by_id(group_id_uuid)
+    if not group:
+        return response(False, error="Gruppe nicht gefunden")
+
+
+    #Rückgabe setzt sich zusammen aus Informationen des Feeds, der Challenge und der Gruppe
+    feed = get_group_feed_by_group_id(group_id_uuid, user_id_uuid)
+    challenge = find_active_challenge_by_group(group_id_uuid)
+    all_members = find_memberships_by_group(group_id_uuid)
+    members = []
+    for m in all_members:
+        members.append(serialize_membership(m))
+
+    group_info = {
+        "group": serialize_gruppe(group),
+        "challenge": serialize_challenge(challenge) if challenge else None,
+        "members": members,
+        "feed": feed
+    }
+    return response(True, group_info)
+
+
+def leave_group_logic(user_id, group_id):
+    try:
+        user_id_str = get_uuid_formated_id(user_id)
+        group_id_str = get_uuid_formated_id(group_id)
+    except ValueError:
+        return response(False, error="User oder Group-ID ungültig")
+
+    group =find_group_by_id(group_id_str)
+    if not group:
+        return response(False, error="Gruppe nicht gefunden.")
+
+    result = delete_membership(user_id_str, group_id_str)
+    if not result:
+        return response(False, error="Fehlgeschlagen")
+
+    return response(True, "User entfernt")

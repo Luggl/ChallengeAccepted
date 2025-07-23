@@ -1,40 +1,46 @@
-
-from app.database.models import Challenge, StandardChallengeSportart, Sportart, SurvivalChallengeSportart
-from app import db
+from datetime import date
+from sqlalchemy.orm import joinedload
+from app.database.models import Challenge, StandardChallengeSportart, Sportart, SurvivalChallengeSportart, \
+    StandardChallenge, Survivalchallenge
 from app.database.database import SessionLocal
+from app.database.models import ChallengeParticipation
 
-
-#def find_sportart_by_id(sportart_id):
-#    """Finde eine Sportart anhand der ID (BLOB/UUID.bytes)."""
-#    with SessionLocal() as session:
-#       return session.query(Sportart).filter_by(sportart_id=sportart_id).first()
-
-
-
-def find_sportart_by_id(sportart_id):
+def find_active_challenge_by_group(gruppe_id):
     with SessionLocal() as session:
-        result = session.query(Sportart).filter_by(sportart_id=sportart_id).first()
-        return result
+        return session.query(Challenge).filter(Challenge.gruppe_id==gruppe_id,
+                                               Challenge.active==True).first()
 
-def find_challenges_by_group(gruppe_id):
-    """Finde alle Challenges einer Gruppe."""
-    return db.session.query(Challenge).filter_by(gruppe_id=gruppe_id).all()
 
-def find_challenges_by_creator(user_id, gruppe_id):
-    """Finde alle Challenges, die von einem bestimmten Mitglied einer bestimmten Gruppe erstellt wurden."""
-    return db.session.query(Challenge).filter_by(
-        ersteller_user_id=user_id,
-        ersteller_gruppe_id=gruppe_id
-    ).all()
+def find_all_survival_challenges():
+    with SessionLocal() as session:
+        return session.query(Survivalchallenge).options(
+            joinedload(Survivalchallenge.sportarten_links)
+        ).filter(
+            Survivalchallenge.startdatum <= date.today()
+        ).all()
 
-def find_challenges_by_type(typ):
-    """Finde alle Challenges eines bestimmten Typs (z.B. 'standard' oder 'survival')."""
-    return db.session.query(Challenge).filter_by(typ=typ).all()
 
 def find_challenge_by_id(challenge_id):
     """Finde eine Challenge anhand der ID."""
     with SessionLocal() as session:
         return session.query(Challenge).filter_by(challenge_id=challenge_id).first()
+
+def find_standard_challenge_by_id(challenge_id):
+    """Finde eine Standard-Challenge anhand der ID."""
+    with SessionLocal() as session:
+        return session.query(StandardChallenge).filter_by(challenge_id=challenge_id).first()
+
+
+def find_survival_challenge_by_id(challenge_id):
+    """Finde eine Standard-Challenge anhand der ID."""
+    with SessionLocal() as session:
+        return session.query(Survivalchallenge).filter_by(challenge_id=challenge_id).first()
+
+
+def find_standard_challenge_sportarten_by_challenge_id(challenge_id):
+    """Finde alle Sportarten einer Standard-Challenge anhand der Challenge-ID."""
+    with SessionLocal() as session:
+        return session.query(StandardChallengeSportart).filter_by(challenge_id=challenge_id).all()
 
 def create_challenge(challenge: Challenge):
     """Speichere eine neue Challenge in der Datenbank."""
@@ -54,14 +60,6 @@ def delete_challenge_by_id(challenge_id):
             return True
         return False
 
-def update_challenge(challenge):
-    """Aktualisiere eine bestehende Challenge."""
-    db.session.commit()
-    return challenge
-
-def get_all_challenges():
-    """Gibt alle Challenges zurück."""
-    return db.session.query(Challenge).all()
 
 def save_standard_challenge_sportart(sportart_link: StandardChallengeSportart):
     """Speichert einen Eintrag in der standard_challenge_sportart-Tabelle."""
@@ -85,3 +83,21 @@ def is_user_allowed_to_delete(challenge_id, user_id):
             .filter_by(challenge_id=challenge_id, ersteller_user_id=user_id)\
             .first()
         return challenge is not None
+
+
+def find_teilnehmer_and_user_by_challenge(challenge_id):
+    with SessionLocal() as session:
+        return session.query(ChallengeParticipation).options(
+            joinedload(ChallengeParticipation.user)
+        ).filter(ChallengeParticipation.challenge_id == challenge_id).all()
+
+def get_dead_teilnehmer(challenge_id):
+    with SessionLocal() as session:
+        return session.query(ChallengeParticipation).filter(ChallengeParticipation.challenge_id == challenge_id,
+                                                            ChallengeParticipation.aktiv == False).all()
+
+def save_challenge_participation(challenge_participation):
+    with SessionLocal() as session:
+        session.add(challenge_participation)
+        session.commit()
+        session.refresh(challenge_participation)
