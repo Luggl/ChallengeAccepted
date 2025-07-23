@@ -22,6 +22,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import de.thws.challengeaccepted.data.database.AppDatabase
 import de.thws.challengeaccepted.data.repository.BeitragRepository
+import de.thws.challengeaccepted.data.repository.GroupRepository
+import de.thws.challengeaccepted.ui.viewmodels.GroupViewModel
+import de.thws.challengeaccepted.ui.viewmodels.GroupViewModelFactory
 import de.thws.challengeaccepted.data.repository.UserRepository
 import de.thws.challengeaccepted.network.ApiClient
 import de.thws.challengeaccepted.network.UserService
@@ -32,13 +35,18 @@ import de.thws.challengeaccepted.ui.viewmodels.FeedViewModel
 import de.thws.challengeaccepted.ui.viewmodels.UserViewModel
 import de.thws.challengeaccepted.ui.viewmodels.UserViewModelFactory
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.temporal.WeekFields
 import java.util.Locale
+import de.thws.challengeaccepted.data.entities.User
+
 
 class DashboardActivity : AppCompatActivity() {
 
+    // UserViewModel mit Repository-Factory
     private val userViewModel: UserViewModel by viewModels {
         // GEÄNDERT: Die Factory braucht jetzt nur noch das Repository
         val db = AppDatabase.getDatabase(applicationContext)

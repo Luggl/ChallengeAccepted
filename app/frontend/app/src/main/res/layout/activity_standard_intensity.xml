@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Hauptcontainer: CoordinatorLayout für flexible Layoutanpassung mit Insets -->
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/coordinator"
@@ -7,7 +8,7 @@
     android:fitsSystemWindows="true"
     tools:context=".StandardIntensityActivity">
 
-    <!-- Scrollbarer Inhalt -->
+    <!-- Scrollbarer Bereich für den Hauptinhalt -->
     <androidx.core.widget.NestedScrollView
         android:id="@+id/root_scroll"
         android:layout_width="match_parent"
@@ -16,6 +17,7 @@
         android:clipToPadding="false"
         android:paddingBottom="100dp">
 
+        <!-- Hauptinhalt in vertikaler Anordnung -->
         <LinearLayout
             android:id="@+id/main_content"
             android:layout_width="match_parent"
@@ -23,6 +25,7 @@
             android:gravity="center_horizontal"
             android:orientation="vertical">
 
+            <!-- Header mit Zurück-Button und Challenge-Titel -->
             <LinearLayout
                 android:id="@+id/header"
                 android:layout_width="wrap_content"
@@ -30,7 +33,6 @@
                 android:gravity="center_horizontal"
                 android:orientation="horizontal"
                 android:paddingBottom="16dp">
-
 
                 <!-- Zurück-Button -->
                 <ImageButton
@@ -44,7 +46,7 @@
                     android:tint="@android:color/white"
                     tools:ignore="UseAppTint" />
 
-                <!-- Gruppenname -->
+                <!-- Challenge-Titel -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -65,10 +67,9 @@
                         android:textSize="25sp"
                         android:textStyle="bold" />
                 </LinearLayout>
-
             </LinearLayout>
 
-            <!-- Übungstitel -->
+            <!-- Name der aktuellen Übung -->
             <TextView
                 android:id="@+id/tv_title"
                 android:layout_width="wrap_content"
@@ -79,7 +80,7 @@
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
-            <!-- Icon der Übung -->
+            <!-- Icon zur Übung -->
             <ImageView
                 android:id="@+id/iv_exercise_icon"
                 android:layout_width="80dp"
@@ -92,7 +93,7 @@
                 android:tint="@android:color/holo_blue_bright"
                 tools:ignore="UseAppTint" />
 
-            <!-- Startintensität -->
+            <!-- Auswahlbereich für Startintensität -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -111,6 +112,7 @@
                     android:textSize="25sp"
                     android:textStyle="bold" />
 
+                <!-- Anzeige Startwert -->
                 <TextView
                     android:id="@+id/tv_start_main"
                     android:layout_width="60dp"
@@ -123,6 +125,7 @@
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
+                <!-- Seekbar für Startwert -->
                 <SeekBar
                     android:id="@+id/seekbar_start"
                     android:layout_width="200dp"
@@ -131,7 +134,7 @@
                     android:progress="0" />
             </LinearLayout>
 
-            <!-- Endintensität -->
+            <!-- Auswahlbereich für Endintensität -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -150,6 +153,7 @@
                     android:textSize="25sp"
                     android:textStyle="bold" />
 
+                <!-- Anzeige Endwert -->
                 <TextView
                     android:id="@+id/tv_end_main"
                     android:layout_width="60dp"
@@ -162,6 +166,7 @@
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
+                <!-- Seekbar für Endwert -->
                 <SeekBar
                     android:id="@+id/seekbar_end"
                     android:layout_width="200dp"
@@ -170,7 +175,7 @@
                     android:progress="0" />
             </LinearLayout>
 
-            <!-- Ceck Button -->
+            <!-- Bestätigungs-Button -->
             <ImageButton
                 android:id="@+id/btn_confirm_selection"
                 android:layout_width="70dp"
@@ -183,8 +188,7 @@
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-
-    <!-- Bottom Navigation -->
+    <!-- Feste untere Navigationsleiste -->
     <LinearLayout
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
@@ -196,7 +200,7 @@
         android:paddingBottom="0dp"
         android:weightSum="4">
 
-        <!-- Community Icon -->
+        <!-- Gruppenübersicht -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -209,10 +213,9 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:src="@drawable/group_white_icon" />
-
         </LinearLayout>
 
-        <!-- Home Icon -->
+        <!-- Startseite -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -225,10 +228,9 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:src="@drawable/home_blue_icon" />
-
         </LinearLayout>
 
-        <!-- Add Icon -->
+        <!-- Challenge hinzufügen -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -241,10 +243,9 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:src="@drawable/add_white_icon" />
-
         </LinearLayout>
 
-        <!-- Profile Icon -->
+        <!-- Profil -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -257,7 +258,6 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:src="@drawable/profile_white_icon" />
-
         </LinearLayout>
     </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

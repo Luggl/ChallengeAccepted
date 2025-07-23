@@ -8,11 +8,12 @@
     android:fitsSystemWindows="true"
     tools:context=".ProfileSettingsActivity">
 
+    <!-- Haupt-Container -->
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-       <!-- Scrollbarer Inhalt -->
+        <!-- Scrollbarer Inhalt -->
         <androidx.core.widget.NestedScrollView
             android:id="@+id/root_scroll"
             android:layout_width="match_parent"
@@ -26,6 +27,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
+                <!-- Zurück-Button + Überschrift -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -44,7 +46,7 @@
                         android:tint="@android:color/white"
                         tools:ignore="UseAppTint" />
 
-                    <!-- Titelleiste -->
+                    <!-- Überschrift: "Einstellungen" -->
                     <LinearLayout
                         android:layout_width="300dp"
                         android:layout_height="wrap_content"
@@ -65,9 +67,9 @@
                             android:textSize="25sp"
                             android:textStyle="bold" />
                     </LinearLayout>
-
                 </LinearLayout>
-                <!-- Persönliche Daten Header -->
+
+                <!-- Nutzerbild & Benutzername bearbeiten -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -77,6 +79,7 @@
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
+                    <!-- Profilbild + Kamera-Icon -->
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -101,6 +104,7 @@
                             android:src="@drawable/camera_icon" />
                     </LinearLayout>
 
+                    <!-- Benutzername -->
                     <EditText
                         android:id="@+id/etUserName"
                         android:layout_width="200dp"
@@ -112,12 +116,12 @@
                         android:textSize="18sp"
                         android:textStyle="bold" />
 
+                    <!-- Bearbeitungs-Icon -->
                     <LinearLayout
                         android:layout_width="36dp"
                         android:layout_height="36dp"
                         android:background="@drawable/grey_background"
-                        android:gravity="center"
-                        android:orientation="horizontal">
+                        android:gravity="center">
 
                         <ImageView
                             android:id="@+id/ivEditName"
@@ -127,7 +131,7 @@
                     </LinearLayout>
                 </LinearLayout>
 
-                <!-- Bereich Persönliche Daten -->
+                <!-- Abschnitt: Persönliche Daten -->
                 <LinearLayout
                     android:layout_width="400dp"
                     android:layout_height="wrap_content"
@@ -135,6 +139,7 @@
                     android:layout_margin="16dp"
                     android:orientation="vertical">
 
+                    <!-- Rahmen Persönliche Daten -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -143,6 +148,7 @@
                         android:orientation="vertical"
                         android:padding="12dp">
 
+                        <!-- Header -->
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -164,6 +170,7 @@
                                 android:textStyle="bold" />
                         </LinearLayout>
 
+                        <!-- E-Mail ändern -->
                         <Button
                             android:id="@+id/btnEmail"
                             android:layout_width="match_parent"
@@ -173,33 +180,27 @@
                             android:text="E-Mail"
                             android:textColor="@color/white" />
 
-                        <LinearLayout
+                        <!-- Passwort ändern -->
+                        <Button
+                            android:id="@+id/btn_change_password"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal">
-
-                            <Button
-                                android:id="@+id/btn_change_password"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:background="@drawable/grey_background"
-                                android:text="Passwort ändern"
-                                android:textColor="@color/white" />
-                        </LinearLayout>
+                            android:background="@drawable/grey_background"
+                            android:text="Passwort ändern"
+                            android:textColor="@color/white" />
                     </LinearLayout>
 
-                    <!-- Datenschutz -->
+                    <!-- Abschnitt: Datenschutz -->
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_margin="16dp"
                         android:background="@drawable/blue_frame"
                         android:orientation="vertical"
                         android:padding="12dp">
 
+                        <!-- Header -->
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -221,6 +222,7 @@
                                 android:textStyle="bold" />
                         </LinearLayout>
 
+                        <!-- Datenschutzerklärung -->
                         <Button
                             android:id="@+id/btn_datenschutz"
                             android:layout_width="match_parent"
@@ -231,7 +233,7 @@
                             android:textColor="@color/white" />
                     </LinearLayout>
 
-                    <!-- Logout & Delete -->
+                    <!-- Abmelden & Profil löschen -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -262,7 +264,7 @@
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
 
-        <!-- Bottom Navigation -->
+        <!-- Feste Navigationsleiste unten -->
         <LinearLayout
             android:id="@+id/bottom_navigation"
             android:layout_width="match_parent"
@@ -270,72 +272,62 @@
             android:layout_gravity="bottom"
             android:background="@color/grey_300"
             android:orientation="horizontal"
-            android:paddingTop="0dp"
-            android:paddingBottom="0dp"
             android:weightSum="4">
 
-            <!-- Community Icon -->
+            <!-- Community -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:gravity="center"
-                android:orientation="vertical">
+                android:gravity="center">
 
                 <ImageView
                     android:id="@+id/nav_group"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:src="@drawable/group_white_icon" />
-
             </LinearLayout>
 
-            <!-- Home Icon -->
+            <!-- Home -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:gravity="center"
-                android:orientation="vertical">
+                android:gravity="center">
 
                 <ImageView
                     android:id="@+id/nav_home"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:src="@drawable/home_blue_icon" />
-
             </LinearLayout>
 
-            <!-- Add Icon -->
+            <!-- Add -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:gravity="center"
-                android:orientation="vertical">
+                android:gravity="center">
 
                 <ImageView
                     android:id="@+id/nav_add"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:src="@drawable/add_white_icon" />
-
             </LinearLayout>
 
-            <!-- Profile Icon -->
+            <!-- Profil -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:gravity="center"
-                android:orientation="vertical">
+                android:gravity="center">
 
                 <ImageView
                     android:id="@+id/nav_profile"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:src="@drawable/profile_white_icon" />
-
             </LinearLayout>
         </LinearLayout>
     </FrameLayout>

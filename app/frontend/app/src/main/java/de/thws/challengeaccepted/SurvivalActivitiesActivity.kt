@@ -19,9 +19,10 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 
 class SurvivalActivitiesActivity : AppCompatActivity() {
-    // Liste zur Speicherung der ausgewählten Übungen
+    // Menge zur Speicherung der aktuell ausgewählten Übungen
     private val selectedExercises = mutableSetOf<String>()
 
+    // Erweiterungsfunktion zur Umrechnung von dp in Pixel
     fun Int.dpToPx(): Int =
         (this * Resources.getSystem().displayMetrics.density).toInt()
 
@@ -30,11 +31,14 @@ class SurvivalActivitiesActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_survival_activities)
 
+        // Edge-to-Edge Layout aktivieren
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
+        // Views referenzieren
         val rootScroll = findViewById<View>(R.id.root_scroll)
         val bottomNav = findViewById<View>(R.id.bottom_navigation)
 
+        // Insets oben einfügen (Statusleiste)
         ViewCompat.setOnApplyWindowInsetsListener(rootScroll) { view, insets ->
             val systemInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             view.setPadding(
@@ -46,9 +50,9 @@ class SurvivalActivitiesActivity : AppCompatActivity() {
             insets
         }
 
+        // Insets unten einfügen (Navigation bar)
         ViewCompat.setOnApplyWindowInsetsListener(bottomNav) { view, insets ->
             val systemInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-
             view.setPadding(
                 view.paddingLeft,
                 8.dpToPx(),
@@ -58,27 +62,28 @@ class SurvivalActivitiesActivity : AppCompatActivity() {
             insets
         }
 
+        // Navigationsleistenfarbe schwarz setzen
         window.navigationBarColor = ContextCompat.getColor(this, R.color.black)
 
-        // groupId aus vorherigem Intent holen
+        // Übergabe der groupId aus vorheriger Seite
         val incomingGroupId = intent.getStringExtra("groupId") ?: ""
 
-        // Zurück-Button
+        // Zurück-Button → zurück zur Modusauswahl
         val backButton = findViewById<ImageButton>(R.id.btn_back)
         backButton.setOnClickListener {
             val intent = Intent(this, CreateChallengeModeActivity::class.java)
-            // groupId an nächste Activity weitergeben
             intent.putExtra("groupId", incomingGroupId)
             startActivity(intent)
         }
 
-        // Gridlayout mit Übungen
+        // Übungen aus dem Grid durchlaufen und Klick-Logik setzen
         val gridExercises = findViewById<GridLayout>(R.id.grid_exercises)
         for (i in 0 until gridExercises.childCount) {
             val child = gridExercises.getChildAt(i) as? LinearLayout ?: continue
             val label = child.getChildAt(1) as TextView
             val text = label.text.toString()
 
+            // Klick auf Übung: Auswahl toggeln
             child.setOnClickListener {
                 if (selectedExercises.contains(text)) {
                     selectedExercises.remove(text)
@@ -93,23 +98,24 @@ class SurvivalActivitiesActivity : AppCompatActivity() {
             }
         }
 
-        // Check-Button
+        // Weiter-Button → nächste Seite
         val checkButton = findViewById<ImageButton>(R.id.btn_confirm_selection)
         checkButton.setOnClickListener {
             if (selectedExercises.isEmpty()) {
                 Toast.makeText(this, "Bitte wähle mindestens eine Übung aus!", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
+
             Toast.makeText(this, "Auswahl bestätigt!", Toast.LENGTH_SHORT).show()
             Log.d("SurvivalActivities", "Bestätigt: $selectedExercises")
+
             val intent = Intent(this, SurvivalIntensityActivity::class.java)
-            // groupId und Auswahl an nächste Activity übergeben
             intent.putExtra("groupId", incomingGroupId)
             intent.putStringArrayListExtra("selectedExercises", ArrayList(selectedExercises))
             startActivity(intent)
         }
 
-        // Bottom Navigation
+        // Navigation unten → Gruppenübersicht
         val navGroup = findViewById<ImageView>(R.id.nav_group)
         navGroup.setOnClickListener {
             val intent = Intent(this, GroupOverviewActivity::class.java)
@@ -117,6 +123,7 @@ class SurvivalActivitiesActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        // Navigation unten → Dashboard
         val navHome = findViewById<ImageView>(R.id.nav_home)
         navHome.setOnClickListener {
             val intent = Intent(this, DashboardActivity::class.java)
@@ -124,6 +131,7 @@ class SurvivalActivitiesActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        // Navigation unten → Profil
         val navProfile = findViewById<ImageView>(R.id.nav_profile)
         navProfile.setOnClickListener {
             val intent = Intent(this, ProfileActivity::class.java)

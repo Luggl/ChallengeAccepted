@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/login_background_pic">
 
-    <!-- Background Image -->
+    <!-- Hintergrundbild -->
     <ImageView
         android:id="@+id/iv_background"
         android:layout_width="match_parent"
@@ -12,13 +12,13 @@
         android:scaleType="centerCrop"
         android:src="@drawable/login_background_pic" />
 
-    <!-- Overlay -->
+    <!-- Dunkles Overlay -->
     <View
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#99000000" />
 
-    <!-- Logo -->
+    <!-- App-Logo oben links -->
     <ImageView
         android:id="@+id/logo_top"
         android:layout_width="100dp"
@@ -28,7 +28,7 @@
         android:contentDescription="App Logo"
         android:src="@drawable/logo" />
 
-    <!-- Titel -->
+    <!-- Titel "Anmelden" -->
     <TextView
         android:id="@+id/title_login"
         android:layout_width="wrap_content"
@@ -41,7 +41,7 @@
         android:textSize="40sp"
         android:textStyle="bold" />
 
-    <!-- Benutzername -->
+    <!-- Eingabefeld E-Mail -->
     <EditText
         android:id="@+id/edit_username"
         android:layout_width="280dp"
@@ -56,7 +56,7 @@
         android:textColor="@color/black"
         android:textColorHint="@color/black" />
 
-    <!-- Passwort -->
+    <!-- Eingabefeld Passwort -->
     <EditText
         android:id="@+id/edit_password"
         android:layout_width="280dp"
@@ -71,7 +71,7 @@
         android:textColor="@color/black"
         android:textColorHint="@color/black" />
 
-    <!-- Passwort vergessen -->
+    <!-- Link "Passwort vergessen?" -->
     <TextView
         android:id="@+id/text_forgot"
         android:layout_width="wrap_content"
@@ -83,7 +83,7 @@
         android:textColor="@color/white"
         android:textSize="12sp" />
 
-    <!-- Los geht's Button -->
+    <!-- Login-Button -->
     <Button
         android:id="@+id/button_login"
         android:layout_width="250dp"

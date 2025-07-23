@@ -8,7 +8,7 @@
     android:fitsSystemWindows="true"
     tools:context=".GroupOverviewActivity">
 
-    <!-- Scrollbarer Inhalt -->
+    <!-- Scrollbarer Hauptinhalt -->
     <androidx.core.widget.NestedScrollView
         android:id="@+id/root_scroll"
         android:layout_width="match_parent"
@@ -24,8 +24,7 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-
-            <!-- Begrüßungsbereich -->
+            <!-- Begrüßungskarte mit Titel -->
             <androidx.cardview.widget.CardView
                 android:id="@+id/cv_greeting"
                 android:layout_width="match_parent"
@@ -35,6 +34,7 @@
                 app:cardCornerRadius="12dp"
                 app:cardElevation="4dp">
 
+                <!-- Hintergrundbild -->
                 <ImageView
                     android:id="@+id/iv_background"
                     android:layout_width="match_parent"
@@ -42,6 +42,7 @@
                     android:scaleType="centerCrop"
                     android:src="@drawable/group_picture_bg" />
 
+                <!-- Titelbereich über dem Bild -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -62,9 +63,9 @@
                         android:textSize="25sp"
                         android:textStyle="bold" />
                 </LinearLayout>
-
             </androidx.cardview.widget.CardView>
 
+            <!-- Text für Anzahl der Gruppen -->
             <TextView
                 android:id="@+id/tv_group_count"
                 android:layout_width="wrap_content"
@@ -77,6 +78,7 @@
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
+            <!-- RecyclerView für Gruppenliste -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerViewGroups"
                 android:layout_width="match_parent"
@@ -91,7 +93,7 @@
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <!-- Bottom Navigation -->
+    <!-- Feste Bottom Navigation -->
     <LinearLayout
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
@@ -103,7 +105,7 @@
         android:paddingBottom="0dp"
         android:weightSum="4">
 
-        <!-- Community Icon -->
+        <!-- Community -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -116,10 +118,9 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:src="@drawable/group_blue_icon" />
-
         </LinearLayout>
 
-        <!-- Home Icon -->
+        <!-- Home -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -132,10 +133,9 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:src="@drawable/home_white_icon" />
-
         </LinearLayout>
 
-        <!-- Add Icon -->
+        <!-- Add -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -148,10 +148,9 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:src="@drawable/add_white_icon" />
-
         </LinearLayout>
 
-        <!-- Profile Icon -->
+        <!-- Profile -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -164,8 +163,6 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:src="@drawable/profile_white_icon" />
-
         </LinearLayout>
-
     </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

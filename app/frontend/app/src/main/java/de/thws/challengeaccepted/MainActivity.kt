@@ -10,34 +10,35 @@ import androidx.core.view.WindowCompat
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // Session-Check: Ist der User noch angemeldet?
+        // Systemleisten ausblenden (Full-Screen)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+
+        // Login-Status prüfen
         val prefs = getSharedPreferences("app", MODE_PRIVATE)
         val token = prefs.getString("token", null)
         val userId = prefs.getString("USER_ID", null)
 
+        // Falls User bereits eingeloggt → direkt zum Dashboard
         if (token != null && userId != null) {
-            // User ist noch angemeldet → direkt ins Dashboard
             val intent = Intent(this, DashboardActivity::class.java)
-            // (Optional, falls Dashboard noch User-ID braucht)
             intent.putExtra("USER_ID", userId)
             startActivity(intent)
             finish()
             return
         }
 
-        // Sonst wie gehabt:
+        // Weiterleitung zur Registrierung
         val registerButton = findViewById<Button>(R.id.btnStart)
-        val loginText = findViewById<TextView>(R.id.txtLogin)
-
         registerButton.setOnClickListener {
             val intent = Intent(this, RegisterActivity::class.java)
             startActivity(intent)
         }
 
+        // Weiterleitung zum Login
+        val loginText = findViewById<TextView>(R.id.txtLogin)
         loginText.setOnClickListener {
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)

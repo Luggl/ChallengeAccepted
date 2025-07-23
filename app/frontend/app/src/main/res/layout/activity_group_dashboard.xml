@@ -7,14 +7,14 @@
     android:fitsSystemWindows="true"
     tools:context=".GroupDashboardActivity">
 
-    <!-- Scrollbarer Inhalt -->
+    <!-- Scrollbarer Hauptinhalt der Seite -->
     <androidx.core.widget.NestedScrollView
         android:id="@+id/root_scroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/black"
         android:clipToPadding="false"
-        android:paddingBottom="100dp">
+        android:paddingBottom="100dp"> <!-- Platz für Bottom Navigation -->
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -22,7 +22,7 @@
             android:orientation="vertical"
             android:paddingBottom="16dp">
 
-            <!-- Gruppen-Header -->
+            <!-- Header mit Gruppenbild und -name -->
             <LinearLayout
                 android:id="@+id/ll_groupstatus"
                 android:layout_width="match_parent"
@@ -34,6 +34,7 @@
                 android:orientation="horizontal"
                 android:padding="8dp">
 
+                <!-- Rundes Gruppenbild -->
                 <ImageView
                     android:id="@+id/ivGroupImageDashboard"
                     android:layout_width="60dp"
@@ -43,6 +44,7 @@
                     android:scaleType="centerCrop"
                     tools:src="@drawable/group_profile_picture" />
 
+                <!-- Gruppenname -->
                 <TextView
                     android:id="@+id/tvGroupNameDashboard"
                     android:layout_width="wrap_content"
@@ -53,13 +55,13 @@
                     tools:text="Kämpfernatur" />
             </LinearLayout>
 
-            <!-- Container für die Challenge-Logik -->
+            <!-- Logik-Container für Challenge: Zeigt entweder aktive Challenge oder Button -->
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp">
 
-                <!-- 1. Ansicht: Aktive Challenge (jetzt mit Aufgabe + Timer) -->
+                <!-- Aktive Challenge-Karte (dynamisch sichtbar) -->
                 <LinearLayout
                     android:id="@+id/challenge_card_active"
                     android:layout_width="match_parent"
@@ -70,7 +72,7 @@
                     android:visibility="gone"
                     tools:visibility="visible">
 
-                    <!-- Challenge-Titel -->
+                    <!-- Anzeige der Laufzeit der Challenge -->
                     <TextView
                         android:id="@+id/tv_challenge_laufzeit"
                         android:layout_width="wrap_content"
@@ -80,23 +82,23 @@
                         android:textStyle="bold"
                         tools:text="Challenge läuft seit 5 Tagen" />
 
-                    <!-- Aufgabenbeschreibung (NEU) -->
+                    <!-- Aufgabenbeschreibung für aktuelle Challenge -->
                     <TextView
                         android:id="@+id/tv_aufgabe_desc"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="35dp"
                         android:text="Offene Aufgabe"
                         android:textColor="@color/white"
                         android:textSize="18sp"
                         android:textStyle="bold" />
 
-
+                    <!-- Anzeige toter Gruppenmitglieder (dynamisch befüllt) -->
                     <LinearLayout
                         android:id="@+id/ll_dead_members"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="16dp"
+                        android:layout_margin="12dp"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
@@ -109,9 +111,10 @@
                             android:textColor="@color/white"
                             android:textSize="16sp"
                             android:textStyle="bold" />
-                        <!-- Die Icons für tote Member werden dynamisch hinzugefügt -->
+                        <!-- Tote Mitglieder werden hier per Code als Icons eingefügt -->
                     </LinearLayout>
 
+                    <!-- Timer für verbleibende Zeit der Aufgabe -->
                     <TextView
                         android:id="@+id/tv_remaining_time"
                         android:layout_width="match_parent"
@@ -126,21 +129,21 @@
                         android:text="00:00:00" />
                 </LinearLayout>
 
-                <!-- 2. Ansicht: Button zum Erstellen (standardmäßig sichtbar) -->
+                <!-- Fallback-Ansicht: Button zum Erstellen einer neuen Challenge -->
                 <Button
                     android:id="@+id/btn_create_challenge"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_margin="12dp"
                     android:background="@drawable/blue_frame"
                     android:paddingVertical="16dp"
                     android:text="NEUE CHALLENGE ERSTELLEN"
                     android:textColor="@color/white"
                     android:visibility="gone"
                     tools:visibility="visible" />
-
             </FrameLayout>
 
-            <!-- Gruppen-Feed -->
+            <!-- Überschrift für den Gruppen-Feed -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -151,6 +154,7 @@
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
+            <!-- RecyclerView für Beiträge und Kommentare -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerViewGroupFeed"
                 android:layout_width="match_parent"
@@ -158,26 +162,23 @@
                 android:layout_marginTop="8dp"
                 android:nestedScrollingEnabled="false" />
 
-            <!-- Thumbnail -->
+            <!-- Thumbnail-Vorschau für Medien (Bild/Video) -->
             <ImageView
                 android:id="@+id/imageThumbnail"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop" />
 
-            <!-- Video -->
+            <!-- Videoplayer (standardmäßig ausgeblendet) -->
             <VideoView
                 android:id="@+id/videoView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:visibility="gone" />
-
-
         </LinearLayout>
-
     </androidx.core.widget.NestedScrollView>
 
-    <!-- Bottom Navigation -->
+    <!-- Feste untere Navigation (4 Tabs) -->
     <LinearLayout
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
@@ -189,7 +190,7 @@
         android:paddingBottom="0dp"
         android:weightSum="4">
 
-        <!-- Community Icon -->
+        <!-- Tab: Gruppe -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -202,10 +203,9 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:src="@drawable/group_white_icon" />
-
         </LinearLayout>
 
-        <!-- Home Icon -->
+        <!-- Tab: Home -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -218,10 +218,9 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:src="@drawable/home_blue_icon" />
-
         </LinearLayout>
 
-        <!-- Add Icon -->
+        <!-- Tab: Hinzufügen -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -234,10 +233,9 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:src="@drawable/add_white_icon" />
-
         </LinearLayout>
 
-        <!-- Profile Icon -->
+        <!-- Tab: Profil -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -250,7 +248,6 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:src="@drawable/profile_white_icon" />
-
         </LinearLayout>
     </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

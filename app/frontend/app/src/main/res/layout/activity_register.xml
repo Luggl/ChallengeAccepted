@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/login_background_pic">
 
-    <!-- Background Image -->
+    <!-- Hintergrundbild -->
     <ImageView
         android:id="@+id/iv_background"
         android:layout_width="match_parent"
@@ -12,7 +12,7 @@
         android:scaleType="centerCrop"
         android:src="@drawable/login_background_pic" />
 
-    <!-- Overlay -->
+    <!-- Abdunkelung -->
     <View
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -28,7 +28,7 @@
         android:contentDescription="App Logo"
         android:src="@drawable/logo" />
 
-    <!-- Titel -->
+    <!-- Titel "Registrieren" -->
     <TextView
         android:id="@+id/title_registrieren"
         android:layout_width="wrap_content"
@@ -41,7 +41,7 @@
         android:textSize="40sp"
         android:textStyle="bold" />
 
-    <!-- Benutzername -->
+    <!-- Eingabe: Benutzername -->
     <EditText
         android:id="@+id/edit_username"
         android:layout_width="280dp"
@@ -56,7 +56,7 @@
         android:textColor="@color/black"
         android:textColorHint="@color/black" />
 
-    <!-- Email -->
+    <!-- Eingabe: E-Mail -->
     <EditText
         android:id="@+id/edit_email"
         android:layout_width="280dp"
@@ -71,7 +71,7 @@
         android:textColor="@color/black"
         android:textColorHint="@color/black" />
 
-    <!-- Passwort -->
+    <!-- Eingabe: Passwort -->
     <EditText
         android:id="@+id/edit_password1"
         android:layout_width="280dp"
@@ -86,7 +86,7 @@
         android:textColor="@color/black"
         android:textColorHint="@color/black" />
 
-    <!-- Passwort wiederholen -->
+    <!-- Eingabe: Passwort wiederholen -->
     <EditText
         android:id="@+id/edit_password2"
         android:layout_width="280dp"
@@ -101,7 +101,7 @@
         android:textColor="@color/black"
         android:textColorHint="@color/black" />
 
-    <!-- Schon Registriert -->
+    <!-- Hinweis auf bestehendes Konto -->
     <TextView
         android:id="@+id/text_already_account"
         android:layout_width="wrap_content"
@@ -113,7 +113,7 @@
         android:textColor="@color/white"
         android:textSize="12sp" />
 
-    <!-- Los geht's Button -->
+    <!-- Registrieren-Button -->
     <Button
         android:id="@+id/button_start_regist"
         android:layout_width="250dp"

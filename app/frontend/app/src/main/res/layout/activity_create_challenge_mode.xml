@@ -8,7 +8,7 @@
     android:fitsSystemWindows="true"
     tools:context=".CreateChallengeModeActivity">
 
-    <!-- Scrollbarer Inhalt -->
+    <!-- Scrollbarer Hauptinhalt -->
     <androidx.core.widget.NestedScrollView
         android:id="@+id/root_scroll"
         android:layout_width="match_parent"
@@ -23,6 +23,7 @@
             android:orientation="vertical"
             android:padding="16dp">
 
+            <!-- Kopfbereich mit Zurück-Button und Gruppenname -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -44,7 +45,7 @@
                     android:tint="@android:color/white"
                     tools:ignore="UseAppTint" />
 
-                <!-- Gruppenname -->
+                <!-- Gruppenname (zentriert) -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -63,18 +64,16 @@
                 </LinearLayout>
             </LinearLayout>
 
-
-            <!-- Modusauswahl -->
+            <!-- Bereich für Modusauswahl -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_above="@id/btn_confirm_selection"
                 android:layout_margin="16dp"
                 android:background="@drawable/grey_background"
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
 
-                <!-- Modusauswahl -->
+                <!-- Modusauswahl (Standard / Survival) -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -91,6 +90,7 @@
                         android:layout_marginBottom="16dp"
                         android:background="@drawable/blue_frame">
 
+                        <!-- Bild für Standard-Modus -->
                         <ImageView
                             android:id="@+id/iv_standard"
                             android:layout_width="match_parent"
@@ -100,6 +100,7 @@
                             android:scaleType="centerCrop"
                             android:src="@drawable/standard_mode_pic" />
 
+                        <!-- Beschriftung für Standard-Modus -->
                         <TextView
                             android:id="@+id/tv_standard"
                             android:layout_width="wrap_content"
@@ -114,13 +115,13 @@
                             android:textStyle="bold" />
                     </FrameLayout>
 
-
                     <!-- Survival-Modus -->
                     <FrameLayout
                         android:id="@+id/fl_survival"
                         android:layout_width="match_parent"
                         android:layout_height="215dp">
 
+                        <!-- Bild für Survival-Modus -->
                         <ImageView
                             android:id="@+id/iv_survival"
                             android:layout_width="match_parent"
@@ -130,6 +131,7 @@
                             android:scaleType="centerCrop"
                             android:src="@drawable/survival_mode_pic" />
 
+                        <!-- Beschriftung für Survival-Modus -->
                         <TextView
                             android:id="@+id/tv_survival"
                             android:layout_width="wrap_content"
@@ -145,7 +147,7 @@
                     </FrameLayout>
                 </LinearLayout>
 
-                <!-- Bestätigungsbutton -->
+                <!-- Button zur Bestätigung der Modusauswahl -->
                 <ImageButton
                     android:id="@+id/btn_confirm_selection"
                     android:layout_width="80dp"
@@ -159,7 +161,7 @@
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <!-- Bottom Navigation -->
+    <!-- Feste untere Navigationsleiste -->
     <LinearLayout
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
@@ -169,14 +171,13 @@
         android:orientation="horizontal"
         android:weightSum="4">
 
-        <!-- Community -->
+        <!-- Community / Gruppen -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
             android:orientation="vertical">
-
             <ImageView
                 android:id="@+id/nav_group"
                 android:layout_width="40dp"
@@ -191,7 +192,6 @@
             android:layout_weight="1"
             android:gravity="center"
             android:orientation="vertical">
-
             <ImageView
                 android:id="@+id/nav_home"
                 android:layout_width="40dp"
@@ -199,14 +199,13 @@
                 android:src="@drawable/home_white_icon" />
         </LinearLayout>
 
-        <!-- Add -->
+        <!-- Add (blau hervorgehoben) -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
             android:orientation="vertical">
-
             <ImageView
                 android:id="@+id/nav_add"
                 android:layout_width="40dp"
@@ -214,14 +213,13 @@
                 android:src="@drawable/add_blue_icon" />
         </LinearLayout>
 
-        <!-- Profile -->
+        <!-- Profil -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
             android:orientation="vertical">
-
             <ImageView
                 android:id="@+id/nav_profile"
                 android:layout_width="40dp"

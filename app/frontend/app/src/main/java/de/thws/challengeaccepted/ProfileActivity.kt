@@ -25,14 +25,16 @@ import kotlinx.coroutines.launch
 
 class ProfileActivity : AppCompatActivity() {
 
+    // ViewModel mit Repository initialisieren (Datenbank & API)
     private val userViewModel: UserViewModel by viewModels {
         val db = AppDatabase.getDatabase(applicationContext)
         val userService = ApiClient.getRetrofit(applicationContext).create(UserService::class.java)
         val repository = UserRepository(userService, db.userDao())
-        // GEÄNDERT: Übergib hier nur noch das Repository
+        // Übergabe des Repositories an das ViewModel
         UserViewModelFactory(repository)
     }
 
+    // Hilfsfunktion: dp → px
     fun Int.dpToPx(): Int =
         (this * Resources.getSystem().displayMetrics.density).toInt()
 
@@ -40,12 +42,13 @@ class ProfileActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
 
+        // Vollbildmodus – Inhalte hinter Status- und Navigationsleisten erlauben
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         val rootScroll = findViewById<View>(R.id.root_scroll)
         val bottomNav = findViewById<View>(R.id.bottom_navigation)
 
-// STATUSLEISTE OBEN BEHANDELN (z. B. bei Notch oder Uhrzeit)
+        // Statusleiste oben einbeziehen (z. B. Notch, Uhrzeit)
         ViewCompat.setOnApplyWindowInsetsListener(rootScroll) { view, insets ->
             val systemInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             view.setPadding(
@@ -57,33 +60,36 @@ class ProfileActivity : AppCompatActivity() {
             insets
         }
 
-// NAVIGATIONSBALKEN UNTEN BEHANDELN
+        // Navigationsleiste unten einbeziehen
         ViewCompat.setOnApplyWindowInsetsListener(bottomNav) { view, insets ->
             val systemInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
 
-            // Padding NUR unten – oben fest (z. B. 8dp), unten dynamisch
+            // Nur Padding unten dynamisch setzen
             view.setPadding(
                 view.paddingLeft,
                 8.dpToPx(),
                 view.paddingRight,
-                8.dpToPx(),
+                8.dpToPx()
             )
             insets
         }
 
-// Optional: Hintergrundfarbe für Navigationsleiste setzen
+        // Optional: Navigationsleiste einfärben
         window.navigationBarColor = ContextCompat.getColor(this, R.color.black)
 
-
+        // Views für Benutzername & Streak holen
         val nameView = findViewById<TextView>(R.id.tv_username)
         val streakView = findViewById<TextView>(R.id.tv_streak)
 
+        // Benutzer-ID aus SharedPreferences laden
         val prefs = getSharedPreferences("app", MODE_PRIVATE)
         val userId = prefs.getString("USER_ID", null)
 
         if (userId != null) {
+            // Benutzer-Daten laden
             userViewModel.loadInitialData(userId)
 
+            // Änderungen beobachten & UI aktualisieren
             lifecycleScope.launch {
                 userViewModel.user.collect { userEntity ->
                     userEntity?.let {
@@ -96,9 +102,11 @@ class ProfileActivity : AppCompatActivity() {
             Toast.makeText(this, "Kein Nutzer gefunden!", Toast.LENGTH_SHORT).show()
         }
 
+        // Navigationsleiste einrichten
         setupNavigation()
     }
 
+    // Klick-Listener für untere Navigationsleiste
     private fun setupNavigation() {
         findViewById<ImageView>(R.id.nav_group).setOnClickListener {
             startActivity(Intent(this, GroupOverviewActivity::class.java))

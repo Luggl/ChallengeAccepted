@@ -28,15 +28,17 @@ import kotlinx.coroutines.launch
 
 class ProfileSettingsActivity : AppCompatActivity() {
 
+    // ViewModel mit Factory initialisieren (Repository aus Retrofit + Room)
     private val userViewModel: UserViewModel by viewModels {
         val db = AppDatabase.getDatabase(applicationContext)
         val userService = ApiClient.getRetrofit(applicationContext).create(UserService::class.java)
         val repository = UserRepository(userService, db.userDao())
-        // GEÄNDERT: Übergib hier nur noch das Repository
         UserViewModelFactory(repository)
     }
+
     private lateinit var prefs: SharedPreferences
 
+    // Hilfsfunktion für dp → px
     fun Int.dpToPx(): Int =
         (this * Resources.getSystem().displayMetrics.density).toInt()
 
@@ -45,12 +47,13 @@ class ProfileSettingsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_profile_settings)
         prefs = getSharedPreferences("app", MODE_PRIVATE)
 
+        // Randloses Layout aktivieren
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         val rootScroll = findViewById<View>(R.id.root_scroll)
         val bottomNav = findViewById<View>(R.id.bottom_navigation)
 
-// STATUSLEISTE OBEN BEHANDELN (z. B. bei Notch oder Uhrzeit)
+        // Obere Systemleiste (z. B. Notch) berücksichtigen
         ViewCompat.setOnApplyWindowInsetsListener(rootScroll) { view, insets ->
             val systemInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             view.setPadding(
@@ -62,11 +65,8 @@ class ProfileSettingsActivity : AppCompatActivity() {
             insets
         }
 
-// NAVIGATIONSBALKEN UNTEN BEHANDELN
+        // Untere Systemleiste (Navigation Bar) berücksichtigen
         ViewCompat.setOnApplyWindowInsetsListener(bottomNav) { view, insets ->
-            val systemInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-
-            // Padding NUR unten – oben fest (z. B. 8dp), unten dynamisch
             view.setPadding(
                 view.paddingLeft,
                 8.dpToPx(),
@@ -76,20 +76,22 @@ class ProfileSettingsActivity : AppCompatActivity() {
             insets
         }
 
-// Optional: Hintergrundfarbe für Navigationsleiste setzen
+        // Navigationsleiste einfärben
         window.navigationBarColor = ContextCompat.getColor(this, R.color.black)
 
+        // UI-Elemente referenzieren
         val nameEdit = findViewById<EditText>(R.id.etUserName)
         val emailBtn = findViewById<Button>(R.id.btnEmail)
         val userId = prefs.getString("USER_ID", null)
 
+        // Ohne USER_ID → abbrechen
         if (userId == null) {
             Toast.makeText(this, "Fehler: Nicht angemeldet.", Toast.LENGTH_LONG).show()
             finish()
             return
         }
 
-        // Daten laden und UI füllen
+        // Nutzerdaten laden und UI füllen
         userViewModel.loadInitialData(userId)
         lifecycleScope.launch {
             val user = userViewModel.user.first { it != null }
@@ -99,7 +101,7 @@ class ProfileSettingsActivity : AppCompatActivity() {
             }
         }
 
-        // Name speichern, wenn der Fokus verloren geht
+        // Namensänderung speichern, sobald das Feld den Fokus verliert
         nameEdit.setOnFocusChangeListener { _, hasFocus ->
             if (!hasFocus) {
                 val currentUser = userViewModel.user.value
@@ -112,17 +114,20 @@ class ProfileSettingsActivity : AppCompatActivity() {
             }
         }
 
-        // Navigation und Button-Listener initialisieren
+        // Buttons & Navigation einrichten
         setupNavigationAndButtons(userId)
     }
 
+    // Bestätigungsdialog für Profil-Löschung
     private fun showDeleteConfirmationDialog(userId: String) {
         AlertDialog.Builder(this)
             .setTitle("Profil wirklich löschen?")
             .setMessage("Das kann nicht rückgängig gemacht werden.")
             .setPositiveButton("Profil löschen") { _, _ ->
-                userViewModel.deleteCurrentUser(userId,
+                userViewModel.deleteCurrentUser(
+                    userId,
                     onSuccess = {
+                        // SharedPreferences und Datenbank löschen
                         prefs.edit().clear().apply()
                         val intent = Intent(this, LoginActivity::class.java)
                         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -138,8 +143,9 @@ class ProfileSettingsActivity : AppCompatActivity() {
             .show()
     }
 
+    // Alle Button- und Navigationslistener setzen
     private fun setupNavigationAndButtons(userId: String) {
-        // Zurück-Button
+        // Zurück zur Profilseite
         findViewById<ImageView>(R.id.btn_back).setOnClickListener {
             startActivity(Intent(this, ProfileActivity::class.java))
         }
@@ -149,24 +155,22 @@ class ProfileSettingsActivity : AppCompatActivity() {
             startActivity(Intent(this, ProfileChangePassActivity::class.java))
         }
 
-        // Datenschutz
+        // Datenschutzseite öffnen
         findViewById<Button>(R.id.btn_datenschutz).setOnClickListener {
             startActivity(Intent(this, DataPrivacyActivity::class.java))
         }
 
-        // Abmelden
+        // Logout mit Bestätigung
         findViewById<Button>(R.id.btn_logout).setOnClickListener {
             AlertDialog.Builder(this)
                 .setMessage("Wirklich abmelden?")
                 .setPositiveButton("Abmelden") { _, _ ->
-                    // 1. Datenbank löschen (suspend → Coroutine!)
                     lifecycleScope.launch {
+                        // Datenbank und SharedPrefs löschen
                         AppDatabase.getDatabase(applicationContext).clearAllData()
-
-                        // 2. SharedPreferences löschen
                         prefs.edit().clear().apply()
 
-                        // 3. Navigation
+                        // Navigation zum Login
                         val intent = Intent(this@ProfileSettingsActivity, LoginActivity::class.java)
                         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                         startActivity(intent)
@@ -177,7 +181,7 @@ class ProfileSettingsActivity : AppCompatActivity() {
                 .show()
         }
 
-        // Profil löschen
+        // Profil löschen mit Bestätigungsdialog
         findViewById<Button>(R.id.btn_deactivate_delete).setOnClickListener {
             showDeleteConfirmationDialog(userId)
         }

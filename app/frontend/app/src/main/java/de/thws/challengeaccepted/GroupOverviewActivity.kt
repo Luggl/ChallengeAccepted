@@ -26,6 +26,7 @@ import kotlinx.coroutines.launch
 
 class GroupOverviewActivity : AppCompatActivity() {
 
+    // ViewModel initialisieren mit Datenbank & API-Service
     private val groupViewModel: GroupViewModel by viewModels {
         val database = AppDatabase.getDatabase(applicationContext)
         val groupService = ApiClient.getRetrofit(applicationContext).create(GroupService::class.java)
@@ -41,6 +42,7 @@ class GroupOverviewActivity : AppCompatActivity() {
         GroupViewModelFactory(repository)
     }
 
+    // Hilfsfunktion zur Umrechnung von dp in px
     fun Int.dpToPx(): Int =
         (this * Resources.getSystem().displayMetrics.density).toInt()
 
@@ -48,12 +50,13 @@ class GroupOverviewActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_group_overview)
 
+        // Systemleisten einbeziehen (Edge-to-Edge)
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         val rootScroll = findViewById<View>(R.id.root_scroll)
         val bottomNav = findViewById<View>(R.id.bottom_navigation)
 
-// STATUSLEISTE OBEN BEHANDELN (z. B. bei Notch oder Uhrzeit)
+        // Statusleiste oben behandeln (z. B. bei Notch oder Uhrzeit)
         ViewCompat.setOnApplyWindowInsetsListener(rootScroll) { view, insets ->
             val systemInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             view.setPadding(
@@ -65,11 +68,11 @@ class GroupOverviewActivity : AppCompatActivity() {
             insets
         }
 
-// NAVIGATIONSBALKEN UNTEN BEHANDELN
+        // Navigationsleiste unten behandeln
         ViewCompat.setOnApplyWindowInsetsListener(bottomNav) { view, insets ->
             val systemInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
 
-            // Padding NUR unten – oben fest (z. B. 8dp), unten dynamisch
+            // Padding: oben 8dp fix, unten dynamisch
             view.setPadding(
                 view.paddingLeft,
                 8.dpToPx(),
@@ -79,16 +82,16 @@ class GroupOverviewActivity : AppCompatActivity() {
             insets
         }
 
-// Optional: Hintergrundfarbe für Navigationsleiste setzen
+        // Optional: Farbe für Navigationsleiste setzen
         window.navigationBarColor = ContextCompat.getColor(this, R.color.black)
 
-
-
+        // Gruppenübersicht laden
         groupViewModel.loadGroupOverview()
+
         val recycler = findViewById<RecyclerView>(R.id.recyclerViewGroups)
         val tvGroupCount = findViewById<TextView>(R.id.tv_group_count)
 
-        // Der Adapter erwartet jetzt eine Liste von "Gruppe"-Entities
+        // Adapter für RecyclerView (öffnet Gruppendetail bei Klick)
         val adapter = GroupAdapter { gruppe ->
             val intent = Intent(this, GroupDashboardActivity::class.java)
             intent.putExtra("GROUP_ID", gruppe.gruppeId)
@@ -97,19 +100,19 @@ class GroupOverviewActivity : AppCompatActivity() {
             intent.putExtra("GROUP_BILD", gruppe.gruppenbild)
             startActivity(intent)
         }
+
         recycler.layoutManager = LinearLayoutManager(this)
         recycler.adapter = adapter
 
-        // Beobachte den Flow aus dem ViewModel
+        // ViewModel-Flow beobachten → Gruppenliste aktualisieren
         lifecycleScope.launch {
             groupViewModel.gruppen.collect { gruppenListe ->
-                // Der ListAdapter aktualisiert die UI effizient
                 adapter.submitList(gruppenListe)
                 tvGroupCount.text = "Aktiv in ${gruppenListe.size} Gruppen:"
             }
         }
 
-        // --- Bottom Navigation (bleibt wie gehabt) ---
+        // --- Bottom Navigation (wie gehabt) ---
         val navHome = findViewById<ImageView>(R.id.nav_home)
         navHome.setOnClickListener {
             val intent = Intent(this, DashboardActivity::class.java)

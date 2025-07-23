@@ -21,6 +21,7 @@ import androidx.core.view.WindowInsetsCompat
 
 class SurvivalChallengeOverviewActivity : AppCompatActivity() {
 
+    // Hilfsfunktion zur Umrechnung von dp in px (für dynamisches Padding)
     fun Int.dpToPx(): Int =
         (this * Resources.getSystem().displayMetrics.density).toInt()
 
@@ -29,11 +30,13 @@ class SurvivalChallengeOverviewActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_survival_challenge_overview)
 
+        // Aktiviert Edge-to-Edge-Layout (z. B. hinter der Statusleiste)
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         val rootScroll = findViewById<View>(R.id.root_scroll)
         val bottomNav = findViewById<View>(R.id.bottom_navigation)
 
+        // Setzt systemabhängiges Padding für ScrollView (oben)
         ViewCompat.setOnApplyWindowInsetsListener(rootScroll) { view, insets ->
             val systemInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             view.setPadding(
@@ -45,6 +48,7 @@ class SurvivalChallengeOverviewActivity : AppCompatActivity() {
             insets
         }
 
+        // Fügt Padding für untere Navigation hinzu (oben + unten)
         ViewCompat.setOnApplyWindowInsetsListener(bottomNav) { view, insets ->
             val systemInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
 
@@ -57,9 +61,10 @@ class SurvivalChallengeOverviewActivity : AppCompatActivity() {
             insets
         }
 
+        // Setzt Hintergrundfarbe der System-Navigationsleiste (unten)
         window.navigationBarColor = ContextCompat.getColor(this, R.color.black)
 
-        // Platz für die Navigation Bar falls eine vorhanden
+        // Stellt sicher, dass `ll_bottom_navigation` nicht von Systembars überlappt wird
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.ll_bottom_navigation)) { view, insets ->
             val systemBarsInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             view.setPadding(
@@ -71,22 +76,21 @@ class SurvivalChallengeOverviewActivity : AppCompatActivity() {
             insets
         }
 
-
-        // Navigation Groupstatus
+        // Öffnet Gruppenstatusseite bei Klick auf Gruppeninfo-Leiste
         val navGroupstatus = findViewById<LinearLayout>(R.id.ll_groupstatus)
         navGroupstatus.setOnClickListener {
             val intent = Intent(this, GroupstatusActivity::class.java)
             startActivity(intent)
         }
 
-        // Navigation Record Activity
+        // Öffnet Kamera- bzw. Aufzeichnungsseite bei Klick auf verbleibende Zeit
         val navRecordAc = findViewById<TextView>(R.id.tv_remaining_time)
         navRecordAc.setOnClickListener {
             val intent = Intent(this, RecordActivity::class.java)
             startActivity(intent)
         }
 
-        // Challenge verlassen PopUp
+        // Challenge-verlassen-Dialog mit Bestätigung
         val leaveBtn = findViewById<Button>(R.id.btn_leave_challenge)
         leaveBtn.setOnClickListener {
             val dialogBuilder = AlertDialog.Builder(this)
@@ -97,13 +101,12 @@ class SurvivalChallengeOverviewActivity : AppCompatActivity() {
                 Toast.makeText(this, "Du hast die Challenge verlassen.", Toast.LENGTH_SHORT).show()
             }
 
-            // Abbrechen
             val alertDialog = dialogBuilder.create()
 
-            // Hintergrund schwarz
+            // Schwarzer Hintergrund für Dialogfenster
             alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.BLACK))
 
-            // Dialog anzeigen & Farben setzen
+            // Text- und Buttonfarben anpassen, sobald Dialog sichtbar ist
             alertDialog.setOnShowListener {
                 val titleId = resources.getIdentifier("alertTitle", "id", "android")
                 alertDialog.findViewById<TextView>(titleId)?.setTextColor(Color.WHITE)
@@ -117,20 +120,21 @@ class SurvivalChallengeOverviewActivity : AppCompatActivity() {
             alertDialog.show()
         }
 
-
-        // Bottom Navigation
+        // Bottom Navigation: Gruppenübersicht
         val navGroup = findViewById<ImageView>(R.id.nav_group)
         navGroup.setOnClickListener {
             val intent = Intent(this, GroupOverviewActivity::class.java)
             startActivity(intent)
         }
 
+        // Bottom Navigation: Dashboard/Home
         val navHome = findViewById<ImageView>(R.id.nav_home)
         navHome.setOnClickListener {
             val intent = Intent(this, DashboardActivity::class.java)
             startActivity(intent)
         }
 
+        // Bottom Navigation: Öffnet Dialog zur Auswahl zwischen Aufgabe erledigen oder neue Challenge erstellen
         val navAdd = findViewById<ImageView>(R.id.nav_add)
         navAdd.setOnClickListener {
             val dialogBuilder = AlertDialog.Builder(this)
@@ -149,19 +153,17 @@ class SurvivalChallengeOverviewActivity : AppCompatActivity() {
                 startActivity(intent)
             }
 
-            // Abbrechen
             val alertDialog = dialogBuilder.create()
 
-            // Schwarzer Hintergrund
+            // Schwarzer Dialoghintergrund
             alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.BLACK))
 
+            // Texte und Buttonfarben dynamisch setzen
             alertDialog.setOnShowListener {
-                // Titel & Nachricht in weiß
                 val titleId = resources.getIdentifier("alertTitle", "id", "android")
                 alertDialog.findViewById<TextView>(titleId)?.setTextColor(Color.WHITE)
                 alertDialog.findViewById<TextView>(android.R.id.message)?.setTextColor(Color.WHITE)
 
-                // Buttonfarben
                 alertDialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(getColor(R.color.button_green))
                 alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(getColor(R.color.button_green))
             }
@@ -169,6 +171,7 @@ class SurvivalChallengeOverviewActivity : AppCompatActivity() {
             alertDialog.show()
         }
 
+        // Bottom Navigation: Profilseite öffnen
         val navProfile = findViewById<ImageView>(R.id.nav_profile)
         navProfile.setOnClickListener {
             val intent = Intent(this, ProfileActivity::class.java)

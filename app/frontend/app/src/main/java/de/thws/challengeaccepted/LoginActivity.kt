@@ -17,16 +17,21 @@ import de.thws.challengeaccepted.network.UserService
 import kotlinx.coroutines.launch
 
 class LoginActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
-        WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
+        // Systemleisten ausblenden (Full-Screen)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+
+        // UI-Elemente
         val loginButton = findViewById<Button>(R.id.button_login)
         val username = findViewById<EditText>(R.id.edit_username)
         val password = findViewById<EditText>(R.id.edit_password)
         val forgotText = findViewById<TextView>(R.id.text_forgot)
 
+        // Login-Button gedrückt
         loginButton.setOnClickListener {
             val user = username.text.toString()
             val pw = password.text.toString()
@@ -38,12 +43,14 @@ class LoginActivity : AppCompatActivity() {
             }
         }
 
+        // "Passwort vergessen" gedrückt
         forgotText.setOnClickListener {
             val intent = Intent(this, ForgotPasswordActivity::class.java)
             startActivity(intent)
         }
     }
 
+    // Login-Logik mit Token- und User-Speicherung
     private fun loginUser(email: String, password: String) {
         val service = ApiClient.retrofit.create(UserService::class.java)
         val loginRequest = LoginRequest(email = email, password = password)
@@ -52,14 +59,16 @@ class LoginActivity : AppCompatActivity() {
             try {
                 val response = service.loginUser(loginRequest)
                 if (response.access_token != null && response.user != null) {
-                    // User lokal speichern
+                    // User in lokale Datenbank speichern
                     val userEntity = response.user.toRoomUser()
                     App.database.userDao().insertUsers(userEntity)
+
+                    // Token + User-ID in SharedPreferences speichern
                     val prefs = getSharedPreferences("app", MODE_PRIVATE)
                     prefs.edit().putString("token", response.access_token).apply()
                     prefs.edit().putString("USER_ID", userEntity.userId).apply()
 
-                    // USER_ID an Dashboard übergeben!
+                    // Weiterleitung zum Dashboard
                     val intent = Intent(this@LoginActivity, DashboardActivity::class.java)
                     intent.putExtra("USER_ID", userEntity.userId)
                     startActivity(intent)

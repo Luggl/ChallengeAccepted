@@ -22,18 +22,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
 import de.thws.challengeaccepted.ui.viewmodels.BeitragViewModelFactory
 import de.thws.challengeaccepted.ui.viewmodels.BeitragViewModel
-import de.thws.challengeaccepted.data.repository.BeitragRepository
-import okhttp3.Call
-import okhttp3.Callback
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.MultipartBody
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.RequestBody.Companion.asRequestBody
-import okhttp3.Response
 import java.io.File
-import java.io.IOException
-import androidx.activity.viewModels
 
 
 class PostEditActivity : AppCompatActivity() {

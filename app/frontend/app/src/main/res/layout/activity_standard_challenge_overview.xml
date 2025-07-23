@@ -8,13 +8,13 @@
     android:background="@color/black"
     tools:context=".StandardCreateChallengeOverviewActivity">
 
-    <!-- Scrollbarer Hauptbereich -->
+    <!-- Scrollbarer Hauptbereich mit Status, Teilnehmern und Steuerung -->
     <androidx.core.widget.NestedScrollView
         android:id="@+id/root_scroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
-        android:paddingBottom="100dp">
+        android:paddingBottom="100dp"> <!-- Abstand für feste Bottom Navigation -->
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -22,7 +22,7 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Gruppenstatus -->
+            <!-- Anzeige der Gruppe (Name + Bild) -->
             <LinearLayout
                 android:id="@+id/ll_groupstatus"
                 android:layout_width="match_parent"
@@ -37,6 +37,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
+                    <!-- Gruppenbild -->
                     <ImageView
                         android:layout_width="60dp"
                         android:layout_height="60dp"
@@ -45,6 +46,7 @@
                         android:scaleType="centerCrop"
                         android:src="@drawable/group_profile_picture" />
 
+                    <!-- Gruppenname -->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -56,8 +58,7 @@
                 </LinearLayout>
             </LinearLayout>
 
-
-            <!-- Kalender -->
+            <!-- Kalender & Challenge-Status -->
             <LinearLayout
                 android:id="@+id/calendar"
                 android:layout_width="match_parent"
@@ -68,7 +69,7 @@
                 android:padding="12dp"
                 tools:ignore="DuplicateIds">
 
-                <!-- Challenge läuft seit -->
+                <!-- Laufzeit der aktuellen Challenge -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -84,6 +85,7 @@
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
+                    <!-- Dynamisch anpassbarer Zeitraum -->
                     <TextView
                         android:layout_width="100dp"
                         android:layout_height="wrap_content"
@@ -92,6 +94,7 @@
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
+                    <!-- Symbol für Challengeplan -->
                     <ImageView
                         android:layout_width="24dp"
                         android:layout_height="24dp"
@@ -99,7 +102,7 @@
                         android:src="@drawable/challenge_plan_icon" />
                 </LinearLayout>
 
-                <!-- Teilnehmeranzeige -->
+                <!-- Teilnehmer, die heutige Aufgabe erfüllt haben -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -109,12 +112,13 @@
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
+                <!-- Dynamischer Avatarbereich -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
-                    <!-- Avatare -->
+                    <!-- Teilnehmer-Avatare (farblich kodiert) -->
                     <ImageView
                         android:layout_width="32dp"
                         android:layout_height="32dp"
@@ -151,6 +155,7 @@
                         android:src="@drawable/profile_picture" />
                 </LinearLayout>
 
+                <!-- Countdown zur Erfüllung -->
                 <TextView
                     android:id="@+id/tv_remaining_time"
                     android:layout_width="match_parent"
@@ -165,9 +170,9 @@
                     android:textColor="@color/blue"
                     android:textSize="16sp"
                     android:textStyle="bold" />
-
             </LinearLayout>
 
+            <!-- Liste aller Spieler der Gruppe -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -178,7 +183,7 @@
                 android:orientation="vertical"
                 android:padding="15dp">
 
-                <!-- Überschrift -->
+                <!-- Titel -->
                 <TextView
                     android:id="@+id/playersTitle"
                     android:layout_width="wrap_content"
@@ -189,7 +194,37 @@
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
-                <!-- Spieler 1 -->
+                <!-- Spielerkarte 1 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/blue_frame"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="8dp">
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginEnd="6dp"
+                        android:background="@drawable/bright_grey_frame"
+                        android:clipToOutline="true"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/profile_picture" />
+
+                    <!-- Spielername -->
+                    <TextView
+                        android:layout_width="50dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="100dp"
+                        android:text="Ben"
+                        android:textColor="@color/white"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <!-- Spielerkarte 2 (identisch zu oben) -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="80dp"
@@ -216,42 +251,10 @@
                         android:textColor="@color/white"
                         android:textSize="16sp"
                         android:textStyle="bold" />
-
                 </LinearLayout>
-
-                <!-- Spieler 2 -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="80dp"
-                    android:layout_marginBottom="8dp"
-                    android:background="@drawable/blue_frame"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:padding="8dp">
-
-                    <ImageView
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_marginEnd="6dp"
-                        android:background="@drawable/bright_grey_frame"
-                        android:clipToOutline="true"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/profile_picture" />
-
-                    <TextView
-                        android:layout_width="50dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="100dp"
-                        android:text="Ben"
-                        android:textColor="@color/white"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
-
-
-                </LinearLayout>
-
             </LinearLayout>
-            <!-- Challenge verlassen -->
+
+            <!-- Button zum Verlassen der Challenge -->
             <Button
                 android:id="@+id/btn_leave_challenge"
                 android:layout_width="match_parent"
@@ -266,7 +269,7 @@
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <!-- Bottom Navigation -->
+    <!-- Feste Bottom Navigation mit 4 Icons -->
     <LinearLayout
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
@@ -276,7 +279,7 @@
         android:orientation="horizontal"
         android:weightSum="4">
 
-        <!-- Community -->
+        <!-- Navigation: Gruppe -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -291,7 +294,7 @@
                 android:src="@drawable/group_white_icon" />
         </LinearLayout>
 
-        <!-- Home -->
+        <!-- Navigation: Home -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -306,7 +309,7 @@
                 android:src="@drawable/home_white_icon" />
         </LinearLayout>
 
-        <!-- Add -->
+        <!-- Navigation: Hinzufügen -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -321,7 +324,7 @@
                 android:src="@drawable/add_blue_icon" />
         </LinearLayout>
 
-        <!-- Profile -->
+        <!-- Navigation: Profil -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -336,5 +339,4 @@
                 android:src="@drawable/profile_white_icon" />
         </LinearLayout>
     </LinearLayout>
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

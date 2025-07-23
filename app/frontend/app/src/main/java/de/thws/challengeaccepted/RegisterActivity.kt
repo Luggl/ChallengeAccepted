@@ -20,10 +20,13 @@ import retrofit2.HttpException
 class RegisterActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
 
+        // Systemleisten überlagern (Full-Screen)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+
+        // UI-Elemente initialisieren
         val username = findViewById<EditText>(R.id.edit_username)
         val email = findViewById<EditText>(R.id.edit_email)
         val password = findViewById<EditText>(R.id.edit_password1)
@@ -31,19 +34,24 @@ class RegisterActivity : AppCompatActivity() {
         val registerButton = findViewById<Button>(R.id.button_start_regist)
         val alreadyAccount = findViewById<TextView>(R.id.text_already_account)
 
+        // Registrierung auslösen
         registerButton.setOnClickListener {
             val user = username.text.toString().trim()
             val mail = email.text.toString().trim()
             val pw = password.text.toString()
             val rpw = repeatPassword.text.toString()
 
-            // Frontend-Validierung auf das Nötigste reduzieren
+            // Minimale Validierung
             if (user.isEmpty() || mail.isEmpty() || pw.isEmpty() || rpw.isEmpty()) {
                 Toast.makeText(this, "Bitte alle Felder ausfüllen!", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
             if (!Patterns.EMAIL_ADDRESS.matcher(mail).matches()) {
-                Toast.makeText(this, "Bitte eine gültige E-Mail-Adresse eingeben!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this,
+                    "Bitte eine gültige E-Mail-Adresse eingeben!",
+                    Toast.LENGTH_SHORT
+                ).show()
                 return@setOnClickListener
             }
             if (pw != rpw) {
@@ -51,20 +59,18 @@ class RegisterActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            // Die Prüfung der Passwortstärke (isPasswordValid) wird entfernt.
-            // Das Backend ist jetzt die alleinige Quelle der Wahrheit für diese Logik.
-
-            // Jetzt API-Aufruf
-            val capitalizedUser = user.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
+            // API-Aufruf starten
+            val capitalizedUser =
+                user.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
             registerUser(capitalizedUser, mail, pw)
         }
 
+        // Wechsel zur Login-Seite
         alreadyAccount.setOnClickListener {
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
         }
     }
-
 
     private fun registerUser(username: String, email: String, password: String) {
         val service = ApiClient.retrofit.create(UserService::class.java)
@@ -73,41 +79,34 @@ class RegisterActivity : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 service.registerUser(request)
+
+                // Erfolg → Weiterleitung zum Login
                 Toast.makeText(
                     this@RegisterActivity,
                     "Registrierung erfolgreich! ✅",
                     Toast.LENGTH_SHORT
                 ).show()
-
                 val intent = Intent(this@RegisterActivity, LoginActivity::class.java)
                 startActivity(intent)
                 finish()
 
             } catch (e: Exception) {
-                // NEU: Genaue Fehlerbehandlung basierend auf der Server-Antwort
+                // Fehlermeldung auswerten
                 val errorMessage = when (e) {
                     is HttpException -> {
-                        // Versuch, die Fehlermeldung aus dem JSON-Body zu extrahieren
                         val errorBody = e.response()?.errorBody()?.string()
                         try {
                             val json = JSONObject(errorBody)
-                            json.getString("error") // Extrahiert z.B. "Username ist bereits vergeben."
+                            json.getString("error")
                         } catch (_: Exception) {
-                            // Fallback, wenn das Parsen fehlschlägt
                             "Ein unerwarteter Fehler ist aufgetreten."
                         }
                     }
-                    else -> {
-                        // Fallback für Netzwerkprobleme etc.
-                        "Keine Verbindung zum Server möglich."
-                    }
+
+                    else -> "Keine Verbindung zum Server möglich."
                 }
 
-                Toast.makeText(
-                    this@RegisterActivity,
-                    errorMessage,
-                    Toast.LENGTH_LONG // Länger anzeigen, damit der Nutzer es lesen kann
-                ).show()
+                Toast.makeText(this@RegisterActivity, errorMessage, Toast.LENGTH_LONG).show()
             }
         }
     }
